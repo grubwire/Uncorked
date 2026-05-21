@@ -49,7 +49,7 @@ public struct BottleData: Codable {
         }
     }
 
-    public mutating func loadBottles() -> [Bottle] {
+    @MainActor public mutating func loadBottles() -> [Bottle] {
         var bottles: [Bottle] = []
 
         for path in paths {

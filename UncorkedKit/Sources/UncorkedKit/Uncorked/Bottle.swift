@@ -111,6 +111,7 @@ public final class Bottle: ObservableObject, Equatable, Hashable, Identifiable, 
     }
 }
 
+@MainActor
 public extension Sequence where Iterator.Element == Program {
     /// Filter all pinned programs
     var pinned: [Program] {

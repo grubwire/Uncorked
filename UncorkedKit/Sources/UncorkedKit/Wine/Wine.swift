@@ -272,7 +272,7 @@ extension Wine {
         for: .libraryDirectory, in: .userDomainMask
     )[0].appending(path: "Logs").appending(path: Bundle.uncorkedBundleIdentifier)
 
-    public static func makeFileHandle() throws -> FileHandle {
+    public nonisolated static func makeFileHandle() throws -> FileHandle {
         if !FileManager.default.fileExists(atPath: Self.logsFolder.path) {
             try FileManager.default.createDirectory(at: Self.logsFolder, withIntermediateDirectories: true)
         }
