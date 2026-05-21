@@ -19,11 +19,11 @@
 		6E17B6492AF4118F00831173 /* EnvironmentArgView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E17B6482AF4118F00831173 /* EnvironmentArgView.swift */; };
 		6E182FCA2B0BF64E00AADE81 /* WinetricksView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E182FC92B0BF64E00AADE81 /* WinetricksView.swift */; };
 		6E2B25C12B0E20F50084A67A /* PinAddView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E2B25C02B0E20F50084A67A /* PinAddView.swift */; };
-		6E2FB15E2B589A7800E344C6 /* cabextract in Embed WhiskyCmd */ = {isa = PBXBuildFile; fileRef = 6E2FB15D2B589A7800E344C6 /* cabextract */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		6E2FB15E2B589A7800E344C6 /* cabextract in Embed UncorkedCmd */ = {isa = PBXBuildFile; fileRef = 6E2FB15D2B589A7800E344C6 /* cabextract */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		6E355E5829D78249002D83BE /* ConfigView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E355E5729D78249002D83BE /* ConfigView.swift */; };
 		6E355E5A29D782B2002D83BE /* ProgramsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E355E5929D782B2002D83BE /* ProgramsView.swift */; };
 		6E355E5E29D7D85D002D83BE /* ProgramView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E355E5D29D7D85D002D83BE /* ProgramView.swift */; };
-		6E40495629CCA19C006E3F1B /* WhiskyApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E40495529CCA19C006E3F1B /* WhiskyApp.swift */; };
+		6E40495629CCA19C006E3F1B /* UncorkedApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E40495529CCA19C006E3F1B /* UncorkedApp.swift */; };
 		6E40495829CCA19C006E3F1B /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E40495729CCA19C006E3F1B /* ContentView.swift */; };
 		6E40495A29CCA19C006E3F1B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6E40495929CCA19C006E3F1B /* Assets.xcassets */; };
 		6E40495D29CCA19C006E3F1B /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6E40495C29CCA19C006E3F1B /* Preview Assets.xcassets */; };
@@ -37,13 +37,13 @@
 		6E621CEF2A5F631300C9AAB3 /* Winetricks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E621CEE2A5F631200C9AAB3 /* Winetricks.swift */; };
 		6E6C0CF22A419A6800356232 /* WelcomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E6C0CF12A419A6800356232 /* WelcomeView.swift */; };
 		6E6C0CF42A419A7600356232 /* RosettaView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E6C0CF32A419A7600356232 /* RosettaView.swift */; };
-		6E6C0CF62A419A8300356232 /* WhiskyWineDownloadView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E6C0CF52A419A8300356232 /* WhiskyWineDownloadView.swift */; };
-		6E6C0CF82A419A8C00356232 /* WhiskyWineInstallView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E6C0CF72A419A8C00356232 /* WhiskyWineInstallView.swift */; };
+		6E6C0CF62A419A8300356232 /* UncorkedWineDownloadView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E6C0CF52A419A8300356232 /* UncorkedWineDownloadView.swift */; };
+		6E6C0CF82A419A8C00356232 /* UncorkedWineInstallView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E6C0CF72A419A8C00356232 /* UncorkedWineInstallView.swift */; };
 		6E70A49B2A9A2197007799E9 /* Main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E70A49A2A9A2197007799E9 /* Main.swift */; };
-		6E70A4A12A9A280C007799E9 /* WhiskyCmd.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E70A4A02A9A280C007799E9 /* WhiskyCmd.swift */; };
+		6E70A4A12A9A280C007799E9 /* UncorkedCmd.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E70A4A02A9A280C007799E9 /* UncorkedCmd.swift */; };
 		6E7C07BE2AAE7B0100F6E66B /* ProgramShortcut.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E7C07BD2AAE7B0100F6E66B /* ProgramShortcut.swift */; };
 		6E7C07C02AAF570100F6E66B /* FileOpenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E7C07BF2AAF570100F6E66B /* FileOpenView.swift */; };
-		6E95F66D2AB3EF3A00D585D1 /* WhiskyCmd in Embed WhiskyCmd */ = {isa = PBXBuildFile; fileRef = 6E70A4982A9A2197007799E9 /* WhiskyCmd */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		6E95F66D2AB3EF3A00D585D1 /* UncorkedCmd in Embed UncorkedCmd */ = {isa = PBXBuildFile; fileRef = 6E70A4982A9A2197007799E9 /* UncorkedCmd */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		6E95F6702AB3F33C00D585D1 /* SwiftyTextTable in Frameworks */ = {isa = PBXBuildFile; productRef = 6E95F66F2AB3F33C00D585D1 /* SwiftyTextTable */; };
 		6E95F6732AB3F67200D585D1 /* Progress in Frameworks */ = {isa = PBXBuildFile; productRef = 6E95F6722AB3F67200D585D1 /* Progress */; };
 		6EB58AC92AEACE5E00B1ED3F /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 6EB58AC82AEACE5E00B1ED3F /* Localizable.xcstrings */; };
@@ -51,7 +51,7 @@
 		6EFDF64C2AAE2DA800EF622F /* QuickLookThumbnailing.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6EFDF64B2AAE2DA800EF622F /* QuickLookThumbnailing.framework */; };
 		6EFDF64E2AAE2DA800EF622F /* Quartz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6EFDF64D2AAE2DA800EF622F /* Quartz.framework */; };
 		6EFDF6512AAE2DA800EF622F /* ThumbnailProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EFDF6502AAE2DA800EF622F /* ThumbnailProvider.swift */; };
-		6EFDF6562AAE2DA800EF622F /* WhiskyThumbnail.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 6EFDF64A2AAE2DA800EF622F /* WhiskyThumbnail.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		6EFDF6562AAE2DA800EF622F /* UncorkedThumbnail.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 6EFDF64A2AAE2DA800EF622F /* UncorkedThumbnail.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		6EFDF6662AAE303300EF622F /* Icons.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6EFDF6652AAE303300EF622F /* Icons.xcassets */; };
 		8C2AEFC82AED79B700CB568F /* WhiskyKit in Frameworks */ = {isa = PBXBuildFile; productRef = 8C2AEFC72AED79B700CB568F /* WhiskyKit */; };
 		8C2AEFCA2AED79CD00CB568F /* WhiskyKit in Frameworks */ = {isa = PBXBuildFile; productRef = 8C2AEFC92AED79CD00CB568F /* WhiskyKit */; };
@@ -70,7 +70,7 @@
 			containerPortal = 6E40494A29CCA19C006E3F1B /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 6EFDF6492AAE2DA800EF622F;
-			remoteInfo = WhiskyThumbnail;
+			remoteInfo = UncorkedThumbnail;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -84,16 +84,16 @@
 			);
 			runOnlyForDeploymentPostprocessing = 1;
 		};
-		6E95F66C2AB3EF2F00D585D1 /* Embed WhiskyCmd */ = {
+		6E95F66C2AB3EF2F00D585D1 /* Embed UncorkedCmd */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 7;
 			files = (
-				6E2FB15E2B589A7800E344C6 /* cabextract in Embed WhiskyCmd */,
-				6E95F66D2AB3EF3A00D585D1 /* WhiskyCmd in Embed WhiskyCmd */,
+				6E2FB15E2B589A7800E344C6 /* cabextract in Embed UncorkedCmd */,
+				6E95F66D2AB3EF3A00D585D1 /* UncorkedCmd in Embed UncorkedCmd */,
 			);
-			name = "Embed WhiskyCmd";
+			name = "Embed UncorkedCmd";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		6EFDF65A2AAE2DA800EF622F /* Embed Foundation Extensions */ = {
@@ -102,7 +102,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				6EFDF6562AAE2DA800EF622F /* WhiskyThumbnail.appex in Embed Foundation Extensions */,
+				6EFDF6562AAE2DA800EF622F /* UncorkedThumbnail.appex in Embed Foundation Extensions */,
 			);
 			name = "Embed Foundation Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -126,11 +126,11 @@
 		6E355E5929D782B2002D83BE /* ProgramsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgramsView.swift; sourceTree = "<group>"; };
 		6E355E5D29D7D85D002D83BE /* ProgramView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgramView.swift; sourceTree = "<group>"; };
 		6E40495229CCA19C006E3F1B /* Whisky.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Whisky.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		6E40495529CCA19C006E3F1B /* WhiskyApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WhiskyApp.swift; sourceTree = "<group>"; };
+		6E40495529CCA19C006E3F1B /* UncorkedApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UncorkedApp.swift; sourceTree = "<group>"; };
 		6E40495729CCA19C006E3F1B /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		6E40495929CCA19C006E3F1B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		6E40495C29CCA19C006E3F1B /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		6E40495E29CCA19C006E3F1B /* Whisky.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Uncorked.entitlements; sourceTree = "<group>"; };
+
 		6E40498029CCA8B0006E3F1B /* BottleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottleView.swift; sourceTree = "<group>"; };
 		6E40498229CCA91B006E3F1B /* Bottle+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Bottle+Extensions.swift"; sourceTree = "<group>"; };
 		6E49E0202AECB7DB00009CAC /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
@@ -139,22 +139,22 @@
 		6E621CEE2A5F631200C9AAB3 /* Winetricks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Winetricks.swift; sourceTree = "<group>"; };
 		6E6C0CF12A419A6800356232 /* WelcomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeView.swift; sourceTree = "<group>"; };
 		6E6C0CF32A419A7600356232 /* RosettaView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RosettaView.swift; sourceTree = "<group>"; };
-		6E6C0CF52A419A8300356232 /* WhiskyWineDownloadView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WhiskyWineDownloadView.swift; sourceTree = "<group>"; };
-		6E6C0CF72A419A8C00356232 /* WhiskyWineInstallView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WhiskyWineInstallView.swift; sourceTree = "<group>"; };
-		6E70A4982A9A2197007799E9 /* WhiskyCmd */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = WhiskyCmd; sourceTree = BUILT_PRODUCTS_DIR; };
+		6E6C0CF52A419A8300356232 /* UncorkedWineDownloadView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UncorkedWineDownloadView.swift; sourceTree = "<group>"; };
+		6E6C0CF72A419A8C00356232 /* UncorkedWineInstallView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UncorkedWineInstallView.swift; sourceTree = "<group>"; };
+		6E70A4982A9A2197007799E9 /* UncorkedCmd */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = UncorkedCmd; sourceTree = BUILT_PRODUCTS_DIR; };
 		6E70A49A2A9A2197007799E9 /* Main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Main.swift; sourceTree = "<group>"; };
-		6E70A4A02A9A280C007799E9 /* WhiskyCmd.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WhiskyCmd.swift; sourceTree = "<group>"; };
+		6E70A4A02A9A280C007799E9 /* UncorkedCmd.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UncorkedCmd.swift; sourceTree = "<group>"; };
 		6E7C07BD2AAE7B0100F6E66B /* ProgramShortcut.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgramShortcut.swift; sourceTree = "<group>"; };
 		6E7C07BF2AAF570100F6E66B /* FileOpenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileOpenView.swift; sourceTree = "<group>"; };
 		6E899D1129CFC41D00A4A083 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		6EB58AC82AEACE5E00B1ED3F /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		6EF557972A410599001A4F09 /* SetupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupView.swift; sourceTree = "<group>"; };
-		6EFDF64A2AAE2DA800EF622F /* WhiskyThumbnail.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = WhiskyThumbnail.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		6EFDF64A2AAE2DA800EF622F /* UncorkedThumbnail.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = UncorkedThumbnail.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		6EFDF64B2AAE2DA800EF622F /* QuickLookThumbnailing.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuickLookThumbnailing.framework; path = System/Library/Frameworks/QuickLookThumbnailing.framework; sourceTree = SDKROOT; };
 		6EFDF64D2AAE2DA800EF622F /* Quartz.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quartz.framework; path = System/Library/Frameworks/Quartz.framework; sourceTree = SDKROOT; };
 		6EFDF6502AAE2DA800EF622F /* ThumbnailProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThumbnailProvider.swift; sourceTree = "<group>"; };
 		6EFDF6522AAE2DA800EF622F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		6EFDF6532AAE2DA800EF622F /* WhiskyThumbnail.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = WhiskyThumbnail.entitlements; sourceTree = "<group>"; };
+		6EFDF6532AAE2DA800EF622F /* UncorkedThumbnail.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = UncorkedThumbnail.entitlements; sourceTree = "<group>"; };
 		6EFDF6652AAE303300EF622F /* Icons.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Icons.xcassets; sourceTree = "<group>"; };
 		8C73E1332AF472FC00B6FB45 /* ProgramMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgramMenuView.swift; sourceTree = "<group>"; };
 		8CB681E42AED7C6F0018D319 /* WhiskyKit */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = WhiskyKit; sourceTree = "<group>"; };
@@ -265,8 +265,8 @@
 			isa = PBXGroup;
 			children = (
 				6E40495429CCA19C006E3F1B /* Whisky */,
-				6E70A4992A9A2197007799E9 /* WhiskyCmd */,
-				6EFDF64F2AAE2DA800EF622F /* WhiskyThumbnail */,
+				6E70A4992A9A2197007799E9 /* UncorkedCmd */,
+				6EFDF64F2AAE2DA800EF622F /* UncorkedThumbnail */,
 				8CB681E42AED7C6F0018D319 /* WhiskyKit */,
 				6E2FB15F2B589A9000E344C6 /* Libraries */,
 				6E40495329CCA19C006E3F1B /* Products */,
@@ -280,8 +280,8 @@
 			isa = PBXGroup;
 			children = (
 				6E40495229CCA19C006E3F1B /* Whisky.app */,
-				6E70A4982A9A2197007799E9 /* WhiskyCmd */,
-				6EFDF64A2AAE2DA800EF622F /* WhiskyThumbnail.appex */,
+				6E70A4982A9A2197007799E9 /* UncorkedCmd */,
+				6EFDF64A2AAE2DA800EF622F /* UncorkedThumbnail.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -296,7 +296,6 @@
 				6E5197CD29D71FCD00CF655E /* Views */,
 				6E40495929CCA19C006E3F1B /* Assets.xcassets */,
 				6E899D1129CFC41D00A4A083 /* Info.plist */,
-				6E40495E29CCA19C006E3F1B /* Whisky.entitlements */,
 				6E40495B29CCA19C006E3F1B /* Preview Content */,
 				6EB58AC82AEACE5E00B1ED3F /* Localizable.xcstrings */,
 			);
@@ -327,7 +326,7 @@
 				6E6C0CF02A419A5800356232 /* Setup */,
 				6E17B6472AF3FE2E00831173 /* Programs */,
 				6E355E5629D78202002D83BE /* Bottle */,
-				6E40495529CCA19C006E3F1B /* WhiskyApp.swift */,
+				6E40495529CCA19C006E3F1B /* UncorkedApp.swift */,
 				6E40495729CCA19C006E3F1B /* ContentView.swift */,
 				6E064B1329DD331F00D9A2D2 /* SparkleView.swift */,
 				6E7C07BF2AAF570100F6E66B /* FileOpenView.swift */,
@@ -347,7 +346,7 @@
 			isa = PBXGroup;
 			children = (
 				6E621CEE2A5F631200C9AAB3 /* Winetricks.swift */,
-				6E70A4A02A9A280C007799E9 /* WhiskyCmd.swift */,
+				6E70A4A02A9A280C007799E9 /* UncorkedCmd.swift */,
 				6E7C07BD2AAE7B0100F6E66B /* ProgramShortcut.swift */,
 				6763D8F52BC6314100651D27 /* Constants.swift */,
 			);
@@ -369,13 +368,13 @@
 				6EF557972A410599001A4F09 /* SetupView.swift */,
 				6E6C0CF12A419A6800356232 /* WelcomeView.swift */,
 				6E6C0CF32A419A7600356232 /* RosettaView.swift */,
-				6E6C0CF52A419A8300356232 /* WhiskyWineDownloadView.swift */,
-				6E6C0CF72A419A8C00356232 /* WhiskyWineInstallView.swift */,
+				6E6C0CF52A419A8300356232 /* UncorkedWineDownloadView.swift */,
+				6E6C0CF72A419A8C00356232 /* UncorkedWineInstallView.swift */,
 			);
 			path = Setup;
 			sourceTree = "<group>";
 		};
-		6E70A4992A9A2197007799E9 /* WhiskyCmd */ = {
+		6E70A4992A9A2197007799E9 /* UncorkedCmd */ = {
 			isa = PBXGroup;
 			children = (
 				6E70A49A2A9A2197007799E9 /* Main.swift */,
@@ -383,12 +382,12 @@
 			path = WhiskyCmd;
 			sourceTree = "<group>";
 		};
-		6EFDF64F2AAE2DA800EF622F /* WhiskyThumbnail */ = {
+		6EFDF64F2AAE2DA800EF622F /* UncorkedThumbnail */ = {
 			isa = PBXGroup;
 			children = (
 				6EFDF6502AAE2DA800EF622F /* ThumbnailProvider.swift */,
 				6EFDF6522AAE2DA800EF622F /* Info.plist */,
-				6EFDF6532AAE2DA800EF622F /* WhiskyThumbnail.entitlements */,
+				6EFDF6532AAE2DA800EF622F /* UncorkedThumbnail.entitlements */,
 				6EFDF6652AAE303300EF622F /* Icons.xcassets */,
 			);
 			path = WhiskyThumbnail;
@@ -405,7 +404,7 @@
 				6E40494F29CCA19C006E3F1B /* Frameworks */,
 				6E40495029CCA19C006E3F1B /* Resources */,
 				6E50D98129CD0EAF008C39F6 /* SwiftLint */,
-				6E95F66C2AB3EF2F00D585D1 /* Embed WhiskyCmd */,
+				6E95F66C2AB3EF2F00D585D1 /* Embed UncorkedCmd */,
 				6EFDF65A2AAE2DA800EF622F /* Embed Foundation Extensions */,
 			);
 			buildRules = (
@@ -423,9 +422,9 @@
 			productReference = 6E40495229CCA19C006E3F1B /* Whisky.app */;
 			productType = "com.apple.product-type.application";
 		};
-		6E70A4972A9A2197007799E9 /* WhiskyCmd */ = {
+		6E70A4972A9A2197007799E9 /* UncorkedCmd */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 6E70A49E2A9A2197007799E9 /* Build configuration list for PBXNativeTarget "WhiskyCmd" */;
+			buildConfigurationList = 6E70A49E2A9A2197007799E9 /* Build configuration list for PBXNativeTarget "UncorkedCmd" */;
 			buildPhases = (
 				6E70A4942A9A2197007799E9 /* Sources */,
 				6E70A4952A9A2197007799E9 /* Frameworks */,
@@ -435,7 +434,7 @@
 			);
 			dependencies = (
 			);
-			name = WhiskyCmd;
+			name = UncorkedCmd;
 			packageProductDependencies = (
 				6E59676A2A9A424900D64F70 /* ArgumentParser */,
 				6E95F66F2AB3F33C00D585D1 /* SwiftyTextTable */,
@@ -443,13 +442,13 @@
 				6E5B61B52AC34E6D007B1913 /* SemanticVersion */,
 				8C2AEFC92AED79CD00CB568F /* WhiskyKit */,
 			);
-			productName = WhiskyCmd;
-			productReference = 6E70A4982A9A2197007799E9 /* WhiskyCmd */;
+			productName = UncorkedCmd;
+			productReference = 6E70A4982A9A2197007799E9 /* UncorkedCmd */;
 			productType = "com.apple.product-type.tool";
 		};
-		6EFDF6492AAE2DA800EF622F /* WhiskyThumbnail */ = {
+		6EFDF6492AAE2DA800EF622F /* UncorkedThumbnail */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 6EFDF6572AAE2DA800EF622F /* Build configuration list for PBXNativeTarget "WhiskyThumbnail" */;
+			buildConfigurationList = 6EFDF6572AAE2DA800EF622F /* Build configuration list for PBXNativeTarget "UncorkedThumbnail" */;
 			buildPhases = (
 				6EFDF6462AAE2DA800EF622F /* Sources */,
 				6EFDF6472AAE2DA800EF622F /* Frameworks */,
@@ -459,12 +458,12 @@
 			);
 			dependencies = (
 			);
-			name = WhiskyThumbnail;
+			name = UncorkedThumbnail;
 			packageProductDependencies = (
 				8CB681E62AED7CD00018D319 /* WhiskyKit */,
 			);
-			productName = WhiskyThumbnail;
-			productReference = 6EFDF64A2AAE2DA800EF622F /* WhiskyThumbnail.appex */;
+			productName = UncorkedThumbnail;
+			productReference = 6EFDF64A2AAE2DA800EF622F /* UncorkedThumbnail.appex */;
 			productType = "com.apple.product-type.app-extension";
 		};
 /* End PBXNativeTarget section */
@@ -531,8 +530,8 @@
 			projectRoot = "";
 			targets = (
 				6E40495129CCA19C006E3F1B /* Whisky */,
-				6E70A4972A9A2197007799E9 /* WhiskyCmd */,
-				6EFDF6492AAE2DA800EF622F /* WhiskyThumbnail */,
+				6E70A4972A9A2197007799E9 /* UncorkedCmd */,
+				6EFDF6492AAE2DA800EF622F /* UncorkedThumbnail */,
 			);
 		};
 /* End PBXProject section */
@@ -588,7 +587,7 @@
 			files = (
 				EEA5A2462A31DD65008274AE /* AppDelegate.swift in Sources */,
 				6763D8F62BC6314100651D27 /* Constants.swift in Sources */,
-				6E70A4A12A9A280C007799E9 /* WhiskyCmd.swift in Sources */,
+				6E70A4A12A9A280C007799E9 /* UncorkedCmd.swift in Sources */,
 				6E40495829CCA19C006E3F1B /* ContentView.swift in Sources */,
 				67D278512BC5907E006F9A1E /* ActionView.swift in Sources */,
 				6EF557982A410599001A4F09 /* SetupView.swift in Sources */,
@@ -597,7 +596,7 @@
 				6E7C07BE2AAE7B0100F6E66B /* ProgramShortcut.swift in Sources */,
 				6E355E5829D78249002D83BE /* ConfigView.swift in Sources */,
 				63FFDE862ADF0C7700178665 /* BottomBar.swift in Sources */,
-				6E6C0CF62A419A8300356232 /* WhiskyWineDownloadView.swift in Sources */,
+				6E6C0CF62A419A8300356232 /* UncorkedWineDownloadView.swift in Sources */,
 				6365C4C32B1AA8CD00AAE1FD /* BottleListEntry.swift in Sources */,
 				6E50D98529CDF25B008C39F6 /* BottleCreationView.swift in Sources */,
 				6E182FCA2B0BF64E00AADE81 /* WinetricksView.swift in Sources */,
@@ -605,13 +604,13 @@
 				AB0BCABD2B61036E00E21C31 /* RunningProcessesView.swift in Sources */,
 				6E17B6492AF4118F00831173 /* EnvironmentArgView.swift in Sources */,
 				6E6C0CF42A419A7600356232 /* RosettaView.swift in Sources */,
-				6E6C0CF82A419A8C00356232 /* WhiskyWineInstallView.swift in Sources */,
+				6E6C0CF82A419A8C00356232 /* UncorkedWineInstallView.swift in Sources */,
 				6365C4C12B1AA69D00AAE1FD /* Animation+Extensions.swift in Sources */,
 				6E40498329CCA91B006E3F1B /* Bottle+Extensions.swift in Sources */,
 				6E621CEF2A5F631300C9AAB3 /* Winetricks.swift in Sources */,
 				6E17B6462AF3FDC100831173 /* PinView.swift in Sources */,
 				6E064B1429DD331F00D9A2D2 /* SparkleView.swift in Sources */,
-				6E40495629CCA19C006E3F1B /* WhiskyApp.swift in Sources */,
+				6E40495629CCA19C006E3F1B /* UncorkedApp.swift in Sources */,
 				8C73E1342AF472FC00B6FB45 /* ProgramMenuView.swift in Sources */,
 				6E50D98329CD6066008C39F6 /* BottleVM.swift in Sources */,
 				6E2B25C12B0E20F50084A67A /* PinAddView.swift in Sources */,
@@ -644,7 +643,7 @@
 /* Begin PBXTargetDependency section */
 		6EFDF6552AAE2DA800EF622F /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 6EFDF6492AAE2DA800EF622F /* WhiskyThumbnail */;
+			target = 6EFDF6492AAE2DA800EF622F /* UncorkedThumbnail */;
 			targetProxy = 6EFDF6542AAE2DA800EF622F /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -866,7 +865,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				PRODUCT_BUNDLE_IDENTIFIER = app.uncorked.UncorkCmd;
+				PRODUCT_BUNDLE_IDENTIFIER = app.uncorked.UncorkedCmd;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
@@ -893,7 +892,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				PRODUCT_BUNDLE_IDENTIFIER = app.uncorked.UncorkCmd;
+				PRODUCT_BUNDLE_IDENTIFIER = app.uncorked.UncorkedCmd;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
@@ -906,7 +905,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
-				CODE_SIGN_ENTITLEMENTS = WhiskyThumbnail/WhiskyThumbnail.entitlements;
+				CODE_SIGN_ENTITLEMENTS = WhiskyThumbnail/UncorkedThumbnail.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 43;
@@ -918,7 +917,7 @@
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = WhiskyThumbnail/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = WhiskyThumbnail;
+				INFOPLIST_KEY_CFBundleDisplayName = UncorkedThumbnail;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -927,7 +926,7 @@
 				);
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MARKETING_VERSION = 2.3.5;
-				PRODUCT_BUNDLE_IDENTIFIER = app.uncorked.Uncorked.WhiskyThumbnail;
+				PRODUCT_BUNDLE_IDENTIFIER = app.uncorked.Uncorked.UncorkedThumbnail;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
@@ -942,7 +941,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
-				CODE_SIGN_ENTITLEMENTS = WhiskyThumbnail/WhiskyThumbnail.entitlements;
+				CODE_SIGN_ENTITLEMENTS = WhiskyThumbnail/UncorkedThumbnail.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 43;
@@ -954,7 +953,7 @@
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = WhiskyThumbnail/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = WhiskyThumbnail;
+				INFOPLIST_KEY_CFBundleDisplayName = UncorkedThumbnail;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -963,7 +962,7 @@
 				);
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MARKETING_VERSION = 2.3.5;
-				PRODUCT_BUNDLE_IDENTIFIER = app.uncorked.Uncorked.WhiskyThumbnail;
+				PRODUCT_BUNDLE_IDENTIFIER = app.uncorked.Uncorked.UncorkedThumbnail;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
@@ -994,7 +993,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		6E70A49E2A9A2197007799E9 /* Build configuration list for PBXNativeTarget "WhiskyCmd" */ = {
+		6E70A49E2A9A2197007799E9 /* Build configuration list for PBXNativeTarget "UncorkedCmd" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				6E70A49C2A9A2197007799E9 /* Debug */,
@@ -1003,7 +1002,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		6EFDF6572AAE2DA800EF622F /* Build configuration list for PBXNativeTarget "WhiskyThumbnail" */ = {
+		6EFDF6572AAE2DA800EF622F /* Build configuration list for PBXNativeTarget "UncorkedThumbnail" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				6EFDF6582AAE2DA800EF622F /* Debug */,
