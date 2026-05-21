@@ -33,6 +33,9 @@ jobs:
             -exportPath "$RUNNER_TEMP/export" \
             -exportOptionsPlist ExportOptions-unsigned.plist
 
+      - name: Ad-hoc sign
+        run: codesign --force --deep --sign - "$RUNNER_TEMP/export/Uncorked.app"
+
       - name: Create DMG
         run: |
           create-dmg \
