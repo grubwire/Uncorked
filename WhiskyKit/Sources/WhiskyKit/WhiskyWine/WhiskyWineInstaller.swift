@@ -2,22 +2,40 @@
 //  WhiskyWineInstaller.swift
 //  WhiskyKit
 //
-//  This file is part of Uncorked.
+//  This file is part of Whisky.
 //
-//  Uncorked is free software: you can redistribute it and/or modify it under the terms
+//  Whisky is free software: you can redistribute it and/or modify it under the terms
 //  of the GNU General Public License as published by the Free Software Foundation,
 //  either version 3 of the License, or (at your option) any later version.
 //
-//  Uncorked is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+//  Whisky is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
 //  without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 //  See the GNU General Public License for more details.
 //
-//  You should have received a copy of the GNU General Public License along with Uncorked.
+//  You should have received a copy of the GNU General Public License along with Whisky.
 //  If not, see https://www.gnu.org/licenses/.
 //
 
 import Foundation
 import SemanticVersion
+
+private struct GcenxRelease: Codable {
+    let tagName: String
+    let assets: [GcenxAsset]
+    enum CodingKeys: String, CodingKey {
+        case tagName = "tag_name"
+        case assets
+    }
+}
+
+private struct GcenxAsset: Codable {
+    let name: String
+    let browserDownloadUrl: String
+    enum CodingKeys: String, CodingKey {
+        case name
+        case browserDownloadUrl = "browser_download_url"
+    }
+}
 
 public class WhiskyWineInstaller {
     /// The Whisky application folder
@@ -34,24 +52,6 @@ public class WhiskyWineInstaller {
     // MARK: - Gcenx GitHub API
 
     private static let gcenxReleasesAPI = "https://api.github.com/repos/Gcenx/macOS_Wine_builds/releases/latest"
-
-    private struct GcenxRelease: Codable {
-        let tagName: String
-        let assets: [GcenxAsset]
-        enum CodingKeys: String, CodingKey {
-            case tagName = "tag_name"
-            case assets
-        }
-    }
-
-    private struct GcenxAsset: Codable {
-        let name: String
-        let browserDownloadUrl: String
-        enum CodingKeys: String, CodingKey {
-            case name
-            case browserDownloadUrl = "browser_download_url"
-        }
-    }
 
     /// Fetch the latest Gcenx release tag (e.g. "11.9" → SemanticVersion(11, 9, 0))
     private static func fetchLatestGcenxVersion() async -> SemanticVersion? {

@@ -11,5 +11,7 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Install SwiftLint
+        run: brew install swiftlint
       - name: Build
         run: xcodebuild build -scheme Uncorked -configuration Debug CODE_SIGNING_ALLOWED=NO
