@@ -18,7 +18,7 @@
 
 import Foundation
 import AppKit
-import QuickLookThumbnailing
+@preconcurrency import QuickLookThumbnailing
 import UncorkedKit
 
 class ProgramShortcut {
