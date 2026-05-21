@@ -1,6 +1,6 @@
 // swift-tools-version: 5.9
 //
-//  PortableExecutable.swift
+//  Package.swift
 //  UncorkedKit
 //
 //  This file is part of Uncorked.
@@ -31,7 +31,7 @@ let package = Package(
         )
     ],
     dependencies: [
-      .package(url: "git@github.com:SwiftPackageIndex/SemanticVersion.git", from: "0.3.0")
+      .package(url: "https://github.com/SwiftPackageIndex/SemanticVersion.git", from: "0.3.0")
     ],
     targets: [
         .target(
