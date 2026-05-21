@@ -18259,7 +18259,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "In some cases, Whisky wont't be able to function properly from a different folder"
+            "value" : "In some cases, Uncorked won't be able to function properly from a different folder"
           }
         },
         "es" : {
@@ -18395,7 +18395,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Would you like to move Whisky to your Applications folder?"
+            "value" : "Would you like to move Uncorked to your Applications folder?"
           }
         },
         "es" : {
