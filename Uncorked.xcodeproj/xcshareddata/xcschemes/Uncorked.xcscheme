@@ -16,8 +16,8 @@
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "6E40495129CCA19C006E3F1B"
                BuildableName = "Uncorked.app"
-               BlueprintName = "Whisky"
-               ReferencedContainer = "container:Whisky.xcodeproj">
+               BlueprintName = "Uncorked"
+               ReferencedContainer = "container:Uncorked.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -45,8 +45,8 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "6E40495129CCA19C006E3F1B"
             BuildableName = "Uncorked.app"
-            BlueprintName = "Whisky"
-            ReferencedContainer = "container:Whisky.xcodeproj">
+            BlueprintName = "Uncorked"
+            ReferencedContainer = "container:Uncorked.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -62,8 +62,8 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "6E40495129CCA19C006E3F1B"
             BuildableName = "Uncorked.app"
-            BlueprintName = "Whisky"
-            ReferencedContainer = "container:Whisky.xcodeproj">
+            BlueprintName = "Uncorked"
+            ReferencedContainer = "container:Uncorked.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
