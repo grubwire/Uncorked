@@ -21,7 +21,7 @@ import SwiftUI
 import os.log
 
 @MainActor
-public final class Bottle: ObservableObject, Equatable, Hashable, Identifiable, Comparable {
+public final class Bottle: ObservableObject, Equatable, Hashable, Identifiable, @preconcurrency Comparable {
     public let url: URL
     private let metadataURL: URL
     @Published public var settings: BottleSettings {
@@ -88,19 +88,19 @@ public final class Bottle: ObservableObject, Equatable, Hashable, Identifiable, 
 
     // MARK: - Equatable
 
-    public static func == (lhs: Bottle, rhs: Bottle) -> Bool {
+    public nonisolated static func == (lhs: Bottle, rhs: Bottle) -> Bool {
         return lhs.url == rhs.url
     }
 
     // MARK: - Hashable
 
-    public func hash(into hasher: inout Hasher) {
+    public nonisolated func hash(into hasher: inout Hasher) {
         return hasher.combine(url)
     }
 
     // MARK: - Identifiable
 
-    public var id: URL {
+    public nonisolated var id: URL {
         self.url
     }
 

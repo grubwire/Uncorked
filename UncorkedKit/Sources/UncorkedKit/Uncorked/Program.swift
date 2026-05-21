@@ -98,19 +98,19 @@ public final class Program: ObservableObject, Equatable, Hashable, Identifiable 
 
     // MARK: - Equatable
 
-    public static func == (lhs: Program, rhs: Program) -> Bool {
+    public nonisolated static func == (lhs: Program, rhs: Program) -> Bool {
         return lhs.url == rhs.url
     }
 
     // MARK: - Hashable
 
-    public func hash(into hasher: inout Hasher) {
+    public nonisolated func hash(into hasher: inout Hasher) {
         return hasher.combine(url)
     }
 
     // MARK: - Identifiable
 
-    public var id: URL {
+    public nonisolated var id: URL {
         self.url
     }
 }
