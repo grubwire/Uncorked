@@ -45,7 +45,7 @@ class Winetricks {
     static let winetricksURL: URL = UncorkedWineInstaller.libraryFolder
         .appending(path: "winetricks")
 
-    static func runCommand(command: String, bottle: Bottle) async {
+    @MainActor static func runCommand(command: String, bottle: Bottle) async {
         guard let resourcesURL = Bundle.main.url(forResource: "cabextract", withExtension: nil)?
             .deletingLastPathComponent() else { return }
         // swiftlint:disable:next line_length

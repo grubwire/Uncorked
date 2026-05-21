@@ -20,15 +20,13 @@ import Foundation
 import SemanticVersion
 import UncorkedKit
 
-// swiftlint:disable:next todo
-// TODO: Don't use unchecked!
-final class BottleVM: ObservableObject, @unchecked Sendable {
-    @MainActor static let shared = BottleVM()
+@MainActor
+final class BottleVM: ObservableObject {
+    static let shared = BottleVM()
 
     var bottlesList = BottleData()
     @Published var bottles: [Bottle] = []
 
-    @MainActor
     func loadBottles() {
         bottles = bottlesList.loadBottles()
     }
@@ -40,17 +38,14 @@ final class BottleVM: ObservableObject, @unchecked Sendable {
     func createNewBottle(bottleName: String, winVersion: WinVersion, bottleURL: URL) -> URL {
         let newBottleDir = bottleURL.appending(path: UUID().uuidString)
 
-        Task.detached {
+        Task {
             var bottleId: Bottle?
             do {
                 try FileManager.default.createDirectory(atPath: newBottleDir.path(percentEncoded: false),
                                                         withIntermediateDirectories: true)
                 let bottle = Bottle(bottleUrl: newBottleDir, inFlight: true)
                 bottleId = bottle
-
-                await MainActor.run {
-                    self.bottles.append(bottle)
-                }
+                bottles.append(bottle)
 
                 bottle.settings.windowsVersion = winVersion
                 bottle.settings.name = bottleName
@@ -58,17 +53,13 @@ final class BottleVM: ObservableObject, @unchecked Sendable {
                 let wineVer = try await Wine.wineVersion()
                 bottle.settings.wineVersion = SemanticVersion(wineVer) ?? SemanticVersion(0, 0, 0)
                 // Add record
-                await MainActor.run {
-                    self.bottlesList.paths.append(newBottleDir)
-                    self.loadBottles()
-                }
+                bottlesList.paths.append(newBottleDir)
+                loadBottles()
             } catch {
                 print("Failed to create new bottle: \(error)")
                 if let bottle = bottleId {
-                    await MainActor.run {
-                        if let index = self.bottles.firstIndex(of: bottle) {
-                            self.bottles.remove(at: index)
-                        }
+                    if let index = bottles.firstIndex(of: bottle) {
+                        bottles.remove(at: index)
                     }
                 }
             }

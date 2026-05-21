@@ -119,7 +119,7 @@ struct UncorkedApp: App {
         }
     }
 
-    static func killBottles() {
+    @MainActor static func killBottles() {
         for bottle in BottleVM.shared.bottles {
             do {
                 try Wine.killBottle(bottle: bottle)

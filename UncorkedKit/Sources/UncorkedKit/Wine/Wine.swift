@@ -19,13 +19,14 @@
 import Foundation
 import os.log
 
+@MainActor
 public class Wine {
     /// URL to the installed `DXVK` folder
-    private static let dxvkFolder: URL = UncorkedWineInstaller.libraryFolder.appending(path: "DXVK")
+    private nonisolated static let dxvkFolder: URL = UncorkedWineInstaller.libraryFolder.appending(path: "DXVK")
     /// Path to the `wine64` binary
-    public static let wineBinary: URL = UncorkedWineInstaller.binFolder.appending(path: "wine64")
+    public nonisolated static let wineBinary: URL = UncorkedWineInstaller.binFolder.appending(path: "wine64")
     /// Parth to the `wineserver` binary
-    private static let wineserverBinary: URL = UncorkedWineInstaller.binFolder.appending(path: "wineserver")
+    private nonisolated static let wineserverBinary: URL = UncorkedWineInstaller.binFolder.appending(path: "wineserver")
 
     /// Run a process on a executable file given by the `executableURL`
     private static func runProcess(
@@ -209,7 +210,7 @@ public class Wine {
     }
 
     public static func killBottle(bottle: Bottle) throws {
-        Task.detached(priority: .userInitiated) {
+        Task(priority: .userInitiated) {
             try await runWineserver(["-k"], bottle: bottle)
         }
     }
@@ -267,7 +268,7 @@ enum RegistryType: String {
 }
 
 extension Wine {
-    public static let logsFolder = FileManager.default.urls(
+    public nonisolated static let logsFolder = FileManager.default.urls(
         for: .libraryDirectory, in: .userDomainMask
     )[0].appending(path: "Logs").appending(path: Bundle.uncorkedBundleIdentifier)
 

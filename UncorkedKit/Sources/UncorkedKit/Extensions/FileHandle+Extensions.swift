@@ -69,7 +69,7 @@ extension FileHandle {
         write(line: header)
     }
 
-    func writeInfo(for bottle: Bottle) {
+    @MainActor func writeInfo(for bottle: Bottle) {
         var header = String()
         header += "Bottle Name: \(bottle.settings.name)\n"
         header += "Bottle URL: \(bottle.url.path)\n\n"

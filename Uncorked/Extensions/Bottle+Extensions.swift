@@ -39,7 +39,7 @@ extension Bottle {
             end tell
             """
 
-            Task.detached(priority: .userInitiated) {
+            Task(priority: .userInitiated) {
                 var error: NSDictionary?
                 guard let appleScript = NSAppleScript(source: script) else { return }
                 appleScript.executeAndReturnError(&error)
@@ -47,7 +47,7 @@ extension Bottle {
                 if let error = error {
                     Logger.wineKit.error("Failed to run terminal script \(error)")
                     guard let description = error["NSAppleScriptErrorMessage"] as? String else { return }
-                    await self.showRunError(message: String(describing: description))
+                    self.showRunError(message: String(describing: description))
                 }
             }
         }
@@ -203,7 +203,7 @@ extension Bottle {
         settings.name = newName
     }
 
-    @MainActor private func showRunError(message: String) {
+    private func showRunError(message: String) {
         let alert = NSAlert()
         alert.messageText = String(localized: "alert.message")
         alert.informativeText = String(localized: "alert.info")
