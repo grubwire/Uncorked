@@ -1,0 +1,56 @@
+name: Check for Gcenx Wine updates
+
+on:
+  schedule:
+    - cron: '0 9 * * 1'  # every Monday 9am UTC
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch latest Gcenx release
+        id: gcenx
+        run: |
+          RESPONSE=$(curl -s -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+            https://api.github.com/repos/Gcenx/macOS_Wine_builds/releases/latest)
+          TAG=$(echo "$RESPONSE" | jq -r '.tag_name')
+          URL=$(echo "$RESPONSE" | jq -r '.html_url')
+          echo "tag=$TAG" >> $GITHUB_OUTPUT
+          echo "url=$URL" >> $GITHUB_OUTPUT
+
+      - name: Check for existing open issue
+        id: existing
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          COUNT=$(gh issue list \
+            --repo ${{ github.repository }} \
+            --state open \
+            --search "Gcenx ${{ steps.gcenx.outputs.tag }} in:title" \
+            --json number \
+            --jq 'length')
+          echo "count=$COUNT" >> $GITHUB_OUTPUT
+
+      - name: Open issue if this is a new release
+        if: steps.existing.outputs.count == '0'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh issue create \
+            --repo ${{ github.repository }} \
+            --title "Gcenx ${{ steps.gcenx.outputs.tag }} released — test and verify" \
+            --body "$(cat <<'EOF'
+          New Gcenx Wine build available: **${{ steps.gcenx.outputs.tag }}**
+
+          ${{ steps.gcenx.outputs.url }}
+
+          Before closing this:
+          - [ ] Install the new build and test basic bottle creation
+          - [ ] Test a known-working .exe (Hollow Knight or similar)
+          - [ ] Check DXVK still loads
+          - [ ] Verify `WhiskyWineInstaller.parseGcenxTag` handles the new tag format
+          - [ ] Ship a release if everything looks good
+          EOF
+          )"
