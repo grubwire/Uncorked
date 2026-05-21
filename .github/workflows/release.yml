@@ -5,6 +5,9 @@ on:
     tags:
       - 'v*'
 
+permissions:
+  contents: write
+
 jobs:
   release:
     runs-on: macos-latest
@@ -30,21 +33,38 @@ jobs:
           security set-key-partition-list -S apple-tool:,apple: -s -k "uncorked-ci" "$KEYCHAIN"
           rm "$RUNNER_TEMP/cert.p12"
 
-      - name: Archive
+      - name: Archive (signed)
+        if: ${{ secrets.DEVELOPER_ID_CERTIFICATE != '' }}
+        run: |
+          xcodebuild archive \
+            -scheme Uncorked \
+            -configuration Release \
+            -archivePath "$RUNNER_TEMP/Uncorked.xcarchive"
+
+      - name: Archive (unsigned)
+        if: ${{ secrets.DEVELOPER_ID_CERTIFICATE == '' }}
         run: |
           xcodebuild archive \
             -scheme Uncorked \
             -configuration Release \
             -archivePath "$RUNNER_TEMP/Uncorked.xcarchive" \
-            CODE_SIGNING_ALLOWED=${{ secrets.DEVELOPER_ID_CERTIFICATE != '' && 'YES' || 'NO' }}
+            CODE_SIGNING_ALLOWED=NO
 
-      - name: Export app
+      - name: Export app (signed)
+        if: ${{ secrets.DEVELOPER_ID_CERTIFICATE != '' }}
         run: |
-          PLIST=${{ secrets.DEVELOPER_ID_CERTIFICATE != '' && 'ExportOptions.plist' || 'ExportOptions-unsigned.plist' }}
           xcodebuild -exportArchive \
             -archivePath "$RUNNER_TEMP/Uncorked.xcarchive" \
             -exportPath "$RUNNER_TEMP/export" \
-            -exportOptionsPlist "$PLIST"
+            -exportOptionsPlist ExportOptions.plist
+
+      - name: Export app (unsigned)
+        if: ${{ secrets.DEVELOPER_ID_CERTIFICATE == '' }}
+        run: |
+          xcodebuild -exportArchive \
+            -archivePath "$RUNNER_TEMP/Uncorked.xcarchive" \
+            -exportPath "$RUNNER_TEMP/export" \
+            -exportOptionsPlist ExportOptions-unsigned.plist
 
       - name: Notarize
         if: ${{ secrets.APPLE_ID != '' }}
