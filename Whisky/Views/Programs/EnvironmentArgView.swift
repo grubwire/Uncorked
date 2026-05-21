@@ -17,7 +17,7 @@
 //
 
 import SwiftUI
-import WhiskyKit
+import UncorkedKit
 
 enum KeySection {
     case key, value

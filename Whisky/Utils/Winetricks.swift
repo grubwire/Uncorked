@@ -18,7 +18,7 @@
 
 import Foundation
 import AppKit
-import WhiskyKit
+import UncorkedKit
 
 enum WinetricksCategories: String {
     case apps

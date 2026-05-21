@@ -18,7 +18,7 @@
 
 import SwiftUI
 import UniformTypeIdentifiers
-import WhiskyKit
+import UncorkedKit
 
 enum BottleStage {
     case config

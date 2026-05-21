@@ -18,7 +18,7 @@
 
 import SwiftUI
 import Sparkle
-import WhiskyKit
+import UncorkedKit
 
 @main
 struct UncorkedApp: App {

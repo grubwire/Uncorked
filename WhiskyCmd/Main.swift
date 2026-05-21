@@ -17,7 +17,7 @@
 //
 
 import Foundation
-import WhiskyKit
+import UncorkedKit
 import SwiftyTextTable
 import Progress
 import SemanticVersion

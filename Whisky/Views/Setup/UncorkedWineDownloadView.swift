@@ -17,7 +17,7 @@
 //
 
 import SwiftUI
-import WhiskyKit
+import UncorkedKit
 
 // MARK: - Gcenx GitHub Release API models
 

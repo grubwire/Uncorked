@@ -17,7 +17,7 @@
 //
 
 import SwiftUI
-import WhiskyKit
+import UncorkedKit
 
 struct BottleProcess: Identifiable {
     var id = UUID()

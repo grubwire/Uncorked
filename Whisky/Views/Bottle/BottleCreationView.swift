@@ -17,7 +17,7 @@
 //
 
 import SwiftUI
-import WhiskyKit
+import UncorkedKit
 
 struct BottleCreationView: View {
     @Binding var newlyCreatedBottleURL: URL?

@@ -19,7 +19,7 @@
 import Foundation
 import QuickLookThumbnailing
 import AppKit
-import WhiskyKit
+import UncorkedKit
 
 class ThumbnailProvider: QLThumbnailProvider {
     override func provideThumbnail(for request: QLFileThumbnailRequest,

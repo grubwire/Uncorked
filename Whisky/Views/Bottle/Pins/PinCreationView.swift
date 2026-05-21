@@ -18,7 +18,7 @@
 
 import SwiftUI
 import UniformTypeIdentifiers
-import WhiskyKit
+import UncorkedKit
 
 struct PinCreationView: View {
     let bottle: Bottle

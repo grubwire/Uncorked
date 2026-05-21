@@ -17,7 +17,7 @@
 //
 
 import SwiftUI
-import WhiskyKit
+import UncorkedKit
 
 struct SettingsView: View {
     @AppStorage("SUEnableAutomaticChecks") var whiskyUpdate = true

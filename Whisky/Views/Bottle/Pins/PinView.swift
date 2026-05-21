@@ -17,7 +17,7 @@
 //
 
 import SwiftUI
-import WhiskyKit
+import UncorkedKit
 
 struct PinView: View {
     @ObservedObject var bottle: Bottle

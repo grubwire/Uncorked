@@ -19,7 +19,7 @@
 import Foundation
 import AppKit
 import QuickLookThumbnailing
-import WhiskyKit
+import UncorkedKit
 
 class ProgramShortcut {
     public static func createShortcut(_ program: Program, app: URL, name: String) async {

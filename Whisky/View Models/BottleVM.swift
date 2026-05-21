@@ -18,7 +18,7 @@
 
 import Foundation
 import SemanticVersion
-import WhiskyKit
+import UncorkedKit
 
 // swiftlint:disable:next todo
 // TODO: Don't use unchecked!

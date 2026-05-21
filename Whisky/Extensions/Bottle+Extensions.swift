@@ -18,7 +18,7 @@
 
 import Foundation
 import AppKit
-import WhiskyKit
+import UncorkedKit
 import os.log
 
 extension Bottle {
