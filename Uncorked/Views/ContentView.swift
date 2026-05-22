@@ -98,7 +98,7 @@ struct ContentView: View {
                 if let bottle = bottleVM.bottles.first(where: { $0.url == selectedBottleURL && $0.isAvailable }) {
                     selected = bottle.url
                 } else {
-                    selected = bottleVM.bottles[0].url
+                    selected = bottleVM.bottles.first?.url
                 }
             }
 

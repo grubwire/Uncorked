@@ -1,6 +1,6 @@
 //
 //  ThumbnailProvider.swift
-//  WhiskyThumbnail
+//  UncorkedThumbnail
 //
 //  This file is part of Uncorked.
 //
