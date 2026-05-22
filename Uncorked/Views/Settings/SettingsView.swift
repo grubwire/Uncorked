@@ -1,6 +1,6 @@
 //
 //  SettingsView.swift
-//  Whisky
+//  Uncorked
 //
 //  This file is part of Uncorked.
 //
@@ -22,7 +22,7 @@ import UncorkedKit
 struct SettingsView: View {
     @AppStorage("SUEnableAutomaticChecks") var uncorkedUpdate = true
     @AppStorage("killOnTerminate") var killOnTerminate = true
-    @AppStorage("checkWhiskyWineUpdates") var checkUncorkedWineUpdates = true
+    @AppStorage("checkUncorkedWineUpdates") var checkUncorkedWineUpdates = true
     @AppStorage("defaultBottleLocation") var defaultBottleLocation = BottleData.defaultBottleDir
 
     var body: some View {

@@ -34,7 +34,14 @@ jobs:
             -exportOptionsPlist ExportOptions-unsigned.plist
 
       - name: Ad-hoc sign
-        run: codesign --force --deep --sign - "$RUNNER_TEMP/export/Uncorked.app"
+        run: |
+          APP="$RUNNER_TEMP/export/Uncorked.app"
+          # Sign nested bundles (frameworks, dylibs, app extensions) inside-out first
+          find "$APP" \( -name "*.framework" -o -name "*.dylib" -o -name "*.appex" \) \
+            | sort -r \
+            | xargs -I{} codesign --force --options runtime --sign - "{}"
+          # Sign the outer app bundle last
+          codesign --force --options runtime --sign - "$APP"
 
       - name: Create DMG
         run: |

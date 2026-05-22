@@ -1,6 +1,6 @@
 //
 //  UncorkedApp.swift
-//  Whisky
+//  Uncorked
 //
 //  This file is part of Uncorked.
 //
@@ -98,7 +98,7 @@ struct UncorkedApp: App {
             }
             CommandGroup(replacing: .help) {
                 Button("help.website") {
-                    if let url = URL(string: "https://github.com/grubwire/uncorked") {
+                    if let url = URL(string: "https://grubwire.io") {
                         openURL(url)
                     }
                 }

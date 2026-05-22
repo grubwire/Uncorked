@@ -1,6 +1,6 @@
 //
 //  Rosetta2.swift
-//  Whisky
+//  Uncorked
 //
 //  This file is part of Uncorked.
 //

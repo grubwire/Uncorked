@@ -1,6 +1,6 @@
 //
 //  PortableExecutable.swift
-//  WhiskyKit
+//  UncorkedKit
 //
 //  This file is part of Uncorked.
 //

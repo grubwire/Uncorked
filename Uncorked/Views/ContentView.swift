@@ -1,6 +1,6 @@
 //
 //  ContentView.swift
-//  Whisky
+//  Uncorked
 //
 //  This file is part of Uncorked.
 //
@@ -23,6 +23,7 @@ import SemanticVersion
 
 struct ContentView: View {
     @AppStorage("selectedBottleURL") private var selectedBottleURL: URL?
+    @AppStorage("checkUncorkedWineUpdates") private var checkUncorkedWineUpdates = true
     @EnvironmentObject var bottleVM: BottleVM
     @Binding var showSetup: Bool
 
@@ -108,7 +109,7 @@ struct ContentView: View {
                 return await UncorkedWineInstaller.shouldUpdateUncorkedWine()
             }
             let updateInfo = await task.value
-            if updateInfo.0 {
+            if checkUncorkedWineUpdates && updateInfo.0 {
                 let alert = NSAlert()
                 alert.messageText = String(localized: "update.uncorkedwine.title")
                 alert.informativeText = String(format: String(localized: "update.uncorkedwine.description"),

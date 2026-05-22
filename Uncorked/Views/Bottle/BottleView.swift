@@ -1,6 +1,6 @@
 //
 //  BottleView.swift
-//  Whisky
+//  Uncorked
 //
 //  This file is part of Uncorked.
 //
