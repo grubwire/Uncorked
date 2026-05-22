@@ -36,12 +36,15 @@ jobs:
       - name: Ad-hoc sign
         run: |
           APP="$RUNNER_TEMP/export/Uncorked.app"
-          # Sign nested bundles (frameworks, dylibs, app extensions) inside-out first
+          # Sign nested bundles (frameworks, dylibs, app extensions) inside-out first.
+          # No --options runtime: hardened runtime requires a real Developer ID cert;
+          # using it with ad-hoc (-) produces an invalid signature that macOS flags as
+          # "damaged" rather than the bypassable "unidentified developer" warning.
           find "$APP" \( -name "*.framework" -o -name "*.dylib" -o -name "*.appex" \) \
             | sort -r \
-            | xargs -I{} codesign --force --options runtime --sign - "{}"
+            | xargs -I{} codesign --force --sign - "{}"
           # Sign the outer app bundle last
-          codesign --force --options runtime --sign - "$APP"
+          codesign --force --sign - "$APP"
 
       - name: Create DMG
         run: |
