@@ -22,7 +22,7 @@ import UncorkedKit
 struct SettingsView: View {
     @AppStorage("SUEnableAutomaticChecks") var uncorkedUpdate = true
     @AppStorage("killOnTerminate") var killOnTerminate = true
-    @AppStorage("checkUncorkedWineUpdates") var checkUncorkedWineUpdates = true
+    @AppStorage("checkEngineUpdates") var checkEngineUpdates = true
     @AppStorage("defaultBottleLocation") var defaultBottleLocation = BottleData.defaultBottleDir
 
     var body: some View {
@@ -49,7 +49,7 @@ struct SettingsView: View {
             }
             Section("settings.updates") {
                 Toggle("settings.toggle.uncorked.updates", isOn: $uncorkedUpdate)
-                Toggle("settings.toggle.uncorkedwine.updates", isOn: $checkUncorkedWineUpdates)
+                Toggle("settings.toggle.engine.updates", isOn: $checkEngineUpdates)
             }
         }
         .formStyle(.grouped)

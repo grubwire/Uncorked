@@ -1,5 +1,5 @@
 //
-//  UncorkedWineInstaller.swift
+//  UncorkedEngine.swift
 //  UncorkedKit
 //
 //  This file is part of Uncorked.
@@ -37,7 +37,7 @@ private struct GcenxAsset: Codable {
     }
 }
 
-public class UncorkedWineInstaller {
+public class UncorkedEngine {
     /// The Uncorked application folder
     public static let applicationFolder = FileManager.default.urls(
         for: .applicationSupportDirectory, in: .userDomainMask
@@ -91,11 +91,11 @@ public class UncorkedWineInstaller {
 
     // MARK: - Public API
 
-    public static func isUncorkedWineInstalled() -> Bool {
-        return uncorkedWineVersion() != nil
+    public static func isEnginePresent() -> Bool {
+        return engineVersion() != nil
     }
 
-    /// Install Wine from a downloaded tar.xz at `from`.
+    /// Install the engine from a downloaded tar.xz at `from`.
     /// Gcenx archives contain a top-level folder (e.g. "Wine Stable/").
     /// We find the extracted folder containing bin/wine64 and move it to Libraries/Wine/.
     public static func install(from: URL, tagName: String? = nil) async {
@@ -126,35 +126,31 @@ public class UncorkedWineInstaller {
                 )
                 return hasBin
             }) else {
-                // Fallback: just use first directory
                 guard let first = extracted.first else {
-                    print("UncorkedWineInstaller: no extracted directory found")
+                    print("UncorkedEngine: no extracted directory found")
                     return
                 }
-                try moveWineRoot(first, tempDir: tempDir, tagName: tagName)
+                try moveEngineRoot(first, tempDir: tempDir, tagName: tagName)
                 return
             }
 
-            try moveWineRoot(wineRoot, tempDir: tempDir, tagName: tagName)
+            try moveEngineRoot(wineRoot, tempDir: tempDir, tagName: tagName)
         } catch {
-            print("Failed to install UncorkedWine: \(error)")
+            print("Failed to install engine: \(error)")
         }
     }
 
-    private static func moveWineRoot(_ wineRoot: URL, tempDir: URL, tagName: String?) throws {
+    private static func moveEngineRoot(_ wineRoot: URL, tempDir: URL, tagName: String?) throws {
         let wineDestination = libraryFolder.appending(path: "Wine")
         try FileManager.default.createDirectory(at: libraryFolder, withIntermediateDirectories: true)
 
-        // Move the extracted Wine folder to Libraries/Wine/
         if FileManager.default.fileExists(atPath: wineDestination.path) {
             try FileManager.default.removeItem(at: wineDestination)
         }
         try FileManager.default.moveItem(at: wineRoot, to: wineDestination)
 
-        // Clean up temp dir
         try? FileManager.default.removeItem(at: tempDir)
 
-        // Write a synthetic UncorkedWineVersion.plist
         let version: SemanticVersion
         if let tag = tagName, let parsed = parseGcenxTag(tag) {
             version = parsed
@@ -166,9 +162,9 @@ public class UncorkedWineInstaller {
 
     private static func writeVersionPlist(_ version: SemanticVersion) throws {
         let versionPlist = libraryFolder
-            .appending(path: "UncorkedWineVersion")
+            .appending(path: "UncorkedEngineVersion")
             .appendingPathExtension("plist")
-        let info = UncorkedWineVersion(version: version)
+        let info = UncorkedEngineVersion(version: version)
         let encoder = PropertyListEncoder()
         encoder.outputFormat = .xml
         let data = try encoder.encode(info)
@@ -179,13 +175,13 @@ public class UncorkedWineInstaller {
         do {
             try FileManager.default.removeItem(at: libraryFolder)
         } catch {
-            print("Failed to uninstall UncorkedWine: \(error)")
+            print("Failed to uninstall engine: \(error)")
         }
     }
 
-    /// Check whether a newer Gcenx Wine build is available.
-    public static func shouldUpdateUncorkedWine() async -> (Bool, SemanticVersion) {
-        let localVersion = uncorkedWineVersion()
+    /// Check whether a newer Gcenx build is available.
+    public static func shouldUpdateEngine() async -> (Bool, SemanticVersion) {
+        let localVersion = engineVersion()
         let remoteVersion = await fetchLatestGcenxVersion()
 
         if let localVersion = localVersion, let remoteVersion = remoteVersion {
@@ -197,23 +193,33 @@ public class UncorkedWineInstaller {
         return (false, SemanticVersion(0, 0, 0))
     }
 
-    public static func uncorkedWineVersion() -> SemanticVersion? {
+    public static func engineVersion() -> SemanticVersion? {
         do {
             let versionPlist = libraryFolder
-                .appending(path: "UncorkedWineVersion")
+                .appending(path: "UncorkedEngineVersion")
                 .appendingPathExtension("plist")
 
             let decoder = PropertyListDecoder()
             let data = try Data(contentsOf: versionPlist)
-            let info = try decoder.decode(UncorkedWineVersion.self, from: data)
+            let info = try decoder.decode(UncorkedEngineVersion.self, from: data)
             return info.version
         } catch {
-            print(error)
-            return nil
+            // Also check legacy plist name from pre-rename installs
+            do {
+                let legacyPlist = libraryFolder
+                    .appending(path: "UncorkedWineVersion")
+                    .appendingPathExtension("plist")
+                let decoder = PropertyListDecoder()
+                let data = try Data(contentsOf: legacyPlist)
+                let info = try decoder.decode(UncorkedEngineVersion.self, from: data)
+                return info.version
+            } catch {
+                return nil
+            }
         }
     }
 }
 
-struct UncorkedWineVersion: Codable {
+struct UncorkedEngineVersion: Codable {
     var version: SemanticVersion = SemanticVersion(1, 0, 0)
 }

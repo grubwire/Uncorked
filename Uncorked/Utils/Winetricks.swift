@@ -42,14 +42,14 @@ struct WinetricksCategory {
 }
 
 class Winetricks {
-    static let winetricksURL: URL = UncorkedWineInstaller.libraryFolder
+    static let winetricksURL: URL = UncorkedEngine.libraryFolder
         .appending(path: "winetricks")
 
     @MainActor static func runCommand(command: String, bottle: Bottle) async {
         guard let resourcesURL = Bundle.main.url(forResource: "cabextract", withExtension: nil)?
             .deletingLastPathComponent() else { return }
         // swiftlint:disable:next line_length
-        let winetricksCmd = #"PATH=\"\#(UncorkedWineInstaller.binFolder.path):\#(resourcesURL.path(percentEncoded: false)):$PATH\" WINE=wine64 WINEPREFIX=\"\#(bottle.url.path)\" \"\#(winetricksURL.path(percentEncoded: false))\" \#(command)"#
+        let winetricksCmd = #"PATH=\"\#(UncorkedEngine.binFolder.path):\#(resourcesURL.path(percentEncoded: false)):$PATH\" WINE=wine64 WINEPREFIX=\"\#(bottle.url.path)\" \"\#(winetricksURL.path(percentEncoded: false))\" \#(command)"#
 
         let script = """
         tell application "Terminal"
@@ -82,7 +82,7 @@ class Winetricks {
 
     static func parseVerbs() async -> [WinetricksCategory] {
         // Grab the verbs file
-        let verbsURL = UncorkedWineInstaller.libraryFolder.appending(path: "verbs.txt")
+        let verbsURL = UncorkedEngine.libraryFolder.appending(path: "verbs.txt")
         let verbs: String = await { () async -> String in
             do {
                 let (data, _) = try await URLSession.shared.data(from: verbsURL)

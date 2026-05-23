@@ -74,8 +74,8 @@ extension FileHandle {
         header += "Bottle Name: \(bottle.settings.name)\n"
         header += "Bottle URL: \(bottle.url.path)\n\n"
 
-        if let version = UncorkedWineInstaller.uncorkedWineVersion() {
-            header += "UncorkedWine Version: \(version.major).\(version.minor).\(version.patch)\n"
+        if let version = UncorkedEngine.engineVersion() {
+            header += "Engine Version: \(version.major).\(version.minor).\(version.patch)\n"
         }
         header += "Windows Version: \(bottle.settings.windowsVersion)\n"
         header += "Enhanced Sync: \(bottle.settings.enhancedSync)\n\n"

@@ -1,5 +1,5 @@
 //
-//  UncorkedWineDownloadView.swift
+//  EngineDownloadView.swift
 //  Uncorked
 //
 //  This file is part of Uncorked.
@@ -76,7 +76,7 @@ func fetchLatestWineDownloadURL() async throws -> (URL, String) {
 
 // MARK: - Download view
 
-struct UncorkedWineDownloadView: View {
+struct EngineDownloadView: View {
     @State private var fractionProgress: Double = 0
     @State private var completedBytes: Int64 = 0
     @State private var totalBytes: Int64 = 0
@@ -91,10 +91,10 @@ struct UncorkedWineDownloadView: View {
     var body: some View {
         VStack {
             VStack {
-                Text("setup.uncorkedwine.download")
+                Text("setup.engine.download")
                     .font(.title)
                     .fontWeight(.bold)
-                Text("setup.uncorkedwine.download.subtitle")
+                Text("setup.engine.download.subtitle")
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
                 Spacer()
@@ -108,12 +108,12 @@ struct UncorkedWineDownloadView: View {
                         ProgressView(value: fractionProgress, total: 1)
                         HStack {
                             HStack {
-                                Text(String(format: String(localized: "setup.uncorkedwine.progress"),
+                                Text(String(format: String(localized: "setup.engine.progress"),
                                             formatBytes(bytes: completedBytes),
                                             formatBytes(bytes: totalBytes)))
                                 + Text(String(" "))
                                 + (shouldShowEstimate() ?
-                                   Text(String(format: String(localized: "setup.uncorkedwine.eta"),
+                                   Text(String(format: String(localized: "setup.engine.eta"),
                                                formatRemainingTime(remainingBytes: totalBytes - completedBytes)))
                                    : Text(String()))
                                 Spacer()
@@ -195,6 +195,6 @@ struct UncorkedWineDownloadView: View {
     }
 
     func proceed() {
-        path.append(.uncorkedWineInstall)
+        path.append(.engineInstall)
     }
 }

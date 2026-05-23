@@ -45,4 +45,4 @@ Built on the shoulders of:
 
 ## License
 
-MIT — same as Whisky upstream.
+GPL-3.0. Uncorked is a fork of Whisky, which is licensed GPL-3.0. See [LICENSE](LICENSE) for details.

@@ -23,7 +23,7 @@ import SemanticVersion
 
 struct ContentView: View {
     @AppStorage("selectedBottleURL") private var selectedBottleURL: URL?
-    @AppStorage("checkUncorkedWineUpdates") private var checkUncorkedWineUpdates = true
+    @AppStorage("checkEngineUpdates") private var checkEngineUpdates = true
     @EnvironmentObject var bottleVM: BottleVM
     @Binding var showSetup: Bool
 
@@ -102,28 +102,28 @@ struct ContentView: View {
                 }
             }
 
-            if !UncorkedWineInstaller.isUncorkedWineInstalled() {
+            if !UncorkedEngine.isEnginePresent() {
                 showSetup = true
             }
             let task = Task.detached {
-                return await UncorkedWineInstaller.shouldUpdateUncorkedWine()
+                return await UncorkedEngine.shouldUpdateEngine()
             }
             let updateInfo = await task.value
-            if checkUncorkedWineUpdates && updateInfo.0 {
+            if checkEngineUpdates && updateInfo.0 {
                 let alert = NSAlert()
-                alert.messageText = String(localized: "update.uncorkedwine.title")
-                alert.informativeText = String(format: String(localized: "update.uncorkedwine.description"),
-                                               String(UncorkedWineInstaller.uncorkedWineVersion()
+                alert.messageText = String(localized: "update.engine.title")
+                alert.informativeText = String(format: String(localized: "update.engine.description"),
+                                               String(UncorkedEngine.engineVersion()
                                                       ?? SemanticVersion(0, 0, 0)),
                                                String(updateInfo.1))
                 alert.alertStyle = .warning
-                alert.addButton(withTitle: String(localized: "update.uncorkedwine.update"))
+                alert.addButton(withTitle: String(localized: "update.engine.update"))
                 alert.addButton(withTitle: String(localized: "button.removeAlert.cancel"))
 
                 let response = alert.runModal()
 
                 if response == .alertFirstButtonReturn {
-                    UncorkedWineInstaller.uninstall()
+                    UncorkedEngine.uninstall()
                     showSetup = true
                 }
             }

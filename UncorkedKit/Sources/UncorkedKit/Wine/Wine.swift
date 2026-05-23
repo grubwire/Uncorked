@@ -22,11 +22,11 @@ import os.log
 @MainActor
 public class Wine {
     /// URL to the installed `DXVK` folder
-    private nonisolated static let dxvkFolder: URL = UncorkedWineInstaller.libraryFolder.appending(path: "DXVK")
+    private nonisolated static let dxvkFolder: URL = UncorkedEngine.libraryFolder.appending(path: "DXVK")
     /// Path to the `wine64` binary
-    public nonisolated static let wineBinary: URL = UncorkedWineInstaller.binFolder.appending(path: "wine64")
+    public nonisolated static let wineBinary: URL = UncorkedEngine.binFolder.appending(path: "wine64")
     /// Parth to the `wineserver` binary
-    private nonisolated static let wineserverBinary: URL = UncorkedWineInstaller.binFolder.appending(path: "wineserver")
+    private nonisolated static let wineserverBinary: URL = UncorkedEngine.binFolder.appending(path: "wineserver")
 
     /// Run a process on a executable file given by the `executableURL`
     private static func runProcess(
@@ -126,7 +126,7 @@ public class Wine {
 
     public static func generateTerminalEnvironmentCommand(bottle: Bottle) -> String {
         var cmd = """
-        export PATH=\"\(UncorkedWineInstaller.binFolder.path):$PATH\"
+        export PATH=\"\(UncorkedEngine.binFolder.path):$PATH\"
         export WINE=\"wine64\"
         alias wine=\"wine64\"
         alias winecfg=\"wine64 winecfg\"

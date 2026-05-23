@@ -1,5 +1,5 @@
 //
-//  UncorkedWineInstallView.swift
+//  EngineInstallView.swift
 //  Uncorked
 //
 //  This file is part of Uncorked.
@@ -19,7 +19,7 @@
 import SwiftUI
 import UncorkedKit
 
-struct UncorkedWineInstallView: View {
+struct EngineInstallView: View {
     @State var installing: Bool = true
     @Binding var tarLocation: URL
     @Binding var wineTagName: String
@@ -29,10 +29,10 @@ struct UncorkedWineInstallView: View {
     var body: some View {
         VStack {
             VStack {
-                Text("setup.uncorkedwine.install")
+                Text("setup.engine.install")
                     .font(.title)
                     .fontWeight(.bold)
-                Text("setup.uncorkedwine.install.subtitle")
+                Text("setup.engine.install.subtitle")
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
                 Spacer()
@@ -55,7 +55,7 @@ struct UncorkedWineInstallView: View {
             Task.detached {
                 let tag = await MainActor.run { wineTagName }
                 let loc = await MainActor.run { tarLocation }
-                await UncorkedWineInstaller.install(from: loc, tagName: tag.isEmpty ? nil : tag)
+                await UncorkedEngine.install(from: loc, tagName: tag.isEmpty ? nil : tag)
                 await MainActor.run {
                     installing = false
                 }

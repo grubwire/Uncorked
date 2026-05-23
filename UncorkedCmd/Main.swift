@@ -210,7 +210,7 @@ extension Uncorked {
     }
 
     struct Install: ParsableCommand {
-        static let configuration = CommandConfiguration(abstract: "Install UncorkedWine.")
+        static let configuration = CommandConfiguration(abstract: "Install the compatibility engine.")
 
         mutating func run() throws {
 
@@ -218,9 +218,9 @@ extension Uncorked {
     }
 
     struct Uninstall: ParsableCommand {
-        static let configuration = CommandConfiguration(abstract: "Uninstall UncorkedWine.")
+        static let configuration = CommandConfiguration(abstract: "Uninstall the compatibility engine.")
 
-        @Flag(name: [.long, .short], help: "Uninstall UncorkedWine") var uncorkedWine = false
+        @Flag(name: [.long, .short], help: "Uninstall the compatibility engine") var engine = false
 
         mutating func run() throws {
 

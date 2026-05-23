@@ -42,7 +42,7 @@ struct ConfigView: View {
 
     var body: some View {
         Form {
-            Section("config.title.wine", isExpanded: $wineSectionExpanded) {
+            Section("config.title.compatibility", isExpanded: $wineSectionExpanded) {
                 SettingItemView(title: "config.winVersion", loadingState: winVersionLoadingState) {
                     Picker("config.winVersion", selection: $bottle.settings.windowsVersion) {
                         ForEach(WinVersion.allCases.reversed(), id: \.self) {
