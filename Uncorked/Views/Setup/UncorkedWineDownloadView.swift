@@ -60,10 +60,12 @@ func fetchLatestGcenxRelease() async throws -> GcenxRelease {
 
 func fetchLatestWineDownloadURL() async throws -> (URL, String) {
     let release = try await fetchLatestGcenxRelease()
-    // Prefer wine-stable tar.xz for arm64/universal
-    guard let asset = release.assets.first(where: {
-        $0.name.contains("wine-stable") && $0.name.hasSuffix(".tar.xz")
-    }) else {
+    let tarAssets = release.assets.filter { $0.name.hasSuffix(".tar.xz") }
+    let asset = tarAssets.first(where: { $0.name.contains("wine-stable") })
+        ?? tarAssets.first(where: { $0.name.contains("wine-staging") })
+        ?? tarAssets.first(where: { $0.name.contains("wine-devel") })
+        ?? tarAssets.first
+    guard let asset = asset else {
         throw UncorkError.noSuitableAsset
     }
     guard let url = URL(string: asset.browserDownloadUrl) else {
