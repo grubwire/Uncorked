@@ -53,36 +53,57 @@ public class UncorkedEngine {
         return info.version
     }
 
-    // MARK: - Install (manifest-based, used from Step 5 setup view onward)
+    // MARK: - Phased install API (used by EngineSetupView)
 
-    /// Downloads, verifies, and installs the engine using the signed manifest.
-    /// Returns the installed engine version.
-    public static func install() async throws -> SemanticVersion {
-        let manifest = try await EngineManifestClient.fetch()
+    /// Fetches the signed manifest from data.grubwire.io and verifies its signature.
+    public static func fetchManifest() async throws -> EngineManifest {
+        try await EngineManifestClient.fetch()
+    }
 
-        guard let downloadURL = URL(string: manifest.url) else { throw URLError(.badURL) }
-        let (archive, response) = try await URLSession.shared.download(from: downloadURL)
+    /// Downloads the archive for `manifest`, streaming bytes to a temp file.
+    /// `progress` is called with (bytesWritten, totalExpected); totalExpected may be -1 if unknown.
+    public static func downloadArchive(
+        manifest: EngineManifest,
+        progress: @escaping @Sendable (Int64, Int64) -> Void
+    ) async throws -> URL {
+        guard let url = URL(string: manifest.url) else { throw URLError(.badURL) }
+        let (byteStream, response) = try await URLSession.shared.bytes(from: url)
         guard let http = response as? HTTPURLResponse, http.statusCode == 200 else {
             throw URLError(.badServerResponse)
         }
-        defer { try? FileManager.default.removeItem(at: archive) }
+        let expected = http.expectedContentLength
 
-        try EngineManifestClient.verifyArchive(at: archive, against: manifest)
+        let dest = FileManager.default.temporaryDirectory
+            .appending(path: UUID().uuidString + ".tar.xz")
+        FileManager.default.createFile(atPath: dest.path, contents: nil)
+        let handle = try FileHandle(forWritingTo: dest)
 
-        let version = parseVersion(manifest.version)
-        try await extract(archive: archive, version: version)
-        return version
+        var buf = Data(capacity: 65536)
+        var written: Int64 = 0
+        for try await byte in byteStream {
+            buf.append(byte)
+            if buf.count >= 65536 {
+                try handle.write(contentsOf: buf)
+                written += Int64(buf.count)
+                buf.removeAll(keepingCapacity: true)
+                progress(written, expected)
+            }
+        }
+        if !buf.isEmpty {
+            try handle.write(contentsOf: buf)
+            written += Int64(buf.count)
+            progress(written, expected)
+        }
+        try handle.close()
+        return dest
     }
 
-    // MARK: - Install (legacy: pre-downloaded archive, used by EngineInstallView until Step 5)
-
-    public static func install(from archive: URL, tagName: String? = nil) async {
-        do {
-            let version = tagName.map { parseVersion($0) } ?? SemanticVersion(0, 0, 0)
-            try await extract(archive: archive, version: version)
-        } catch {
-            print("UncorkedEngine: install failed: \(error)")
-        }
+    /// Verifies the archive SHA-256 against the manifest, then extracts and installs.
+    public static func verifyAndInstall(archive: URL, manifest: EngineManifest) async throws {
+        defer { try? FileManager.default.removeItem(at: archive) }
+        try EngineManifestClient.verifyArchive(at: archive, against: manifest)
+        let version = parseVersion(manifest.version)
+        try await extract(archive: archive, version: version)
     }
 
     // MARK: - Extraction

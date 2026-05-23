@@ -86,27 +86,21 @@ struct RosettaView: View {
     }
 
     func checkOrInstall() async {
-        if Rosetta2.isRosettaInstalled {
+        do {
+            try await RosettaCheck.ensureInstalled()
             installing = false
-            sleep(2)
+            try await Task.sleep(for: .seconds(2))
             proceed()
-        } else {
-            do {
-                successful = try await Rosetta2.installRosetta()
-                installing = false
-                try await Task.sleep(for: .seconds(2))
-                proceed()
-            } catch {
-                successful = false
-                installing = false
-            }
+        } catch {
+            successful = false
+            installing = false
         }
     }
 
     @MainActor
     func proceed() {
         if !UncorkedEngine.isEnginePresent() {
-            path.append(.engineDownload)
+            path.append(.engineSetup)
             return
         }
 

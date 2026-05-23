@@ -83,7 +83,7 @@ struct WelcomeView: View {
                         }
 
                         if !engineInstalled {
-                            path.append(.engineDownload)
+                            path.append(.engineSetup)
                             return
                         }
 
