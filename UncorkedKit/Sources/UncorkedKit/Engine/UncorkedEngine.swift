@@ -19,204 +19,178 @@
 import Foundation
 import SemanticVersion
 
-private struct GcenxRelease: Codable {
-    let tagName: String
-    let assets: [GcenxAsset]
-    enum CodingKeys: String, CodingKey {
-        case tagName = "tag_name"
-        case assets
-    }
-}
-
-private struct GcenxAsset: Codable {
-    let name: String
-    let browserDownloadUrl: String
-    enum CodingKeys: String, CodingKey {
-        case name
-        case browserDownloadUrl = "browser_download_url"
-    }
-}
-
 public class UncorkedEngine {
-    /// The Uncorked application folder
+    /// ~/Library/Application Support/Uncorked
     public static let applicationFolder = FileManager.default.urls(
         for: .applicationSupportDirectory, in: .userDomainMask
-        )[0].appending(path: Bundle.uncorkedBundleIdentifier)
+    )[0].appending(path: Bundle.uncorkedBundleIdentifier)
 
-    /// The folder of all the library files
+    /// ~/Library/Application Support/Uncorked/Libraries
     public static let libraryFolder = applicationFolder.appending(path: "Libraries")
 
-    /// URL to the installed `wine` `bin` directory
-    public static let binFolder: URL = libraryFolder.appending(path: "Wine").appending(path: "bin")
+    /// ~/Library/Application Support/Uncorked/Libraries/Wine/bin
+    public static let binFolder: URL = libraryFolder
+        .appending(path: "Wine")
+        .appending(path: "bin")
 
-    // MARK: - Gcenx GitHub API
-
-    private static let gcenxReleasesAPI = "https://api.github.com/repos/Gcenx/macOS_Wine_builds/releases/latest"
-
-    /// Fetch the latest Gcenx release tag (e.g. "11.9" → SemanticVersion(11, 9, 0))
-    private static func fetchLatestGcenxVersion() async -> SemanticVersion? {
-        guard let apiURL = URL(string: gcenxReleasesAPI) else { return nil }
-        var request = URLRequest(url: apiURL)
-        request.setValue("application/vnd.github+json", forHTTPHeaderField: "Accept")
-        return await withCheckedContinuation { continuation in
-            URLSession(configuration: .ephemeral).dataTask(with: request) { data, _, error in
-                guard error == nil, let data = data else {
-                    continuation.resume(returning: nil)
-                    return
-                }
-                do {
-                    let release = try JSONDecoder().decode(GcenxRelease.self, from: data)
-                    let version = Self.parseGcenxTag(release.tagName)
-                    continuation.resume(returning: version)
-                } catch {
-                    print("Failed to decode Gcenx release: \(error)")
-                    continuation.resume(returning: nil)
-                }
-            }.resume()
-        }
-    }
-
-    /// Parse Gcenx tag format: "wine-stable-11.9" or plain "11.9" → SemanticVersion(11, 9, 0)
-    static func parseGcenxTag(_ tag: String) -> SemanticVersion? {
-        // Strip any non-numeric prefix (e.g. "wine-stable-")
-        let stripped = tag.components(separatedBy: CharacterSet.decimalDigits.inverted)
-            .filter { !$0.isEmpty }
-        guard let major = stripped.first.flatMap({ Int($0) }),
-              let minor = stripped.dropFirst().first.flatMap({ Int($0) }) else {
-            return nil
-        }
-        let patch = stripped.dropFirst(2).first.flatMap { Int($0) } ?? 0
-        return SemanticVersion(major, minor, patch)
-    }
-
-    // MARK: - Public API
+    // MARK: - State
 
     public static func isEnginePresent() -> Bool {
-        return engineVersion() != nil
-    }
-
-    /// Install the engine from a downloaded tar.xz at `from`.
-    /// Gcenx archives contain a top-level folder (e.g. "Wine Stable/").
-    /// We find the extracted folder containing bin/wine64 and move it to Libraries/Wine/.
-    public static func install(from: URL, tagName: String? = nil) async {
-        do {
-            // Ensure a clean application folder
-            if FileManager.default.fileExists(atPath: applicationFolder.path) {
-                try FileManager.default.removeItem(at: applicationFolder)
-            }
-            try FileManager.default.createDirectory(at: applicationFolder, withIntermediateDirectories: true)
-
-            // Extract to a temp directory
-            let tempDir = applicationFolder.appending(path: "_extract_tmp")
-            try FileManager.default.createDirectory(at: tempDir, withIntermediateDirectories: true)
-            try Tar.untar(tarBall: from, toURL: tempDir)
-            try? FileManager.default.removeItem(at: from)
-
-            // Find the extracted Wine folder (the one containing bin/wine64 or bin/wine)
-            let extracted = try FileManager.default.contentsOfDirectory(
-                at: tempDir,
-                includingPropertiesForKeys: [.isDirectoryKey],
-                options: .skipsHiddenFiles
-            )
-            guard let wineRoot = extracted.first(where: { url in
-                let hasBin = FileManager.default.fileExists(
-                    atPath: url.appending(path: "bin/wine64").path
-                ) || FileManager.default.fileExists(
-                    atPath: url.appending(path: "bin/wine").path
-                )
-                return hasBin
-            }) else {
-                guard let first = extracted.first else {
-                    print("UncorkedEngine: no extracted directory found")
-                    return
-                }
-                try moveEngineRoot(first, tempDir: tempDir, tagName: tagName)
-                return
-            }
-
-            try moveEngineRoot(wineRoot, tempDir: tempDir, tagName: tagName)
-        } catch {
-            print("Failed to install engine: \(error)")
-        }
-    }
-
-    private static func moveEngineRoot(_ wineRoot: URL, tempDir: URL, tagName: String?) throws {
-        let wineDestination = libraryFolder.appending(path: "Wine")
-        try FileManager.default.createDirectory(at: libraryFolder, withIntermediateDirectories: true)
-
-        if FileManager.default.fileExists(atPath: wineDestination.path) {
-            try FileManager.default.removeItem(at: wineDestination)
-        }
-        try FileManager.default.moveItem(at: wineRoot, to: wineDestination)
-
-        try? FileManager.default.removeItem(at: tempDir)
-
-        let version: SemanticVersion
-        if let tag = tagName, let parsed = parseGcenxTag(tag) {
-            version = parsed
-        } else {
-            version = SemanticVersion(0, 0, 0)
-        }
-        try writeVersionPlist(version)
-    }
-
-    private static func writeVersionPlist(_ version: SemanticVersion) throws {
-        let versionPlist = libraryFolder
-            .appending(path: "UncorkedEngineVersion")
-            .appendingPathExtension("plist")
-        let info = UncorkedEngineVersion(version: version)
-        let encoder = PropertyListEncoder()
-        encoder.outputFormat = .xml
-        let data = try encoder.encode(info)
-        try data.write(to: versionPlist)
-    }
-
-    public static func uninstall() {
-        do {
-            try FileManager.default.removeItem(at: libraryFolder)
-        } catch {
-            print("Failed to uninstall engine: \(error)")
-        }
-    }
-
-    /// Check whether a newer Gcenx build is available.
-    public static func shouldUpdateEngine() async -> (Bool, SemanticVersion) {
-        let localVersion = engineVersion()
-        let remoteVersion = await fetchLatestGcenxVersion()
-
-        if let localVersion = localVersion, let remoteVersion = remoteVersion {
-            if localVersion < remoteVersion {
-                return (true, remoteVersion)
-            }
-        }
-
-        return (false, SemanticVersion(0, 0, 0))
+        engineVersion() != nil
     }
 
     public static func engineVersion() -> SemanticVersion? {
-        do {
-            let versionPlist = libraryFolder
-                .appending(path: "UncorkedEngineVersion")
-                .appendingPathExtension("plist")
+        if let v = readVersionPlist(named: "UncorkedEngineVersion") { return v }
+        // Fallback for users upgrading from pre-rename installs.
+        return readVersionPlist(named: "UncorkedWineVersion")
+    }
 
-            let decoder = PropertyListDecoder()
-            let data = try Data(contentsOf: versionPlist)
-            let info = try decoder.decode(UncorkedEngineVersion.self, from: data)
-            return info.version
-        } catch {
-            // Also check legacy plist name from pre-rename installs
-            do {
-                let legacyPlist = libraryFolder
-                    .appending(path: "UncorkedWineVersion")
-                    .appendingPathExtension("plist")
-                let decoder = PropertyListDecoder()
-                let data = try Data(contentsOf: legacyPlist)
-                let info = try decoder.decode(UncorkedEngineVersion.self, from: data)
-                return info.version
-            } catch {
-                return nil
-            }
+    private static func readVersionPlist(named name: String) -> SemanticVersion? {
+        let url = libraryFolder.appending(path: name).appendingPathExtension("plist")
+        guard let data = try? Data(contentsOf: url),
+              let info = try? PropertyListDecoder().decode(UncorkedEngineVersion.self, from: data)
+        else { return nil }
+        return info.version
+    }
+
+    // MARK: - Install (manifest-based, used from Step 5 setup view onward)
+
+    /// Downloads, verifies, and installs the engine using the signed manifest.
+    /// Returns the installed engine version.
+    public static func install() async throws -> SemanticVersion {
+        let manifest = try await EngineManifestClient.fetch()
+
+        guard let downloadURL = URL(string: manifest.url) else { throw URLError(.badURL) }
+        let (archive, response) = try await URLSession.shared.download(from: downloadURL)
+        guard let http = response as? HTTPURLResponse, http.statusCode == 200 else {
+            throw URLError(.badServerResponse)
         }
+        defer { try? FileManager.default.removeItem(at: archive) }
+
+        try EngineManifestClient.verifyArchive(at: archive, against: manifest)
+
+        let version = parseVersion(manifest.version)
+        try await extract(archive: archive, version: version)
+        return version
+    }
+
+    // MARK: - Install (legacy: pre-downloaded archive, used by EngineInstallView until Step 5)
+
+    public static func install(from archive: URL, tagName: String? = nil) async {
+        do {
+            let version = tagName.map { parseVersion($0) } ?? SemanticVersion(0, 0, 0)
+            try await extract(archive: archive, version: version)
+        } catch {
+            print("UncorkedEngine: install failed: \(error)")
+        }
+    }
+
+    // MARK: - Extraction
+
+    private static func extract(archive: URL, version: SemanticVersion) async throws {
+        try FileManager.default.createDirectory(at: applicationFolder, withIntermediateDirectories: true)
+
+        let tempDir = applicationFolder.appending(path: "_extract_tmp")
+        if FileManager.default.fileExists(atPath: tempDir.path) {
+            try FileManager.default.removeItem(at: tempDir)
+        }
+        try FileManager.default.createDirectory(at: tempDir, withIntermediateDirectories: true)
+
+        try Tar.untar(tarBall: archive, toURL: tempDir)
+
+        let wineRoot = try findWineRoot(in: tempDir)
+        try clearQuarantine(at: wineRoot)
+
+        let dest = libraryFolder.appending(path: "Wine")
+        try FileManager.default.createDirectory(at: libraryFolder, withIntermediateDirectories: true)
+        if FileManager.default.fileExists(atPath: dest.path) {
+            try FileManager.default.removeItem(at: dest)
+        }
+        try FileManager.default.moveItem(at: wineRoot, to: dest)
+        try? FileManager.default.removeItem(at: tempDir)
+
+        try writeVersionPlist(version)
+    }
+
+    private static func findWineRoot(in dir: URL) throws -> URL {
+        let contents = try FileManager.default.contentsOfDirectory(
+            at: dir, includingPropertiesForKeys: [.isDirectoryKey], options: .skipsHiddenFiles
+        )
+        if let match = contents.first(where: {
+            FileManager.default.fileExists(atPath: $0.appending(path: "bin/wine64").path)
+            || FileManager.default.fileExists(atPath: $0.appending(path: "bin/wine").path)
+        }) { return match }
+        guard let first = contents.first else { throw CocoaError(.fileNoSuchFile) }
+        return first
+    }
+
+    private static func clearQuarantine(at url: URL) throws {
+        let process = Process()
+        process.executableURL = URL(fileURLWithPath: "/usr/bin/xattr")
+        process.arguments = ["-dr", "com.apple.quarantine", url.path]
+        try process.run()
+        process.waitUntilExit()
+    }
+
+    private static func writeVersionPlist(_ version: SemanticVersion) throws {
+        let url = libraryFolder
+            .appending(path: "UncorkedEngineVersion")
+            .appendingPathExtension("plist")
+        let encoder = PropertyListEncoder()
+        encoder.outputFormat = .xml
+        let data = try encoder.encode(UncorkedEngineVersion(version: version))
+        try data.write(to: url)
+    }
+
+    // MARK: - Uninstall
+
+    public static func uninstall() {
+        try? FileManager.default.removeItem(at: libraryFolder)
+    }
+
+    // MARK: - Update check
+
+    /// Returns whether a newer engine is available and the remote version.
+    public static func shouldUpdateEngine() async -> (Bool, SemanticVersion) {
+        guard let local = engineVersion() else { return (false, SemanticVersion(0, 0, 0)) }
+        guard let manifest = try? await EngineManifestClient.fetch() else {
+            return (false, SemanticVersion(0, 0, 0))
+        }
+        let remote = parseVersion(manifest.version)
+        return local < remote ? (true, remote) : (false, remote)
+    }
+
+    // MARK: - Migration cleanup
+
+    /// Deletes a stale engine left in Application Support by older builds.
+    /// Preserves all bottles and wineprefixes. Safe to call on every launch.
+    public static func removeLegacyEngineIfNeeded() {
+        let flagKey = "uncorkedLegacyEngineRemoved"
+        guard !UserDefaults.standard.bool(forKey: flagKey) else { return }
+        UserDefaults.standard.set(true, forKey: flagKey)
+        // The legacy engine lives at Libraries/Wine but has no version plist next to it.
+        // The new managed engine always writes UncorkedEngineVersion.plist, so absence of
+        // that file is the reliable signal that this is a stale pre-managed install.
+        let stale = libraryFolder.appending(path: "Wine")
+        let plist = libraryFolder
+            .appending(path: "UncorkedEngineVersion")
+            .appendingPathExtension("plist")
+        if FileManager.default.fileExists(atPath: stale.path)
+            && !FileManager.default.fileExists(atPath: plist.path)
+        {
+            try? FileManager.default.removeItem(at: stale)
+        }
+    }
+
+    // MARK: - Helpers
+
+    static func parseVersion(_ tag: String) -> SemanticVersion {
+        let parts = tag.components(separatedBy: CharacterSet.decimalDigits.inverted)
+            .filter { !$0.isEmpty }
+        let major = parts.first.flatMap { Int($0) } ?? 0
+        let minor = parts.dropFirst().first.flatMap { Int($0) } ?? 0
+        let patch = parts.dropFirst(2).first.flatMap { Int($0) } ?? 0
+        return SemanticVersion(major, minor, patch)
     }
 }
 
