@@ -14587,7 +14587,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Terminate Wine processes when Uncorked closes"
+            "value" : "Terminate background processes when Uncorked closes"
           }
         },
         "es" : {
@@ -14641,7 +14641,7 @@
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Terminate Wine processes when Uncorked closes"
+            "value" : "Terminate background processes when Uncorked closes"
           }
         },
         "pt-PT" : {
