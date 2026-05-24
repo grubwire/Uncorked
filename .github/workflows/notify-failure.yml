@@ -7,13 +7,13 @@ name: Notify on CI failure
 on:
   workflow_run:
     workflows:
-      - Build and release
+      - Release
       - Bundle engine
       - Promote engine to prod
-      - Engine update check
+      - Check for engine updates
       - Build
       - SwiftLint
-      - CodeQL
+      - CodeQL Advanced
     types: [completed]
 
 jobs:

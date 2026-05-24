@@ -60,7 +60,7 @@ jobs:
 
           Release: ${{ steps.gcenx.outputs.url }}
 
-          To publish: run the **Bundle and publish engine** workflow in the Actions tab.
+          To publish: run the **Bundle engine** workflow in the Actions tab.
 
           Test checklist:
           - [ ] Fresh install: setup flow downloads and installs engine cleanly
