@@ -18,23 +18,21 @@ if [[ -n "${ENGINE_MANIFEST_KEY_FILE:-}" ]]; then
         -in "$MANIFEST" \
         -out "$SIG"
 elif [[ -n "${ENGINE_MANIFEST_SIGNING_KEY:-}" ]]; then
-    # Convert hex seed to PKCS#8 PEM and sign in one pipeline.
-    printf '%s' "$ENGINE_MANIFEST_SIGNING_KEY" \
-        | xxd -r -p \
-        | openssl pkey -inform der -out /tmp/_engine_key.pem \
-            -provider default -provider legacy 2>/dev/null \
-        || openssl pkey -inform raw -in /dev/stdin -pubout > /dev/null 2>&1
-    # Simpler: build a minimal PKCS#8 DER wrapper around the 32-byte seed.
+    # Build a minimal PKCS#8 DER wrapper around the 32-byte seed, then
+    # convert to PEM before signing. pkeyutl -inkey with PEM is universally
+    # supported across OpenSSL versions; -keyform der is not.
     # Ed25519 PKCS#8 DER: 302e 0201 00 3005 0603 2b65 70 0422 0420 <seed>
     KEY_HEX="${ENGINE_MANIFEST_SIGNING_KEY}"
     printf '302e020100300506032b657004220420%s' "$KEY_HEX" \
         | xxd -r -p > /tmp/_engine_sign.der
+    openssl pkey -inform DER -in /tmp/_engine_sign.der \
+        -outform PEM -out /tmp/_engine_sign.pem
     openssl pkeyutl -sign \
-        -keyform der -inkey /tmp/_engine_sign.der \
+        -inkey /tmp/_engine_sign.pem \
         -rawin \
         -in "$MANIFEST" \
         -out "$SIG"
-    rm -f /tmp/_engine_sign.der
+    rm -f /tmp/_engine_sign.der /tmp/_engine_sign.pem
 else
     echo "Error: set ENGINE_MANIFEST_KEY_FILE or ENGINE_MANIFEST_SIGNING_KEY" >&2
     exit 1
