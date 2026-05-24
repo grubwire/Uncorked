@@ -1,6 +1,6 @@
 # Crosswire
 
-Run Windows apps and games on macOS — no scripts, no Terminal, just download and go.
+Run Windows apps and games on macOS. No scripts, no Terminal, just download and go.
 
 Crosswire is a maintained fork of [Whisky](https://github.com/Whisky-App/Whisky), updated to use [Gcenx's actively maintained Wine builds](https://github.com/Gcenx/macOS_Wine_builds) instead of the original archived source.
 
@@ -20,7 +20,7 @@ Double-click the DMG, drag Crosswire to Applications. That's it.
 ## Requirements
 
 - macOS 14 (Sonoma) or later
-- Apple Silicon (M1 or later) — Intel support coming
+- Apple Silicon (M1 or later). Intel support coming.
 
 ## Usage
 
@@ -38,10 +38,10 @@ Crosswire needs an Apple Developer account ($99/year) to distribute signed, nota
 ## Credits
 
 Built on the shoulders of:
-- [Whisky](https://github.com/Whisky-App/Whisky) by Isaac Marovitz — the original GUI
-- [Gcenx/macOS_Wine_builds](https://github.com/Gcenx/macOS_Wine_builds) — actively maintained Wine for macOS
-- [Wine](https://www.winehq.org/) — the core compatibility layer
-- [CodeWeavers](https://www.codeweavers.com/) — primary Wine contributor
+- [Whisky](https://github.com/Whisky-App/Whisky) by Isaac Marovitz, the original GUI
+- [Gcenx/macOS_Wine_builds](https://github.com/Gcenx/macOS_Wine_builds), actively maintained Wine for macOS
+- [Wine](https://www.winehq.org/), the core compatibility layer
+- [CodeWeavers](https://www.codeweavers.com/), primary Wine contributor
 
 ## License
 
