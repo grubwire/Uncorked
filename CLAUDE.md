@@ -81,10 +81,10 @@ engine-version.json  (sibling to Engine/, in Application Support/Uncorked/)
 
 Manifest is signed with Ed25519 (CryptoKit `Curve25519.Signing`).
 
-- Public key (embedded in `EngineManifest.swift`): `ad4fd39031fd57c059eb5a70b15f42e2271d4b7d722a34a98874126c30c4cbe2`
+- Public key (embedded in `EngineManifest.swift`): `51c6ffe71ee5c92539aeb87c3b348e9b5914f7c03c3811da09be60b06cd822fc`
 - Private key (hex seed): stored in GitHub secret `ENGINE_MANIFEST_SIGNING_KEY`
   - PEM backup at `~/.engine-manifest-key.txt` on nick-dev-01 (NOT in repo)
-  - Key rotated 2026-05-24 (previous seed was exposed in session transcript)
+  - Key rotated 2026-05-24 (second rotation; prior seed exposed in session transcript)
   - To sign: `bash scripts/sign-manifest.sh /path/to/engine-manifest.json`
 
 ## Engine Version State
