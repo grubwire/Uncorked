@@ -52,9 +52,6 @@ jobs:
           test -f "/tmp/artifact/engine-manifest.json" || { echo "Missing manifest"; exit 1; }
           test -f "/tmp/artifact/engine-manifest.json.sig" || { echo "Missing signature"; exit 1; }
 
-      - name: Install AWS CLI
-        run: pip install awscli --quiet
-
       - name: Upload archive to R2 (immutable version-specific path)
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
@@ -79,11 +76,13 @@ jobs:
           aws s3 cp /tmp/artifact/engine-manifest.json \
             "s3://${R2_BUCKET}/engine/prod/engine-manifest.json" \
             --endpoint-url "$R2_ENDPOINT" \
-            --content-type "application/json"
+            --content-type "application/json" \
+            --cache-control "no-cache, no-store, must-revalidate"
           aws s3 cp /tmp/artifact/engine-manifest.json.sig \
             "s3://${R2_BUCKET}/engine/prod/engine-manifest.json.sig" \
             --endpoint-url "$R2_ENDPOINT" \
-            --content-type "application/octet-stream"
+            --content-type "application/octet-stream" \
+            --cache-control "no-cache, no-store, must-revalidate"
 
       - name: Update engine-version.txt and push
         run: |

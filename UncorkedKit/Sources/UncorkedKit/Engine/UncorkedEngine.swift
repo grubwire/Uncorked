@@ -198,8 +198,11 @@ public class UncorkedEngine {
             at: dir, includingPropertiesForKeys: [.isDirectoryKey], options: .skipsHiddenFiles
         )
         // The archive contains one top-level directory named "engine/".
+        // Check for uncorked64 (generated wrapper present in all Uncorked engine archives)
+        // with wine64/wine as fallbacks for robustness.
         if let match = contents.first(where: {
-            FileManager.default.fileExists(atPath: $0.appending(path: "bin/wine64").path)
+            FileManager.default.fileExists(atPath: $0.appending(path: "bin/uncorked64").path)
+            || FileManager.default.fileExists(atPath: $0.appending(path: "bin/wine64").path)
             || FileManager.default.fileExists(atPath: $0.appending(path: "bin/wine").path)
         }) { return match }
         guard let first = contents.first else { throw CocoaError(.fileNoSuchFile) }
