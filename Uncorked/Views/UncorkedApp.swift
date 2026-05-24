@@ -136,8 +136,8 @@ struct UncorkedApp: App {
 
     @MainActor private func openAboutWindow() {
         let existing = NSApp.windows.first { $0.title == "About Uncorked" }
-        if let w = existing {
-            w.makeKeyAndOrderFront(nil)
+        if let existingWindow = existing {
+            existingWindow.makeKeyAndOrderFront(nil)
             return
         }
         let view = NSHostingView(rootView: AboutView())
@@ -155,8 +155,8 @@ struct UncorkedApp: App {
 
     @MainActor private func openDiagnosticsWindow() {
         let existing = NSApp.windows.first { $0.title == "Diagnostics" }
-        if let w = existing {
-            w.makeKeyAndOrderFront(nil)
+        if let existingWindow = existing {
+            existingWindow.makeKeyAndOrderFront(nil)
             return
         }
         let view = NSHostingView(rootView: DiagnosticsView())

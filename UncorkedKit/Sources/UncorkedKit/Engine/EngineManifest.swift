@@ -61,14 +61,14 @@ public enum EngineManifestClient {
     // DEBUG builds read the staging copy to keep test traffic off the prod manifest.
     #if DEBUG
     private static let engineManifestURL =
-        URL(string: "https://data.grubwire.io/engine/staging/engine-manifest.json")!
+        URL(staticString: "https://data.grubwire.io/engine/staging/engine-manifest.json")
     private static let engineManifestSigURL =
-        URL(string: "https://data.grubwire.io/engine/staging/engine-manifest.json.sig")!
+        URL(staticString: "https://data.grubwire.io/engine/staging/engine-manifest.json.sig")
     #else
     private static let engineManifestURL =
-        URL(string: "https://data.grubwire.io/engine/prod/engine-manifest.json")!
+        URL(staticString: "https://data.grubwire.io/engine/prod/engine-manifest.json")
     private static let engineManifestSigURL =
-        URL(string: "https://data.grubwire.io/engine/prod/engine-manifest.json.sig")!
+        URL(staticString: "https://data.grubwire.io/engine/prod/engine-manifest.json.sig")
     #endif
 
     /// Fetches, signature-verifies, and decodes the engine manifest.
@@ -94,8 +94,7 @@ public enum EngineManifestClient {
         defer { try? handle.close() }
         let chunkSize = 1024 * 1024
         while true {
-            let chunk = try handle.read(upToCount: chunkSize)
-            guard !chunk.isEmpty else { break }
+            guard let chunk = try handle.read(upToCount: chunkSize), !chunk.isEmpty else { break }
             hasher.update(data: chunk)
         }
         let digest = hasher.finalize()

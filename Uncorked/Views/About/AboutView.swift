@@ -96,12 +96,16 @@ struct AboutView: View {
             // License and links
             HStack(spacing: 16) {
                 Button("GPL-3.0 License") {
-                    openURL(URL(string: "https://github.com/grubwire/uncorked/blob/main/LICENSE")!)
+                    if let url = URL(string: "https://github.com/grubwire/uncorked/blob/main/LICENSE") {
+                        openURL(url)
+                    }
                 }
                 .buttonStyle(.link)
 
                 Button("Source Code") {
-                    openURL(URL(string: "https://github.com/grubwire/uncorked")!)
+                    if let url = URL(string: "https://github.com/grubwire/uncorked") {
+                        openURL(url)
+                    }
                 }
                 .buttonStyle(.link)
             }
@@ -123,7 +127,7 @@ private struct AcknowledgementRow: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
             Button(title) {
-                if let u = URL(string: url) { openURL(u) }
+                if let linkURL = URL(string: url) { openURL(linkURL) }
             }
             .buttonStyle(.link)
             .font(.subheadline)
