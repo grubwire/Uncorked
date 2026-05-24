@@ -59,17 +59,15 @@ public enum EngineManifestClient {
     // MARK: - Manifest URL (single isolated config value)
     // Stage 1: always prod. Switch to beta channel URL when the beta system is built (Part 2).
     // DEBUG builds read the staging copy to keep test traffic off the prod manifest.
+    // swiftlint:disable force_unwrapping line_length
     #if DEBUG
-    // swiftlint:disable:next force_unwrapping
-    private static let engineManifestURL = URL(string: "https://data.grubwire.io/engine/staging/engine-manifest.json")!
-    // swiftlint:disable:next force_unwrapping
+    private static let engineManifestURL    = URL(string: "https://data.grubwire.io/engine/staging/engine-manifest.json")!
     private static let engineManifestSigURL = URL(string: "https://data.grubwire.io/engine/staging/engine-manifest.json.sig")!
     #else
-    // swiftlint:disable:next force_unwrapping
-    private static let engineManifestURL = URL(string: "https://data.grubwire.io/engine/prod/engine-manifest.json")!
-    // swiftlint:disable:next force_unwrapping
+    private static let engineManifestURL    = URL(string: "https://data.grubwire.io/engine/prod/engine-manifest.json")!
     private static let engineManifestSigURL = URL(string: "https://data.grubwire.io/engine/prod/engine-manifest.json.sig")!
     #endif
+    // swiftlint:enable force_unwrapping line_length
 
     /// Fetches, signature-verifies, and decodes the engine manifest.
     public static func fetch() async throws -> EngineManifest {
