@@ -87,25 +87,47 @@ jobs:
         run: bash scripts/sign-engine.sh /tmp/engine
 
       - name: Boot smoke test
+        id: smoke_test
         run: |
           # Initialize a throwaway prefix with uncorkedboot and verify wine64 reports a version.
           # A failure here means the engine cannot launch; stop and produce no artifact.
-          export TMPPREFIX=$(mktemp -d)
-          /tmp/engine/bin/uncorkedboot --init "$TMPPREFIX" || {
-            echo "::error::uncorkedboot init failed -- engine cannot launch. Aborting."
+          # wineboot reads the prefix location from WINEPREFIX, not a positional argument.
+          WINEPREFIX=$(mktemp -d)
+          export WINEPREFIX
+          WINEPREFIX="$WINEPREFIX" /tmp/engine/bin/uncorkedboot --init || {
+            echo "::error::uncorkedboot --init failed -- engine cannot launch. Aborting."
+            rm -rf "$WINEPREFIX"
             exit 1
           }
           VERSION=$(/tmp/engine/bin/wine64 --version 2>/dev/null) || {
             echo "::error::wine64 --version failed. Aborting."
+            rm -rf "$WINEPREFIX"
             exit 1
           }
           echo "Smoke test passed: $VERSION"
-          rm -rf "$TMPPREFIX"
+          rm -rf "$WINEPREFIX"
+
+      - name: Open issue on smoke test failure
+        if: failure() && steps.smoke_test.outcome == 'failure'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TAG="${{ steps.gcenx.outputs.tag }}"
+          gh issue create \
+            --repo "${{ github.repository }}" \
+            --title "Engine ${TAG} failed smoke test" \
+            --body "Engine **${TAG}** downloaded from Gcenx but failed the boot smoke test.
+
+          The engine binary could not launch or \`wine64 --version\` returned an error.
+          No artifact was produced. Do not promote this engine to prod.
+
+          Run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
 
       - name: Measure uncompressed engine size
         id: sizes
         run: |
-          SIZE=$(du -sb /tmp/engine | awk '{print $1}')
+          # macOS du uses BSD syntax: -sk gives kibibytes; multiply by 1024 for bytes.
+          SIZE=$(du -sk /tmp/engine | awk '{print $1 * 1024}')
           echo "size_bytes=${SIZE}" >> $GITHUB_OUTPUT
 
       - name: Repack as tar.xz
