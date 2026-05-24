@@ -1,6 +1,6 @@
 name: Release
 
-# Builds, signs (ad-hoc Phase 1), and publishes the Uncorked app.
+# Builds, signs (ad-hoc Phase 1), and publishes the Crosswire app.
 # The compatibility engine is separately published to data.grubwire.io
 # via engine-bundle.yml; it is not bundled here.
 #
@@ -27,21 +27,21 @@ jobs:
       - name: Archive
         run: |
           xcodebuild archive \
-            -scheme Uncorked \
+            -scheme Crosswire \
             -configuration Release \
-            -archivePath "$RUNNER_TEMP/Uncorked.xcarchive" \
+            -archivePath "$RUNNER_TEMP/Crosswire.xcarchive" \
             CODE_SIGNING_ALLOWED=NO
 
       - name: Export app
         run: |
           xcodebuild -exportArchive \
-            -archivePath "$RUNNER_TEMP/Uncorked.xcarchive" \
+            -archivePath "$RUNNER_TEMP/Crosswire.xcarchive" \
             -exportPath "$RUNNER_TEMP/export" \
             -exportOptionsPlist ExportOptions-unsigned.plist
 
       - name: Ad-hoc sign (Phase 1)
         run: |
-          APP="$RUNNER_TEMP/export/Uncorked.app"
+          APP="$RUNNER_TEMP/export/Crosswire.app"
           # Sign nested bundles inside-out first.
           # No --options runtime: requires a real Developer ID cert; using it
           # with ad-hoc (-) produces a "damaged" signature on Gatekeeper.
@@ -53,17 +53,17 @@ jobs:
       - name: Create DMG
         run: |
           create-dmg \
-            --volname "Uncorked" \
+            --volname "Crosswire" \
             --window-pos 200 120 \
             --window-size 660 400 \
             --icon-size 128 \
-            --icon "Uncorked.app" 200 185 \
-            --hide-extension "Uncorked.app" \
+            --icon "Crosswire.app" 200 185 \
+            --hide-extension "Crosswire.app" \
             --app-drop-link 460 185 \
-            "$RUNNER_TEMP/Uncorked-${{ github.ref_name }}.dmg" \
+            "$RUNNER_TEMP/Crosswire-${{ github.ref_name }}.dmg" \
             "$RUNNER_TEMP/export/"
           # Stable filename for the grubwire.io download link
-          cp "$RUNNER_TEMP/Uncorked-${{ github.ref_name }}.dmg" "$RUNNER_TEMP/Uncorked.dmg"
+          cp "$RUNNER_TEMP/Crosswire-${{ github.ref_name }}.dmg" "$RUNNER_TEMP/Crosswire.dmg"
 
       - name: Create GitHub release
         uses: softprops/action-gh-release@v3.0.0
@@ -71,5 +71,5 @@ jobs:
           draft: true
           generate_release_notes: true
           files: |
-            ${{ runner.temp }}/Uncorked-${{ github.ref_name }}.dmg
-            ${{ runner.temp }}/Uncorked.dmg
+            ${{ runner.temp }}/Crosswire-${{ github.ref_name }}.dmg
+            ${{ runner.temp }}/Crosswire.dmg

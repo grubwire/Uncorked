@@ -3,9 +3,9 @@
     xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle"
     xmlns:dc="http://purl.org/dc/elements/1.1/">
     <channel>
-        <title>Uncorked</title>
-        <link>https://github.com/grubwire/uncorked</link>
-        <description>Uncorked changelog</description>
+        <title>Crosswire</title>
+        <link>https://github.com/grubwire/Crosswire</link>
+        <description>Crosswire changelog</description>
         <language>en</language>
     </channel>
 </rss>

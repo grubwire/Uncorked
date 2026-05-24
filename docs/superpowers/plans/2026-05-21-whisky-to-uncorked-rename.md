@@ -1,8 +1,8 @@
-# Whisky → Uncorked Rename Implementation Plan
+# Whisky → Crosswire Rename Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Remove all "Whisky"/"whisky" references from the Uncorked codebase, replacing with "Uncorked"/"uncorked" equivalents, without breaking the build.
+**Goal:** Remove all "Whisky"/"whisky" references from the Crosswire codebase, replacing with "Crosswire"/"Crosswire" equivalents, without breaking the build.
 
 **Architecture:** Two phases — Phase 1 touches only user-visible text (no build impact, one commit); Phase 2 renames Swift types, files, directories, and the Xcode package in four sub-steps each ending with a CI build verify before continuing.
 
@@ -21,14 +21,14 @@
 
 ```powershell
 powershell.exe -NoProfile -Command "
-Get-ChildItem -Recurse 'D:\grubwire\uncorked' -Include '*.swift' |
+Get-ChildItem -Recurse 'D:\grubwire\Crosswire' -Include '*.swift' |
 ForEach-Object {
     \$c = Get-Content \$_.FullName -Raw
     if (\$c -match 'This file is part of Whisky') {
-        \$c = \$c -replace 'This file is part of Whisky\.', 'This file is part of Uncorked.'
-        \$c = \$c -replace 'Whisky is free software:', 'Uncorked is free software:'
-        \$c = \$c -replace 'Whisky is distributed in the hope', 'Uncorked is distributed in the hope'
-        \$c = \$c -replace 'along with Whisky\.', 'along with Uncorked.'
+        \$c = \$c -replace 'This file is part of Whisky\.', 'This file is part of Crosswire.'
+        \$c = \$c -replace 'Whisky is free software:', 'Crosswire is free software:'
+        \$c = \$c -replace 'Whisky is distributed in the hope', 'Crosswire is distributed in the hope'
+        \$c = \$c -replace 'along with Whisky\.', 'along with Crosswire.'
         Set-Content \$_.FullName \$c -NoNewline
     }
 }
@@ -40,7 +40,7 @@ Write-Host 'Done'
 
 ```powershell
 powershell.exe -NoProfile -Command "
-Get-ChildItem -Recurse 'D:\grubwire\uncorked' -Include '*.swift' |
+Get-ChildItem -Recurse 'D:\grubwire\Crosswire' -Include '*.swift' |
 Select-String -Pattern 'This file is part of Whisky' |
 Select-Object Filename, LineNumber, Line
 "
@@ -59,12 +59,12 @@ Expected: no output.
 
 ```powershell
 powershell.exe -NoProfile -Command "
-\$path = 'D:\grubwire\uncorked\.swiftlint.yml'
+\$path = 'D:\grubwire\Crosswire\.swiftlint.yml'
 \$c = Get-Content \$path -Raw
-\$c = \$c -replace 'This file is part of Whisky\.', 'This file is part of Uncorked.'
-\$c = \$c -replace 'Whisky is free software:', 'Uncorked is free software:'
-\$c = \$c -replace 'Whisky is distributed in the hope', 'Uncorked is distributed in the hope'
-\$c = \$c -replace 'along with Whisky\.', 'along with Uncorked.'
+\$c = \$c -replace 'This file is part of Whisky\.', 'This file is part of Crosswire.'
+\$c = \$c -replace 'Whisky is free software:', 'Crosswire is free software:'
+\$c = \$c -replace 'Whisky is distributed in the hope', 'Crosswire is distributed in the hope'
+\$c = \$c -replace 'along with Whisky\.', 'along with Crosswire.'
 Set-Content \$path \$c -NoNewline
 Write-Host 'Done'
 "
@@ -73,7 +73,7 @@ Write-Host 'Done'
 - [ ] **Step 2: Verify**
 
 ```powershell
-powershell.exe -NoProfile -Command "Select-String -Path 'D:\grubwire\uncorked\.swiftlint.yml' -Pattern 'Whisky'"
+powershell.exe -NoProfile -Command "Select-String -Path 'D:\grubwire\Crosswire\.swiftlint.yml' -Pattern 'Whisky'"
 ```
 
 Expected: no output.
@@ -89,18 +89,18 @@ Expected: no output.
 
 ```powershell
 powershell.exe -NoProfile -Command "
-\$path = 'D:\grubwire\uncorked\Whisky\Localizable.xcstrings'
+\$path = 'D:\grubwire\Crosswire\Whisky\Localizable.xcstrings'
 \$c = Get-Content \$path -Raw
-\$c = \$c -replace 'Install Whisky CLI\.\.\.', 'Install Uncorked CLI...'
-\$c = \$c -replace 'Terminate Wine processes when Whisky closes', 'Terminate Wine processes when Uncorked closes'
-\$c = \$c -replace 'Automatically check for Whisky updates', 'Automatically check for Uncorked updates'
-\$c = \$c -replace 'Automatically check for WhiskyWine updates', 'Automatically check for UncorkedWine updates'
-\$c = \$c -replace 'Manage Whisky''s required dependencies\.', \"Manage Uncorked's required dependencies.\"
-\$c = \$c -replace 'Welcome to Whisky', 'Welcome to Uncorked'
-\$c = \$c -replace 'Downloading WhiskyWine', 'Downloading UncorkedWine'
-\$c = \$c -replace 'Installing WhiskyWine', 'Installing UncorkedWine'
-\$c = \$c -replace 'New Version of WhiskyWine Available', 'New Version of UncorkedWine Available'
-\$c = \$c -replace 'running WhiskyWine', 'running UncorkedWine'
+\$c = \$c -replace 'Install Whisky CLI\.\.\.', 'Install Crosswire CLI...'
+\$c = \$c -replace 'Terminate Wine processes when Whisky closes', 'Terminate Wine processes when Crosswire closes'
+\$c = \$c -replace 'Automatically check for Whisky updates', 'Automatically check for Crosswire updates'
+\$c = \$c -replace 'Automatically check for WhiskyWine updates', 'Automatically check for CrosswireWine updates'
+\$c = \$c -replace 'Manage Whisky''s required dependencies\.', \"Manage Crosswire's required dependencies.\"
+\$c = \$c -replace 'Welcome to Whisky', 'Welcome to Crosswire'
+\$c = \$c -replace 'Downloading WhiskyWine', 'Downloading CrosswireWine'
+\$c = \$c -replace 'Installing WhiskyWine', 'Installing CrosswireWine'
+\$c = \$c -replace 'New Version of WhiskyWine Available', 'New Version of CrosswireWine Available'
+\$c = \$c -replace 'running WhiskyWine', 'running CrosswireWine'
 Set-Content \$path \$c -NoNewline
 Write-Host 'Done'
 "
@@ -110,7 +110,7 @@ Write-Host 'Done'
 
 ```powershell
 powershell.exe -NoProfile -Command "
-\$content = Get-Content 'D:\grubwire\uncorked\Whisky\Localizable.xcstrings' -Raw | ConvertFrom-Json
+\$content = Get-Content 'D:\grubwire\Crosswire\Whisky\Localizable.xcstrings' -Raw | ConvertFrom-Json
 \$content.strings.PSObject.Properties |
     Where-Object { \$_.Value.localizations.en.stringUnit.value -match 'Whisky' } |
     ForEach-Object { Write-Host \"\$(\$_.Name): \$(\$_.Value.localizations.en.stringUnit.value)\" }
@@ -128,11 +128,11 @@ Expected: no output (no remaining English Whisky values).
 
 - [ ] **Step 1: Update non-attribution Whisky references**
 
-Keep lines 5, 9, 41, 48 that refer to the upstream project (attribution). Update any that describe Uncorked as "Whisky":
+Keep lines 5, 9, 41, 48 that refer to the upstream project (attribution). Update any that describe Crosswire as "Whisky":
 
 ```powershell
 powershell.exe -NoProfile -Command "
-\$path = 'D:\grubwire\uncorked\README.md'
+\$path = 'D:\grubwire\Crosswire\README.md'
 \$c = Get-Content \$path -Raw
 # Only update 'Whisky was archived' context line that says Whisky as if it's this app
 # Attribution lines (linking to Whisky-App/Whisky) are left intact
@@ -155,11 +155,11 @@ Write-Host 'Done'
 
 ```powershell
 powershell.exe -NoProfile -Command "
-\$path = 'D:\grubwire\uncorked\CONTRIBUTING.md'
+\$path = 'D:\grubwire\Crosswire\CONTRIBUTING.md'
 \$c = Get-Content \$path -Raw
-\$c = \$c -replace 'make a fork of Whisky', 'make a fork of Uncorked'
-\$c = \$c -replace 'Whisky is built using', 'Uncorked is built using'
-\$c = \$c -replace 'Every Whisky commit', 'Every Uncorked commit'
+\$c = \$c -replace 'make a fork of Whisky', 'make a fork of Crosswire'
+\$c = \$c -replace 'Whisky is built using', 'Crosswire is built using'
+\$c = \$c -replace 'Every Whisky commit', 'Every Crosswire commit'
 Set-Content \$path \$c -NoNewline
 Write-Host 'Done'
 "
@@ -169,9 +169,9 @@ Write-Host 'Done'
 
 ```powershell
 powershell.exe -NoProfile -Command "
-\$path = 'D:\grubwire\uncorked\CODE_OF_CONDUCT.md'
+\$path = 'D:\grubwire\Crosswire\CODE_OF_CONDUCT.md'
 \$c = Get-Content \$path -Raw
-\$c = \$c -replace 'Whisky Discord', 'Uncorked Discord'
+\$c = \$c -replace 'Whisky Discord', 'Crosswire Discord'
 Set-Content \$path \$c -NoNewline
 Write-Host 'Done'
 "
@@ -180,7 +180,7 @@ Write-Host 'Done'
 - [ ] **Step 3: Verify**
 
 ```powershell
-powershell.exe -NoProfile -Command "Select-String -Path 'D:\grubwire\uncorked\CONTRIBUTING.md','D:\grubwire\uncorked\CODE_OF_CONDUCT.md' -Pattern 'Whisky' | Select-Object Filename, LineNumber, Line"
+powershell.exe -NoProfile -Command "Select-String -Path 'D:\grubwire\Crosswire\CONTRIBUTING.md','D:\grubwire\Crosswire\CODE_OF_CONDUCT.md' -Pattern 'Whisky' | Select-Object Filename, LineNumber, Line"
 ```
 
 Expected: no output.
@@ -196,11 +196,11 @@ Expected: no output.
 
 ```powershell
 powershell.exe -NoProfile -Command "
-\$path = 'D:\grubwire\uncorked\.github\ISSUE_TEMPLATE\bug.yml'
+\$path = 'D:\grubwire\Crosswire\.github\ISSUE_TEMPLATE\bug.yml'
 \$c = Get-Content \$path -Raw
-\$c = \$c -replace 'id: whisky-version', 'id: uncorked-version'
-\$c = \$c -replace 'What version of Whisky are you using\?', 'What version of Uncorked are you using?'
-\$c = \$c -replace 'pressing `CMD \+ L` in Whisky', 'pressing `CMD + L` in Uncorked'
+\$c = \$c -replace 'id: whisky-version', 'id: Crosswire-version'
+\$c = \$c -replace 'What version of Whisky are you using\?', 'What version of Crosswire are you using?'
+\$c = \$c -replace 'pressing `CMD \+ L` in Whisky', 'pressing `CMD + L` in Crosswire'
 Set-Content \$path \$c -NoNewline
 Write-Host 'Done'
 "
@@ -209,7 +209,7 @@ Write-Host 'Done'
 - [ ] **Step 2: Verify**
 
 ```powershell
-powershell.exe -NoProfile -Command "Select-String -Path 'D:\grubwire\uncorked\.github\ISSUE_TEMPLATE\bug.yml' -Pattern 'Whisky|whisky' | Select-Object LineNumber, Line"
+powershell.exe -NoProfile -Command "Select-String -Path 'D:\grubwire\Crosswire\.github\ISSUE_TEMPLATE\bug.yml' -Pattern 'Whisky|whisky' | Select-Object LineNumber, Line"
 ```
 
 Expected: no output.
@@ -225,9 +225,9 @@ Expected: no output.
 
 ```powershell
 powershell.exe -NoProfile -Command "
-\$path = 'D:\grubwire\uncorked\.github\workflows\wine-update-check.yml'
+\$path = 'D:\grubwire\Crosswire\.github\workflows\wine-update-check.yml'
 \$c = Get-Content \$path -Raw
-\$c = \$c -replace 'WhiskyWineInstaller\.parseGcenxTag', 'UncorkedWineInstaller.parseGcenxTag'
+\$c = \$c -replace 'WhiskyWineInstaller\.parseGcenxTag', 'CrosswireWineInstaller.parseGcenxTag'
 Set-Content \$path \$c -NoNewline
 Write-Host 'Done'
 "
@@ -236,7 +236,7 @@ Write-Host 'Done'
 - [ ] **Step 2: Verify**
 
 ```powershell
-powershell.exe -NoProfile -Command "Select-String -Path 'D:\grubwire\uncorked\.github\workflows\wine-update-check.yml' -Pattern 'Whisky' | Select-Object LineNumber, Line"
+powershell.exe -NoProfile -Command "Select-String -Path 'D:\grubwire\Crosswire\.github\workflows\wine-update-check.yml' -Pattern 'Whisky' | Select-Object LineNumber, Line"
 ```
 
 Expected: no output.
@@ -248,7 +248,7 @@ Expected: no output.
 - [ ] **Step 1: Stage all changes**
 
 ```bash
-cd "D:/grubwire/uncorked"
+cd "D:/grubwire/Crosswire"
 git add -A
 git status
 ```
@@ -258,7 +258,7 @@ Verify only the expected files are staged (no binary files, no unexpected change
 - [ ] **Step 2: Commit**
 
 ```bash
-git commit -m "Replace user-visible Whisky references with Uncorked
+git commit -m "Replace user-visible Whisky references with Crosswire
 
 Updates GPL headers, localizable strings, README, CONTRIBUTING,
 CODE_OF_CONDUCT, issue template, and workflow checklist text."
@@ -270,7 +270,7 @@ CODE_OF_CONDUCT, issue template, and workflow checklist text."
 git push origin main
 ```
 
-Then open https://github.com/grubwire/Uncorked/actions and confirm `Build` workflow passes on this commit before continuing to Phase 2.
+Then open https://github.com/grubwire/Crosswire/actions and confirm `Build` workflow passes on this commit before continuing to Phase 2.
 
 ---
 
@@ -290,15 +290,15 @@ No file moves, no project.pbxproj changes in this step.
 - Modify: `Whisky/Views/Setup/WhiskyWineInstallView.swift`
 - Modify: all files referencing the above types
 
-- [ ] **Step 1: Rename `WhiskyApp` → `UncorkedApp` everywhere**
+- [ ] **Step 1: Rename `WhiskyApp` → `CrosswireApp` everywhere**
 
 ```powershell
 powershell.exe -NoProfile -Command "
-Get-ChildItem -Recurse 'D:\grubwire\uncorked' -Include '*.swift' |
+Get-ChildItem -Recurse 'D:\grubwire\Crosswire' -Include '*.swift' |
 ForEach-Object {
     \$c = Get-Content \$_.FullName -Raw
     if (\$c -match 'WhiskyApp') {
-        \$c = \$c -replace 'WhiskyApp', 'UncorkedApp'
+        \$c = \$c -replace 'WhiskyApp', 'CrosswireApp'
         Set-Content \$_.FullName \$c -NoNewline
     }
 }
@@ -306,15 +306,15 @@ Write-Host 'Done'
 "
 ```
 
-- [ ] **Step 2: Rename `WhiskyCmd` class/struct → `UncorkedCmd`**
+- [ ] **Step 2: Rename `WhiskyCmd` class/struct → `CrosswireCmd`**
 
 ```powershell
 powershell.exe -NoProfile -Command "
-Get-ChildItem -Recurse 'D:\grubwire\uncorked' -Include '*.swift' |
+Get-ChildItem -Recurse 'D:\grubwire\Crosswire' -Include '*.swift' |
 ForEach-Object {
     \$c = Get-Content \$_.FullName -Raw
     if (\$c -match 'WhiskyCmd') {
-        \$c = \$c -replace 'WhiskyCmd', 'UncorkedCmd'
+        \$c = \$c -replace 'WhiskyCmd', 'CrosswireCmd'
         Set-Content \$_.FullName \$c -NoNewline
     }
 }
@@ -322,29 +322,29 @@ Write-Host 'Done'
 "
 ```
 
-- [ ] **Step 3: Rename CLI struct `Whisky` → `Uncorked` in `WhiskyCmd/Main.swift`**
+- [ ] **Step 3: Rename CLI struct `Whisky` → `Crosswire` in `WhiskyCmd/Main.swift`**
 
 ```powershell
 powershell.exe -NoProfile -Command "
-\$path = 'D:\grubwire\uncorked\WhiskyCmd\Main.swift'
+\$path = 'D:\grubwire\Crosswire\WhiskyCmd\Main.swift'
 \$c = Get-Content \$path -Raw
-\$c = \$c -replace 'struct Whisky:', 'struct Uncorked:'
-\$c = \$c -replace 'Whisky\.main\(\)', 'Uncorked.main()'
+\$c = \$c -replace 'struct Whisky:', 'struct Crosswire:'
+\$c = \$c -replace 'Whisky\.main\(\)', 'Crosswire.main()'
 Set-Content \$path \$c -NoNewline
 Write-Host 'Done'
 "
 ```
 
-- [ ] **Step 4: Rename `WhiskyWineInstaller` and `WhiskyWineVersion` → `UncorkedWineInstaller` / `UncorkedWineVersion`**
+- [ ] **Step 4: Rename `WhiskyWineInstaller` and `WhiskyWineVersion` → `CrosswireWineInstaller` / `CrosswireWineVersion`**
 
 ```powershell
 powershell.exe -NoProfile -Command "
-Get-ChildItem -Recurse 'D:\grubwire\uncorked' -Include '*.swift' |
+Get-ChildItem -Recurse 'D:\grubwire\Crosswire' -Include '*.swift' |
 ForEach-Object {
     \$c = Get-Content \$_.FullName -Raw
     if (\$c -match 'WhiskyWineInstaller|WhiskyWineVersion') {
-        \$c = \$c -replace 'WhiskyWineInstaller', 'UncorkedWineInstaller'
-        \$c = \$c -replace 'WhiskyWineVersion', 'UncorkedWineVersion'
+        \$c = \$c -replace 'WhiskyWineInstaller', 'CrosswireWineInstaller'
+        \$c = \$c -replace 'WhiskyWineVersion', 'CrosswireWineVersion'
         Set-Content \$_.FullName \$c -NoNewline
     }
 }
@@ -356,12 +356,12 @@ Write-Host 'Done'
 
 ```powershell
 powershell.exe -NoProfile -Command "
-Get-ChildItem -Recurse 'D:\grubwire\uncorked' -Include '*.swift' |
+Get-ChildItem -Recurse 'D:\grubwire\Crosswire' -Include '*.swift' |
 ForEach-Object {
     \$c = Get-Content \$_.FullName -Raw
     if (\$c -match 'WhiskyWineDownloadView|WhiskyWineInstallView') {
-        \$c = \$c -replace 'WhiskyWineDownloadView', 'UncorkedWineDownloadView'
-        \$c = \$c -replace 'WhiskyWineInstallView', 'UncorkedWineInstallView'
+        \$c = \$c -replace 'WhiskyWineDownloadView', 'CrosswireWineDownloadView'
+        \$c = \$c -replace 'WhiskyWineInstallView', 'CrosswireWineInstallView'
         Set-Content \$_.FullName \$c -NoNewline
     }
 }
@@ -369,15 +369,15 @@ Write-Host 'Done'
 "
 ```
 
-- [ ] **Step 6: Rename `whiskyBundleIdentifier` → `uncorkedBundleIdentifier` everywhere**
+- [ ] **Step 6: Rename `whiskyBundleIdentifier` → `CrosswireBundleIdentifier` everywhere**
 
 ```powershell
 powershell.exe -NoProfile -Command "
-Get-ChildItem -Recurse 'D:\grubwire\uncorked' -Include '*.swift' |
+Get-ChildItem -Recurse 'D:\grubwire\Crosswire' -Include '*.swift' |
 ForEach-Object {
     \$c = Get-Content \$_.FullName -Raw
     if (\$c -match 'whiskyBundleIdentifier') {
-        \$c = \$c -replace 'whiskyBundleIdentifier', 'uncorkedBundleIdentifier'
+        \$c = \$c -replace 'whiskyBundleIdentifier', 'CrosswireBundleIdentifier'
         Set-Content \$_.FullName \$c -NoNewline
     }
 }
@@ -389,7 +389,7 @@ Write-Host 'Done'
 
 ```powershell
 powershell.exe -NoProfile -Command "
-Get-ChildItem -Recurse 'D:\grubwire\uncorked' -Include '*.swift' |
+Get-ChildItem -Recurse 'D:\grubwire\Crosswire' -Include '*.swift' |
 Select-String -Pattern 'WhiskyApp|WhiskyCmd|WhiskyWineInstaller|WhiskyWineVersion|WhiskyWineDownloadView|WhiskyWineInstallView|whiskyBundleIdentifier' |
 Select-Object Filename, LineNumber, Line
 "
@@ -400,18 +400,18 @@ Expected: no output.
 - [ ] **Step 8: Commit and push**
 
 ```bash
-cd "D:/grubwire/uncorked"
+cd "D:/grubwire/Crosswire"
 git add -A
-git commit -m "Rename internal Swift types from Whisky to Uncorked
+git commit -m "Rename internal Swift types from Whisky to Crosswire
 
-WhiskyApp→UncorkedApp, WhiskyCmd→UncorkedCmd, WhiskyWineInstaller→
-UncorkedWineInstaller, WhiskyWineVersion→UncorkedWineVersion,
-WhiskyWineDownloadView/InstallView→Uncorked*, whiskyBundleIdentifier→
-uncorkedBundleIdentifier, CLI struct Whisky→Uncorked"
+WhiskyApp→CrosswireApp, WhiskyCmd→CrosswireCmd, WhiskyWineInstaller→
+CrosswireWineInstaller, WhiskyWineVersion→CrosswireWineVersion,
+WhiskyWineDownloadView/InstallView→Crosswire*, whiskyBundleIdentifier→
+CrosswireBundleIdentifier, CLI struct Whisky→Crosswire"
 git push origin main
 ```
 
-Wait for https://github.com/grubwire/Uncorked/actions `Build` to go green before continuing.
+Wait for https://github.com/grubwire/Crosswire/actions `Build` to go green before continuing.
 
 ---
 
@@ -425,21 +425,21 @@ Wait for https://github.com/grubwire/Uncorked/actions `Build` to go green before
 - [ ] **Step 1: Rename Swift source files**
 
 ```bash
-cd "D:/grubwire/uncorked"
-git mv "Whisky/Views/WhiskyApp.swift" "Whisky/Views/UncorkedApp.swift"
-git mv "Whisky/Utils/WhiskyCmd.swift" "Whisky/Utils/UncorkedCmd.swift"
-git mv "Whisky/Views/Setup/WhiskyWineDownloadView.swift" "Whisky/Views/Setup/UncorkedWineDownloadView.swift"
-git mv "Whisky/Views/Setup/WhiskyWineInstallView.swift" "Whisky/Views/Setup/UncorkedWineInstallView.swift"
-git mv "WhiskyKit/Sources/WhiskyKit/WhiskyWine/WhiskyWineInstaller.swift" "WhiskyKit/Sources/WhiskyKit/WhiskyWine/UncorkedWineInstaller.swift"
+cd "D:/grubwire/Crosswire"
+git mv "Whisky/Views/WhiskyApp.swift" "Whisky/Views/CrosswireApp.swift"
+git mv "Whisky/Utils/WhiskyCmd.swift" "Whisky/Utils/CrosswireCmd.swift"
+git mv "Whisky/Views/Setup/WhiskyWineDownloadView.swift" "Whisky/Views/Setup/CrosswireWineDownloadView.swift"
+git mv "Whisky/Views/Setup/WhiskyWineInstallView.swift" "Whisky/Views/Setup/CrosswireWineInstallView.swift"
+git mv "WhiskyKit/Sources/WhiskyKit/WhiskyWine/WhiskyWineInstaller.swift" "WhiskyKit/Sources/WhiskyKit/WhiskyWine/CrosswireWineInstaller.swift"
 ```
 
 - [ ] **Step 2: Rename WhiskyThumbnail.entitlements**
 
 ```bash
-git mv "WhiskyThumbnail/WhiskyThumbnail.entitlements" "WhiskyThumbnail/UncorkedThumbnail.entitlements"
+git mv "WhiskyThumbnail/WhiskyThumbnail.entitlements" "WhiskyThumbnail/CrosswireThumbnail.entitlements"
 ```
 
-- [ ] **Step 3: Delete dead `Whisky.entitlements` (build uses `Uncorked.entitlements` already)**
+- [ ] **Step 3: Delete dead `Whisky.entitlements` (build uses `Crosswire.entitlements` already)**
 
 ```bash
 git rm "Whisky/Whisky.entitlements"
@@ -464,14 +464,14 @@ Expected: 5 renames for Swift files, 1 entitlements rename, 1 deletion. No unexp
 
 ```powershell
 powershell.exe -NoProfile -Command "
-\$path = 'D:\grubwire\uncorked\Whisky.xcodeproj\project.pbxproj'
+\$path = 'D:\grubwire\Crosswire\Whisky.xcodeproj\project.pbxproj'
 \$c = Get-Content \$path -Raw
-\$c = \$c -replace 'WhiskyApp\.swift', 'UncorkedApp.swift'
-\$c = \$c -replace 'WhiskyCmd\.swift', 'UncorkedCmd.swift'
-\$c = \$c -replace 'WhiskyWineDownloadView\.swift', 'UncorkedWineDownloadView.swift'
-\$c = \$c -replace 'WhiskyWineInstallView\.swift', 'UncorkedWineInstallView.swift'
-\$c = \$c -replace 'WhiskyWineInstaller\.swift', 'UncorkedWineInstaller.swift'
-\$c = \$c -replace 'WhiskyThumbnail\.entitlements', 'UncorkedThumbnail.entitlements'
+\$c = \$c -replace 'WhiskyApp\.swift', 'CrosswireApp.swift'
+\$c = \$c -replace 'WhiskyCmd\.swift', 'CrosswireCmd.swift'
+\$c = \$c -replace 'WhiskyWineDownloadView\.swift', 'CrosswireWineDownloadView.swift'
+\$c = \$c -replace 'WhiskyWineInstallView\.swift', 'CrosswireWineInstallView.swift'
+\$c = \$c -replace 'WhiskyWineInstaller\.swift', 'CrosswireWineInstaller.swift'
+\$c = \$c -replace 'WhiskyThumbnail\.entitlements', 'CrosswireThumbnail.entitlements'
 Set-Content \$path \$c -NoNewline
 Write-Host 'Done'
 "
@@ -483,7 +483,7 @@ The dead file reference occupies two lines — one `PBXFileReference` entry and 
 
 ```powershell
 powershell.exe -NoProfile -Command "
-\$path = 'D:\grubwire\uncorked\Whisky.xcodeproj\project.pbxproj'
+\$path = 'D:\grubwire\Crosswire\Whisky.xcodeproj\project.pbxproj'
 \$lines = Get-Content \$path
 \$filtered = \$lines | Where-Object { \$_ -notmatch '6E40495E29CCA19C006E3F1B.*Whisky\.entitlements' }
 Set-Content \$path (\$filtered -join \`\`n) -NoNewline
@@ -497,7 +497,7 @@ Expected output: `Removed 2 lines`
 
 ```powershell
 powershell.exe -NoProfile -Command "
-Select-String -Path 'D:\grubwire\uncorked\Whisky.xcodeproj\project.pbxproj' -Pattern 'WhiskyApp\.swift|WhiskyCmd\.swift|WhiskyWineDownloadView|WhiskyWineInstallView|WhiskyWineInstaller\.swift|Whisky\.entitlements|WhiskyThumbnail\.entitlements' |
+Select-String -Path 'D:\grubwire\Crosswire\Whisky.xcodeproj\project.pbxproj' -Pattern 'WhiskyApp\.swift|WhiskyCmd\.swift|WhiskyWineDownloadView|WhiskyWineInstallView|WhiskyWineInstaller\.swift|Whisky\.entitlements|WhiskyThumbnail\.entitlements' |
 Select-Object LineNumber, Line
 "
 ```
@@ -507,12 +507,12 @@ Expected: no output.
 - [ ] **Step 4: Commit and push**
 
 ```bash
-cd "D:/grubwire/uncorked"
+cd "D:/grubwire/Crosswire"
 git add -A
-git commit -m "Rename Whisky* source files to Uncorked* equivalents
+git commit -m "Rename Whisky* source files to Crosswire* equivalents
 
 Renames 5 Swift files, WhiskyThumbnail.entitlements, removes dead
-Whisky.entitlements (build already uses Uncorked.entitlements).
+Whisky.entitlements (build already uses Crosswire.entitlements).
 Updates all project.pbxproj file references to match."
 git push origin main
 ```
@@ -521,49 +521,49 @@ Wait for `Build` CI green before continuing.
 
 ---
 
-## Phase 2C — Package rename: `WhiskyKit` → `UncorkedKit`
+## Phase 2C — Package rename: `WhiskyKit` → `CrosswireKit`
 
 ### Task 12: Rename the Swift package directory and manifest
 
 **Files:**
-- Rename dir: `WhiskyKit/` → `UncorkedKit/`
-- Rename dir: `WhiskyKit/Sources/WhiskyKit/` → `UncorkedKit/Sources/UncorkedKit/`
-- Rename dir: `UncorkedKit/Sources/UncorkedKit/WhiskyWine/` → `UncorkedKit/Sources/UncorkedKit/UncorkedWine/`
-- Modify: `UncorkedKit/Package.swift`
+- Rename dir: `WhiskyKit/` → `CrosswireKit/`
+- Rename dir: `WhiskyKit/Sources/WhiskyKit/` → `CrosswireKit/Sources/CrosswireKit/`
+- Rename dir: `CrosswireKit/Sources/CrosswireKit/WhiskyWine/` → `CrosswireKit/Sources/CrosswireKit/CrosswireWine/`
+- Modify: `CrosswireKit/Package.swift`
 
 - [ ] **Step 1: Move top-level package directory**
 
 ```bash
-cd "D:/grubwire/uncorked"
-git mv WhiskyKit UncorkedKit
+cd "D:/grubwire/Crosswire"
+git mv WhiskyKit CrosswireKit
 ```
 
 - [ ] **Step 2: Move inner source directory**
 
 ```bash
-git mv "UncorkedKit/Sources/WhiskyKit" "UncorkedKit/Sources/UncorkedKit"
+git mv "CrosswireKit/Sources/WhiskyKit" "CrosswireKit/Sources/CrosswireKit"
 ```
 
 - [ ] **Step 3: Move inner WhiskyWine subdirectory**
 
 ```bash
-git mv "UncorkedKit/Sources/UncorkedKit/WhiskyWine" "UncorkedKit/Sources/UncorkedKit/UncorkedWine"
+git mv "CrosswireKit/Sources/CrosswireKit/WhiskyWine" "CrosswireKit/Sources/CrosswireKit/CrosswireWine"
 ```
 
 - [ ] **Step 3b: Move inner Whisky subdirectory (bottle/data models)**
 
 ```bash
-git mv "UncorkedKit/Sources/UncorkedKit/Whisky" "UncorkedKit/Sources/UncorkedKit/Uncorked"
+git mv "CrosswireKit/Sources/CrosswireKit/Whisky" "CrosswireKit/Sources/CrosswireKit/Crosswire"
 ```
 
 - [ ] **Step 4: Update `Package.swift` — package name and target names**
 
 ```powershell
 powershell.exe -NoProfile -Command "
-\$path = 'D:\grubwire\uncorked\UncorkedKit\Package.swift'
+\$path = 'D:\grubwire\Crosswire\CrosswireKit\Package.swift'
 \$c = Get-Content \$path -Raw
-\$c = \$c -replace 'name: \"WhiskyKit\"', 'name: \"UncorkedKit\"'
-\$c = \$c -replace '\"WhiskyKit\"', '\"UncorkedKit\"'
+\$c = \$c -replace 'name: \"WhiskyKit\"', 'name: \"CrosswireKit\"'
+\$c = \$c -replace '\"WhiskyKit\"', '\"CrosswireKit\"'
 Set-Content \$path \$c -NoNewline
 Write-Host 'Done'
 "
@@ -572,7 +572,7 @@ Write-Host 'Done'
 - [ ] **Step 5: Verify Package.swift has no WhiskyKit**
 
 ```powershell
-powershell.exe -NoProfile -Command "Select-String -Path 'D:\grubwire\uncorked\UncorkedKit\Package.swift' -Pattern 'WhiskyKit'"
+powershell.exe -NoProfile -Command "Select-String -Path 'D:\grubwire\Crosswire\CrosswireKit\Package.swift' -Pattern 'WhiskyKit'"
 ```
 
 Expected: no output.
@@ -588,11 +588,11 @@ Expected: no output.
 
 ```powershell
 powershell.exe -NoProfile -Command "
-Get-ChildItem -Recurse 'D:\grubwire\uncorked' -Include '*.swift' |
+Get-ChildItem -Recurse 'D:\grubwire\Crosswire' -Include '*.swift' |
 ForEach-Object {
     \$c = Get-Content \$_.FullName -Raw
     if (\$c -match 'import WhiskyKit') {
-        \$c = \$c -replace 'import WhiskyKit', 'import UncorkedKit'
+        \$c = \$c -replace 'import WhiskyKit', 'import CrosswireKit'
         Set-Content \$_.FullName \$c -NoNewline
     }
 }
@@ -604,7 +604,7 @@ Write-Host 'Done'
 
 ```powershell
 powershell.exe -NoProfile -Command "
-Get-ChildItem -Recurse 'D:\grubwire\uncorked' -Include '*.swift' |
+Get-ChildItem -Recurse 'D:\grubwire\Crosswire' -Include '*.swift' |
 Select-String -Pattern 'import WhiskyKit' |
 Select-Object Filename, LineNumber
 "
@@ -623,9 +623,9 @@ Expected: no output.
 
 ```powershell
 powershell.exe -NoProfile -Command "
-\$path = 'D:\grubwire\uncorked\Whisky.xcodeproj\project.pbxproj'
+\$path = 'D:\grubwire\Crosswire\Whisky.xcodeproj\project.pbxproj'
 \$c = Get-Content \$path -Raw
-\$c = \$c -replace 'WhiskyKit', 'UncorkedKit'
+\$c = \$c -replace 'WhiskyKit', 'CrosswireKit'
 Set-Content \$path \$c -NoNewline
 Write-Host 'Done'
 "
@@ -637,7 +637,7 @@ Note: this replaces ALL `WhiskyKit` occurrences in the file. At this point in th
 
 ```powershell
 powershell.exe -NoProfile -Command "
-Select-String -Path 'D:\grubwire\uncorked\Whisky.xcodeproj\project.pbxproj' -Pattern 'WhiskyKit' |
+Select-String -Path 'D:\grubwire\Crosswire\Whisky.xcodeproj\project.pbxproj' -Pattern 'WhiskyKit' |
 Select-Object LineNumber, Line
 "
 ```
@@ -655,9 +655,9 @@ Expected: no output.
 
 ```powershell
 powershell.exe -NoProfile -Command "
-\$path = 'D:\grubwire\uncorked\.github\dependabot.yml'
+\$path = 'D:\grubwire\Crosswire\.github\dependabot.yml'
 \$c = Get-Content \$path -Raw
-\$c = \$c -replace '/WhiskyKit', '/UncorkedKit'
+\$c = \$c -replace '/WhiskyKit', '/CrosswireKit'
 Set-Content \$path \$c -NoNewline
 Write-Host 'Done'
 "
@@ -666,7 +666,7 @@ Write-Host 'Done'
 - [ ] **Step 2: Verify**
 
 ```powershell
-powershell.exe -NoProfile -Command "Select-String -Path 'D:\grubwire\uncorked\.github\dependabot.yml' -Pattern 'WhiskyKit'"
+powershell.exe -NoProfile -Command "Select-String -Path 'D:\grubwire\Crosswire\.github\dependabot.yml' -Pattern 'WhiskyKit'"
 ```
 
 Expected: no output.
@@ -674,11 +674,11 @@ Expected: no output.
 - [ ] **Step 3: Commit and push**
 
 ```bash
-cd "D:/grubwire/uncorked"
+cd "D:/grubwire/Crosswire"
 git add -A
-git commit -m "Rename WhiskyKit package to UncorkedKit
+git commit -m "Rename WhiskyKit package to CrosswireKit
 
-Renames directory, Sources subdirectory, WhiskyWine→UncorkedWine
+Renames directory, Sources subdirectory, WhiskyWine→CrosswireWine
 subdir, updates Package.swift, all import statements, project.pbxproj
 package references, and dependabot.yml directory."
 git push origin main
@@ -693,19 +693,19 @@ Wait for `Build` CI green before continuing.
 ### Task 16: Rename directories with `git mv`
 
 **Files:**
-- Rename: `Whisky/` → `Uncorked/`
-- Rename: `WhiskyCmd/` → `UncorkedCmd/`
-- Rename: `WhiskyThumbnail/` → `UncorkedThumbnail/`
-- Rename: `Whisky.xcodeproj/` → `Uncorked.xcodeproj/`
+- Rename: `Whisky/` → `Crosswire/`
+- Rename: `WhiskyCmd/` → `CrosswireCmd/`
+- Rename: `WhiskyThumbnail/` → `CrosswireThumbnail/`
+- Rename: `Whisky.xcodeproj/` → `Crosswire.xcodeproj/`
 
 - [ ] **Step 1: Rename directories**
 
 ```bash
-cd "D:/grubwire/uncorked"
-git mv Whisky Uncorked
-git mv WhiskyCmd UncorkedCmd
-git mv WhiskyThumbnail UncorkedThumbnail
-git mv Whisky.xcodeproj Uncorked.xcodeproj
+cd "D:/grubwire/Crosswire"
+git mv Whisky Crosswire
+git mv WhiskyCmd CrosswireCmd
+git mv WhiskyThumbnail CrosswireThumbnail
+git mv Whisky.xcodeproj Crosswire.xcodeproj
 ```
 
 - [ ] **Step 2: Verify git tracks all moves**
@@ -714,68 +714,68 @@ git mv Whisky.xcodeproj Uncorked.xcodeproj
 git status | head -40
 ```
 
-Expected: many renames listed (Whisky/... → Uncorked/..., etc.), no unexpected deletions.
+Expected: many renames listed (Whisky/... → Crosswire/..., etc.), no unexpected deletions.
 
 ---
 
 ### Task 17: Update `project.pbxproj` for directory renames
 
 **Files:**
-- Modify: `Uncorked.xcodeproj/project.pbxproj` (already at new path after Task 16)
+- Modify: `Crosswire.xcodeproj/project.pbxproj` (already at new path after Task 16)
 
 - [ ] **Step 1: Update group path and target name references**
 
 ```powershell
 powershell.exe -NoProfile -Command "
-\$path = 'D:\grubwire\uncorked\Uncorked.xcodeproj\project.pbxproj'
+\$path = 'D:\grubwire\Crosswire\Crosswire.xcodeproj\project.pbxproj'
 \$c = Get-Content \$path -Raw
 
 # Directory path references (e.g. 'path = Whisky;')
-\$c = \$c -replace 'path = Whisky;', 'path = Uncorked;'
-\$c = \$c -replace 'path = WhiskyCmd;', 'path = UncorkedCmd;'
-\$c = \$c -replace 'path = WhiskyThumbnail;', 'path = UncorkedThumbnail;'
+\$c = \$c -replace 'path = Whisky;', 'path = Crosswire;'
+\$c = \$c -replace 'path = WhiskyCmd;', 'path = CrosswireCmd;'
+\$c = \$c -replace 'path = WhiskyThumbnail;', 'path = CrosswireThumbnail;'
 
 # Target names
-\$c = \$c -replace 'name = Whisky;', 'name = Uncorked;'
-\$c = \$c -replace 'name = WhiskyCmd;', 'name = UncorkedCmd;'
-\$c = \$c -replace 'name = WhiskyThumbnail;', 'name = UncorkedThumbnail;'
+\$c = \$c -replace 'name = Whisky;', 'name = Crosswire;'
+\$c = \$c -replace 'name = WhiskyCmd;', 'name = CrosswireCmd;'
+\$c = \$c -replace 'name = WhiskyThumbnail;', 'name = CrosswireThumbnail;'
 
 # productName
-\$c = \$c -replace 'productName = Whisky;', 'productName = Uncorked;'
-\$c = \$c -replace 'productName = WhiskyCmd;', 'productName = UncorkedCmd;'
-\$c = \$c -replace 'productName = WhiskyThumbnail;', 'productName = UncorkedThumbnail;'
+\$c = \$c -replace 'productName = Whisky;', 'productName = Crosswire;'
+\$c = \$c -replace 'productName = WhiskyCmd;', 'productName = CrosswireCmd;'
+\$c = \$c -replace 'productName = WhiskyThumbnail;', 'productName = CrosswireThumbnail;'
 
 # Product file references (the .app and .appex in BUILT_PRODUCTS_DIR)
-\$c = \$c -replace 'path = Whisky\.app;', 'path = Uncorked.app;'
-\$c = \$c -replace 'Whisky\.app \*/', 'Uncorked.app */'
-\$c = \$c -replace 'WhiskyThumbnail\.appex', 'UncorkedThumbnail.appex'
-\$c = \$c -replace 'WhiskyCmd \*/', 'UncorkedCmd */'
-\$c = \$c -replace 'path = WhiskyCmd;', 'path = UncorkedCmd;'
+\$c = \$c -replace 'path = Whisky\.app;', 'path = Crosswire.app;'
+\$c = \$c -replace 'Whisky\.app \*/', 'Crosswire.app */'
+\$c = \$c -replace 'WhiskyThumbnail\.appex', 'CrosswireThumbnail.appex'
+\$c = \$c -replace 'WhiskyCmd \*/', 'CrosswireCmd */'
+\$c = \$c -replace 'path = WhiskyCmd;', 'path = CrosswireCmd;'
 
 # Build phase name
-\$c = \$c -replace 'Embed WhiskyCmd', 'Embed UncorkedCmd'
+\$c = \$c -replace 'Embed WhiskyCmd', 'Embed CrosswireCmd'
 
 # Build configuration list comments
-\$c = \$c -replace 'PBXNativeTarget \"Whisky\"', 'PBXNativeTarget \"Uncorked\"'
-\$c = \$c -replace 'PBXNativeTarget \"WhiskyCmd\"', 'PBXNativeTarget \"UncorkedCmd\"'
-\$c = \$c -replace 'PBXNativeTarget \"WhiskyThumbnail\"', 'PBXNativeTarget \"UncorkedThumbnail\"'
+\$c = \$c -replace 'PBXNativeTarget \"Whisky\"', 'PBXNativeTarget \"Crosswire\"'
+\$c = \$c -replace 'PBXNativeTarget \"WhiskyCmd\"', 'PBXNativeTarget \"CrosswireCmd\"'
+\$c = \$c -replace 'PBXNativeTarget \"WhiskyThumbnail\"', 'PBXNativeTarget \"CrosswireThumbnail\"'
 
 # PBXProject name
-\$c = \$c -replace 'PBXProject \"Whisky\"', 'PBXProject \"Uncorked\"'
+\$c = \$c -replace 'PBXProject \"Whisky\"', 'PBXProject \"Crosswire\"'
 
-# Bundle identifier for thumbnail (WhiskyThumbnail → UncorkedThumbnail)
-\$c = \$c -replace 'app\.uncorked\.Uncorked\.WhiskyThumbnail', 'app.uncorked.Uncorked.UncorkedThumbnail'
+# Bundle identifier for thumbnail (WhiskyThumbnail → CrosswireThumbnail)
+\$c = \$c -replace 'app\.Crosswire\.Crosswire\.WhiskyThumbnail', 'app.Crosswire.Crosswire.CrosswireThumbnail'
 
-# Bundle identifier for CLI (UncorkCmd → UncorkedCmd — fixing the existing typo too)
-\$c = \$c -replace 'app\.uncorked\.UncorkCmd', 'app.uncorked.UncorkedCmd'
+# Bundle identifier for CLI (UncorkCmd → CrosswireCmd — fixing the existing typo too)
+\$c = \$c -replace 'app\.Crosswire\.UncorkCmd', 'app.Crosswire.CrosswireCmd'
 
 # remoteInfo
-\$c = \$c -replace 'remoteInfo = WhiskyThumbnail;', 'remoteInfo = UncorkedThumbnail;'
+\$c = \$c -replace 'remoteInfo = WhiskyThumbnail;', 'remoteInfo = CrosswireThumbnail;'
 
 # Build settings with directory-qualified paths (CRITICAL — these break the build if missed)
-\$c = \$c -replace 'CODE_SIGN_ENTITLEMENTS = Whisky/', 'CODE_SIGN_ENTITLEMENTS = Uncorked/'
-\$c = \$c -replace 'DEVELOPMENT_ASSET_PATHS = \"\"Whisky/', 'DEVELOPMENT_ASSET_PATHS = \"\"Uncorked/'
-\$c = \$c -replace 'INFOPLIST_FILE = Whisky/', 'INFOPLIST_FILE = Uncorked/'
+\$c = \$c -replace 'CODE_SIGN_ENTITLEMENTS = Whisky/', 'CODE_SIGN_ENTITLEMENTS = Crosswire/'
+\$c = \$c -replace 'DEVELOPMENT_ASSET_PATHS = \"\"Whisky/', 'DEVELOPMENT_ASSET_PATHS = \"\"Crosswire/'
+\$c = \$c -replace 'INFOPLIST_FILE = Whisky/', 'INFOPLIST_FILE = Crosswire/'
 
 Set-Content \$path \$c -NoNewline
 Write-Host 'Done'
@@ -786,7 +786,7 @@ Write-Host 'Done'
 
 ```powershell
 powershell.exe -NoProfile -Command "
-Select-String -Path 'D:\grubwire\uncorked\Uncorked.xcodeproj\project.pbxproj' -Pattern 'Whisky' |
+Select-String -Path 'D:\grubwire\Crosswire\Crosswire.xcodeproj\project.pbxproj' -Pattern 'Whisky' |
 Select-Object LineNumber, Line
 "
 ```
@@ -799,15 +799,15 @@ Expected: no output.
 
 **Files:**
 - Modify: `crowdin.yml`
-- Modify: `Uncorked.xcodeproj/xcshareddata/xcschemes/Whisky.xcscheme` (rename + content)
+- Modify: `Crosswire.xcodeproj/xcshareddata/xcschemes/Whisky.xcscheme` (rename + content)
 
 - [ ] **Step 1: Update `crowdin.yml` source/translation paths**
 
 ```powershell
 powershell.exe -NoProfile -Command "
-\$path = 'D:\grubwire\uncorked\crowdin.yml'
+\$path = 'D:\grubwire\Crosswire\crowdin.yml'
 \$c = Get-Content \$path -Raw
-\$c = \$c -replace '/Whisky/Localizable\.xcstrings', '/Uncorked/Localizable.xcstrings'
+\$c = \$c -replace '/Whisky/Localizable\.xcstrings', '/Crosswire/Localizable.xcstrings'
 Set-Content \$path \$c -NoNewline
 Write-Host 'Done'
 "
@@ -816,18 +816,18 @@ Write-Host 'Done'
 - [ ] **Step 2: Rename `Whisky.xcscheme` and update its contents**
 
 ```bash
-cd "D:/grubwire/uncorked"
-git mv "Uncorked.xcodeproj/xcshareddata/xcschemes/Whisky.xcscheme" "Uncorked.xcodeproj/xcshareddata/xcschemes/UncorkedLegacy.xcscheme"
+cd "D:/grubwire/Crosswire"
+git mv "Crosswire.xcodeproj/xcshareddata/xcschemes/Whisky.xcscheme" "Crosswire.xcodeproj/xcshareddata/xcschemes/CrosswireLegacy.xcscheme"
 ```
 
 Then update any `Whisky` references inside the moved scheme file:
 
 ```powershell
 powershell.exe -NoProfile -Command "
-\$path = 'D:\grubwire\uncorked\Uncorked.xcodeproj\xcshareddata\xcschemes\UncorkedLegacy.xcscheme'
+\$path = 'D:\grubwire\Crosswire\Crosswire.xcodeproj\xcshareddata\xcschemes\CrosswireLegacy.xcscheme'
 \$c = Get-Content \$path -Raw
-\$c = \$c -replace 'BlueprintName = \"Whisky\"', 'BlueprintName = \"Uncorked\"'
-\$c = \$c -replace 'BuildableName = \"Whisky\.app\"', 'BuildableName = \"Uncorked.app\"'
+\$c = \$c -replace 'BlueprintName = \"Whisky\"', 'BlueprintName = \"Crosswire\"'
+\$c = \$c -replace 'BuildableName = \"Whisky\.app\"', 'BuildableName = \"Crosswire.app\"'
 Set-Content \$path \$c -NoNewline
 Write-Host 'Done'
 "
@@ -836,18 +836,18 @@ Write-Host 'Done'
 - [ ] **Step 3: Update remaining scheme files for `WhiskyCmd` and `WhiskyThumbnail`**
 
 ```bash
-cd "D:/grubwire/uncorked"
-git mv "Uncorked.xcodeproj/xcshareddata/xcschemes/WhiskyCmd.xcscheme" "Uncorked.xcodeproj/xcshareddata/xcschemes/UncorkedCmd.xcscheme"
-git mv "Uncorked.xcodeproj/xcshareddata/xcschemes/WhiskyThumbnail.xcscheme" "Uncorked.xcodeproj/xcshareddata/xcschemes/UncorkedThumbnail.xcscheme"
+cd "D:/grubwire/Crosswire"
+git mv "Crosswire.xcodeproj/xcshareddata/xcschemes/WhiskyCmd.xcscheme" "Crosswire.xcodeproj/xcshareddata/xcschemes/CrosswireCmd.xcscheme"
+git mv "Crosswire.xcodeproj/xcshareddata/xcschemes/WhiskyThumbnail.xcscheme" "Crosswire.xcodeproj/xcshareddata/xcschemes/CrosswireThumbnail.xcscheme"
 ```
 
 ```powershell
 powershell.exe -NoProfile -Command "
-foreach (\$name in @('UncorkedCmd', 'UncorkedThumbnail')) {
-    \$path = \"D:\grubwire\uncorked\Uncorked.xcodeproj\xcshareddata\xcschemes\\${name}.xcscheme\"
+foreach (\$name in @('CrosswireCmd', 'CrosswireThumbnail')) {
+    \$path = \"D:\grubwire\Crosswire\Crosswire.xcodeproj\xcshareddata\xcschemes\\${name}.xcscheme\"
     \$c = Get-Content \$path -Raw
-    \$c = \$c -replace 'WhiskyCmd', 'UncorkedCmd'
-    \$c = \$c -replace 'WhiskyThumbnail', 'UncorkedThumbnail'
+    \$c = \$c -replace 'WhiskyCmd', 'CrosswireCmd'
+    \$c = \$c -replace 'WhiskyThumbnail', 'CrosswireThumbnail'
     Set-Content \$path \$c -NoNewline
 }
 Write-Host 'Done'
@@ -861,7 +861,7 @@ Write-Host 'Done'
 - [ ] **Step 1: Check for any remaining Whisky references across all tracked files**
 
 ```bash
-cd "D:/grubwire/uncorked"
+cd "D:/grubwire/Crosswire"
 git grep -i "whisky" -- "*.swift" "*.yml" "*.yaml" "*.md" "*.xcscheme" "*.pbxproj" "*.plist" "*.strings" "*.xcstrings" "*.entitlements"
 ```
 
@@ -876,12 +876,12 @@ Expected output: only the attribution lines in `README.md` (lines referencing `W
 - [ ] **Step 1: Commit**
 
 ```bash
-cd "D:/grubwire/uncorked"
+cd "D:/grubwire/Crosswire"
 git add -A
-git commit -m "Rename all Whisky directories, targets, and schemes to Uncorked
+git commit -m "Rename all Whisky directories, targets, and schemes to Crosswire
 
-Renames Whisky/→Uncorked/, WhiskyCmd/→UncorkedCmd/, WhiskyThumbnail/→
-UncorkedThumbnail/, Whisky.xcodeproj→Uncorked.xcodeproj. Updates all
+Renames Whisky/→Crosswire/, WhiskyCmd/→CrosswireCmd/, WhiskyThumbnail/→
+CrosswireThumbnail/, Whisky.xcodeproj→Crosswire.xcodeproj. Updates all
 project.pbxproj target names, paths, product names, and bundle IDs.
 Renames scheme files and updates crowdin.yml source path."
 git push origin main
@@ -889,18 +889,18 @@ git push origin main
 
 - [ ] **Step 2: Verify CI passes**
 
-Open https://github.com/grubwire/Uncorked/actions and confirm `Build` workflow passes.
+Open https://github.com/grubwire/Crosswire/actions and confirm `Build` workflow passes.
 
 - [ ] **Step 3: Final rename check**
 
 ```bash
-cd "D:/grubwire/uncorked"
+cd "D:/grubwire/Crosswire"
 git grep -i "whisky" -- "*.swift" "*.yml" "*.yaml" "*.md" "*.xcscheme" "*.pbxproj" "*.plist" "*.strings" "*.xcstrings" "*.entitlements"
 ```
 
 Only expected output:
 ```
-README.md:Uncorked is a maintained fork of [Whisky](https://github.com/Whisky-App/Whisky)...
+README.md:Crosswire is a maintained fork of [Whisky](https://github.com/Whisky-App/Whisky)...
 README.md:- Whisky (the upstream project) was archived in April 2025
 README.md:- [Whisky](https://github.com/Whisky-App/Whisky) by Isaac Marovitz...
 README.md:MIT - same as Whisky upstream.

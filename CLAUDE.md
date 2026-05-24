@@ -1,15 +1,15 @@
-# Uncorked - Project Context for Claude
+# Crosswire - Project Context for Claude
 
-## What Uncorked Is
+## What Crosswire Is
 
-Uncorked is a standalone macOS app for running Windows software. It is a fork of
+Crosswire is a standalone macOS app for running Windows software. It is a fork of
 [Whisky](https://github.com/Whisky-App/Whisky), fully rebranded in May 2026.
 Published by Grubwire (grubwire.io) under GPL-3.0.
 
-**There is no "Wine" in Uncorked. There is no "engine" visible to users. There is only Uncorked.**
+**There is no "Wine" in Crosswire. There is no "engine" visible to users. There is only Crosswire.**
 
 The Windows compatibility engine (Wine, sourced from Gcenx) is an internal implementation
-detail. Users install Uncorked, it works. That is the entire experience.
+detail. Users install Crosswire, it works. That is the entire experience.
 
 ## Two-Stage Strategy
 
@@ -24,11 +24,11 @@ plan.
 ## Current Architecture (Stage 1 - cloud-hosted engine)
 
 ```
-Uncorked (SwiftUI app)
-└── UncorkedKit (Swift package, local dependency)
-    ├── Engine/         - UncorkedEngine, RosettaCheck, EngineManifest
+Crosswire (SwiftUI app)
+└── CrosswireKit (Swift package, local dependency)
+    ├── Engine/         - CrosswireEngine, RosettaCheck, EngineManifest
     ├── Wine/           - Wine process management (class name Wine kept for internal use)
-    ├── Uncorked/       - Bottle, Program, BottleSettings models
+    ├── Crosswire/       - Bottle, Program, BottleSettings models
     ├── PE/             - PE binary parsing
     └── Extensions/     - Swift extensions
 
@@ -38,16 +38,16 @@ R2 layout (data.grubwire.io):
       engine-manifest.json      - signed manifest (mutable, always latest)
       engine-manifest.json.sig  - Ed25519 signature
       archives/
-        uncorked-engine-11.9.tar.xz   - immutable, version-specific
-        uncorked-engine-11.8.tar.xz   - prior versions retained for rollback
+        Crosswire-engine-11.9.tar.xz   - immutable, version-specific
+        Crosswire-engine-11.8.tar.xz   - prior versions retained for rollback
     staging/                          - DEBUG build target (same structure)
   beta/                               - NOT yet created (Part 2 of the plan)
 
-Engine installed at: ~/Library/Application Support/Uncorked/Engine/
-  bin/    - uncorked64 (wrapper), uncorkedserver, uncorkedboot, wine64, wineserver, etc.
+Engine installed at: ~/Library/Application Support/Crosswire/Engine/
+  bin/    - Crosswire64 (wrapper), Crosswireserver, Crosswireboot, wine64, wineserver, etc.
   lib/    - .dylib and Mach-O .so files
   share/
-engine-version.json  (sibling to Engine/, in Application Support/Uncorked/)
+engine-version.json  (sibling to Engine/, in Application Support/Crosswire/)
 ```
 
 ## How the Engine Gets to Users
@@ -72,7 +72,7 @@ engine-version.json  (sibling to Engine/, in Application Support/Uncorked/)
   "schemaVersion": 1,
   "engineVersion": "11.9",
   "upstreamTag": "11.9",
-  "url": "https://data.grubwire.io/engine/prod/archives/uncorked-engine-11.9.tar.xz",
+  "url": "https://data.grubwire.io/engine/prod/archives/Crosswire-engine-11.9.tar.xz",
   "sha256": "<hex SHA-256 of archive>",
   "sizeBytes": <uncompressed engine size in bytes>,
   "minAppVersion": "1.0.0"
@@ -90,7 +90,7 @@ Manifest is signed with Ed25519 (CryptoKit `Curve25519.Signing`).
 ## Engine Version State
 
 Installed engine state is written to:
-`~/Library/Application Support/Uncorked/engine-version.json`
+`~/Library/Application Support/Crosswire/engine-version.json`
 
 ```json
 {
@@ -99,7 +99,7 @@ Installed engine state is written to:
 }
 ```
 
-The `UncorkedEngineVersion.plist` used by older builds is legacy. The migration cleanup
+The `CrosswireEngineVersion.plist` used by older builds is legacy. The migration cleanup
 `removeLegacyEngineIfNeeded()` removes stale `Libraries/Wine` from pre-managed installs.
 
 ## Gcenx: The Engine Upstream
@@ -154,7 +154,7 @@ Sparkle uses DMG-based app replacement (no admin prompt). Do not use PKG-based S
 
 ## Version Scheme
 
-Uncorked app version is fully decoupled from engine version. Engine version never appears in
+Crosswire app version is fully decoupled from engine version. Engine version never appears in
 the app's version string.
 
 - Engine updates do not require app updates and vice versa.
@@ -166,15 +166,15 @@ the app's version string.
 
 | File | Purpose |
 |------|---------|
-| `UncorkedKit/.../Engine/UncorkedEngine.swift` | Engine install, verify, update check, bin paths |
-| `UncorkedKit/.../Engine/EngineManifest.swift` | Manifest model, Ed25519 verification, SHA-256 |
-| `UncorkedKit/.../Engine/RosettaCheck.swift` | Apple Silicon detection, Rosetta install |
-| `Uncorked/Views/Setup/EngineSetupView.swift` | Unified download + verify + install setup UI |
-| `Uncorked/Views/About/AboutView.swift` | About/Acknowledgements: Wine, Gcenx, DXVK, Whisky |
-| `Uncorked/Views/About/DiagnosticsView.swift` | Diagnostics: app version, engine version, beta state |
+| `CrosswireKit/.../Engine/CrosswireEngine.swift` | Engine install, verify, update check, bin paths |
+| `CrosswireKit/.../Engine/EngineManifest.swift` | Manifest model, Ed25519 verification, SHA-256 |
+| `CrosswireKit/.../Engine/RosettaCheck.swift` | Apple Silicon detection, Rosetta install |
+| `Crosswire/Views/Setup/EngineSetupView.swift` | Unified download + verify + install setup UI |
+| `Crosswire/Views/About/AboutView.swift` | About/Acknowledgements: Wine, Gcenx, DXVK, Whisky |
+| `Crosswire/Views/About/DiagnosticsView.swift` | Diagnostics: app version, engine version, beta state |
 | `scripts/sign-engine.sh` | Inside-out Mach-O signing (Phase 1 and 2) |
 | `scripts/sign-manifest.sh` | Signs engine-manifest.json with Ed25519 private key |
-| `scripts/generate-wrappers.sh` | Generates uncorked64, uncorkedserver, uncorkedboot |
+| `scripts/generate-wrappers.sh` | Generates Crosswire64, Crosswireserver, Crosswireboot |
 | `engine-version.txt` | Currently published prod engine tag (updated by CI on promotion) |
 | `.github/workflows/engine-bundle.yml` | Build, sign, smoke test, GitHub artifact (no auto-publish) |
 | `.github/workflows/engine-promote-prod.yml` | Manual promotion of validated artifact to R2 prod |
@@ -206,7 +206,7 @@ Status: all five items are satisfied.
 ## Checkpoint D (R2 / data.grubwire.io setup)
 
 **Requires Nick's Cloudflare account.** Steps needed:
-1. Create an R2 bucket (e.g. `uncorked-engine`) with public access on `engine/prod/` and
+1. Create an R2 bucket (e.g. `Crosswire-engine`) with public access on `engine/prod/` and
    `engine/staging/` prefixes.
 2. Bind `data.grubwire.io` as a custom domain on the bucket (not just the zone).
 3. Add GitHub secrets: `R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_BUCKET`
@@ -226,9 +226,9 @@ Bottles and wineprefixes are preserved.
 
 ## Internal Naming Rules
 
-- All Swift code uses `uncorked64` (the wrapper), never `wine64` directly.
-- `Wine.wineBinary` points to `Engine/bin/uncorked64`.
-- `Wine.wineserverBinary` points to `Engine/bin/uncorkedserver`.
+- All Swift code uses `Crosswire64` (the wrapper), never `wine64` directly.
+- `Wine.wineBinary` points to `Engine/bin/Crosswire64`.
+- `Wine.wineserverBinary` points to `Engine/bin/Crosswireserver`.
 - No user-facing strings mention Wine, engine, wrappers, or internal version numbers.
 - The `Wine` class in `Wine.swift` keeps its name internally (user decision, backward compat).
 - Winetricks is a proper noun kept throughout.
@@ -241,4 +241,4 @@ before relying on it. Include direct DMG link in the transition release notes.
 
 ## Whisky Reference
 
-Uncorked is a fork of Whisky. For reference: `https://github.com/Whisky-App/Whisky`
+Crosswire is a fork of Whisky. For reference: `https://github.com/Whisky-App/Whisky`

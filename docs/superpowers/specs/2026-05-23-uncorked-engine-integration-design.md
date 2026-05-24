@@ -1,15 +1,15 @@
-# Uncorked Engine Integration — Design Spec
+# Crosswire Engine Integration — Design Spec
 
 **Date:** 2026-05-23
 **Status:** Approved (revised after design review)
 
 ## Vision
 
-Uncorked is a complete, standalone macOS app for running Windows software. The engine is an
+Crosswire is a complete, standalone macOS app for running Windows software. The engine is an
 internal implementation detail — not a user-facing concept, not a download, not a separate
-product. Users install Uncorked, it works. That is the entire experience.
+product. Users install Crosswire, it works. That is the entire experience.
 
-There is no "Wine" in Uncorked. There is no "engine" visible to users. There is only Uncorked.
+There is no "Wine" in Crosswire. There is no "engine" visible to users. There is only Crosswire.
 
 ## What We Are Building
 
@@ -17,13 +17,13 @@ A PKG installer for first install, with Sparkle DMG-based updates thereafter:
 - The engine ships pre-extracted inside the app bundle, signed at build time
 - PKG installs the whole pre-signed app to /Applications — no postinstall extraction
 - App opens cold, engine is already there, nothing to download
-- Updates arrive as new Uncorked versions via Sparkle (DMG, not PKG)
+- Updates arrive as new Crosswire versions via Sparkle (DMG, not PKG)
 - New upstream engine builds are detected automatically and queued as draft releases
 
 ## Distribution Format
 
 **First install: PKG installer**
-- PKG payload is the fully pre-extracted, pre-signed `Uncorked.app`
+- PKG payload is the fully pre-extracted, pre-signed `Crosswire.app`
 - The PKG copies it to `/Applications` — that is all it does
 - No postinstall extraction into the bundle (which would invalidate the signature)
 - No xattr quarantine strip in postinstall — PKG installers do not propagate quarantine
@@ -31,7 +31,7 @@ A PKG installer for first install, with Sparkle DMG-based updates thereafter:
 - Download size ~200MB (engine compressed within PKG payload), installed size ~600MB
 
 **Subsequent updates: Sparkle DMG**
-- appcast `<enclosure>` points to a `.dmg` containing the new `Uncorked.app`
+- appcast `<enclosure>` points to a `.dmg` containing the new `Crosswire.app`
 - Sparkle replaces the app bundle without requiring an admin prompt
 - PKG format is not used for Sparkle updates — shelling out to `installer` triggers an
   admin authorization prompt and is not silent; DMG-based app replacement avoids this
@@ -43,14 +43,14 @@ A PKG installer for first install, with Sparkle DMG-based updates thereafter:
 The engine is placed inside the app bundle **at build time**, not at install time.
 
 ```
-Uncorked.app/
+Crosswire.app/
   Contents/
     Resources/
       Engine/
         bin/
-          uncorked64       ← wrapper script → wine64
-          uncorkedserver   ← wrapper script → wineserver
-          uncorkedboot     ← wrapper script → wineboot
+          Crosswire64       ← wrapper script → wine64
+          Crosswireserver   ← wrapper script → wineserver
+          Crosswireboot     ← wrapper script → wineboot
           wine64           ← Gcenx binary (internal only)
           wineserver       ← Gcenx binary (internal only)
           wineboot         ← Gcenx binary (internal only)
@@ -66,19 +66,19 @@ is swapping ad-hoc signatures for Developer ID signatures in CI.
 ### Wrapper Scripts
 
 Gcenx binaries cannot be renamed without recompiling from source — they reference each other
-by name internally. Wrapper scripts provide Uncorked-named entry points:
+by name internally. Wrapper scripts provide Crosswire-named entry points:
 
 ```sh
 #!/bin/sh
 exec "$(dirname "$0")/wine64" "$@"
 ```
 
-`uncorked64`, `uncorkedserver`, `uncorkedboot` are thin wrappers of this form. All Swift code
-in UncorkedKit calls `uncorked64` only — `wine64` is never referenced in app code.
+`Crosswire64`, `Crosswireserver`, `Crosswireboot` are thin wrappers of this form. All Swift code
+in CrosswireKit calls `Crosswire64` only — `wine64` is never referenced in app code.
 
 Wrapper scripts cannot be code-signed as Mach-O. This is fine for Phase 1. For Phase 2,
 confirm that the existing entitlement `com.apple.security.cs.allow-unsigned-executable-memory`
-(already present in `Uncorked.entitlements`) plus disabled library validation covers the
+(already present in `Crosswire.entitlements`) plus disabled library validation covers the
 engine's dynamic loading behavior. Wine's loader is known to need this entitlement.
 
 ## Signing — Correct Procedure
@@ -94,7 +94,7 @@ it will be killed on launch.
 2. Sign all helper executables individually
 3. Sign framework bundles (if any) inside-out
 4. Sign the wrapper scripts (skip — shell scripts cannot be Mach-O signed)
-5. Sign the outer `Uncorked.app` bundle last
+5. Sign the outer `Crosswire.app` bundle last
 
 ```bash
 # Example CI signing step (Phase 1 — ad-hoc)
@@ -130,14 +130,14 @@ it triggers `engine-bundle.yml` automatically.
 2. Download preferred asset (`wine-staging-*` → `wine-devel-*` → any `.tar.xz`)
 3. Extract the tarball
 4. Rename the top-level directory to `Engine/`
-5. Generate wrapper scripts (`uncorked64`, `uncorkedserver`, `uncorkedboot`) with `chmod +x`
+5. Generate wrapper scripts (`Crosswire64`, `Crosswireserver`, `Crosswireboot`) with `chmod +x`
 6. Sign all binaries individually, inside-out (see Signing section)
-7. Place the signed `Engine/` into the app bundle at `Uncorked.app/Contents/Resources/Engine/`
-8. Bump Uncorked version (see Version Mapping below)
-9. Build `Uncorked.app` via `xcodebuild`
+7. Place the signed `Engine/` into the app bundle at `Crosswire.app/Contents/Resources/Engine/`
+8. Bump Crosswire version (see Version Mapping below)
+9. Build `Crosswire.app` via `xcodebuild`
 10. Sign the outer app bundle
 11. Build the PKG: `pkgbuild` (app → /Applications) + `productbuild` (no postinstall script needed)
-12. Build the Sparkle DMG (containing the new `Uncorked.app`)
+12. Build the Sparkle DMG (containing the new `Crosswire.app`)
 13. Create a **draft** GitHub release with both PKG and DMG attached
 14. Open a GitHub issue that the draft is ready for testing
 
@@ -155,44 +155,44 @@ Existing users get the DMG update; new users download the PKG.
 
 ## Version Mapping
 
-Uncorked's version is **fully decoupled** from the engine version. The engine version never
-appears in Uncorked's version string — doing so would leak internal implementation details
+Crosswire's version is **fully decoupled** from the engine version. The engine version never
+appears in Crosswire's version string — doing so would leak internal implementation details
 and break the "users never know what changed" goal.
 
 Simple rule:
-- Engine-only updates increment Uncorked's **patch** version (1.0.2 → 1.0.3)
+- Engine-only updates increment Crosswire's **patch** version (1.0.2 → 1.0.3)
 - App feature/fix releases also increment patch or minor as appropriate
 - The engine version is recorded in an internal plist (not user-visible) for diagnostics
 
-The internal plist (`UncorkedEngineVersion.plist` in Application Support) stores the
+The internal plist (`CrosswireEngineVersion.plist` in Application Support) stores the
 upstream tag (e.g., `11.9`) for use in bug reports and support tooling only.
 
-## Code Changes in Uncorked
+## Code Changes in Crosswire
 
 ### Deleted
 
-- `Uncorked/Views/Setup/UncorkedWineDownloadView.swift` — runtime download screen
+- `Crosswire/Views/Setup/CrosswireWineDownloadView.swift` — runtime download screen
 - All Gcenx GitHub API calls from within the running app
 - The setup/onboarding flow that gates the app behind an engine download
-- `UncorkedWineInstaller` install/download logic (engine is pre-bundled; installer gone)
+- `CrosswireWineInstaller` install/download logic (engine is pre-bundled; installer gone)
 
 ### Renamed
 
-Every `Wine`-prefixed symbol becomes the Uncorked equivalent:
+Every `Wine`-prefixed symbol becomes the Crosswire equivalent:
 
 | Old | New |
 |-----|-----|
-| `UncorkedWineInstaller` | `UncorkedEngine` |
-| `UncorkedWineVersion` | `UncorkedEngineVersion` |
-| `isUncorkedWineInstalled()` | `isEnginePresent()` |
-| `uncorkedWineVersion()` | `engineVersion()` |
+| `CrosswireWineInstaller` | `CrosswireEngine` |
+| `CrosswireWineVersion` | `CrosswireEngineVersion` |
+| `isCrosswireWineInstalled()` | `isEnginePresent()` |
+| `CrosswireWineVersion()` | `engineVersion()` |
 | `binFolder` path | `Bundle.main.resourceURL/Engine/bin` |
-| `UncorkedKit/.../UncorkedWine/` directory | `UncorkedKit/.../Engine/` |
+| `CrosswireKit/.../CrosswireWine/` directory | `CrosswireKit/.../Engine/` |
 
 ### Updated
 
-- `UncorkedEngine.binFolder` resolves to `Uncorked.app/Contents/Resources/Engine/bin`
-- All process launches reference `uncorked64`, never `wine64`
+- `CrosswireEngine.binFolder` resolves to `Crosswire.app/Contents/Resources/Engine/bin`
+- All process launches reference `Crosswire64`, never `wine64`
 - No user-facing strings mention Wine, engine, or internal version numbers
 - `UncorkError` and related error types reviewed for any Wine naming
 
@@ -209,7 +209,7 @@ Every `Wine`-prefixed symbol becomes the Uncorked equivalent:
 ### Phase 1 (no Developer ID yet)
 
 - Engine binaries: ad-hoc signed individually, inside-out, in CI pipeline
-- `Uncorked.app`: ad-hoc signed
+- `Crosswire.app`: ad-hoc signed
 - PKG: unsigned
 - Gatekeeper behavior on macOS 15+ Sequoia: the first launch is blocked; users must go to
   **System Settings → Privacy & Security → Open Anyway**. The old right-click → Open bypass
@@ -219,7 +219,7 @@ Every `Wine`-prefixed symbol becomes the Uncorked equivalent:
 
 - Engine binaries: signed with Developer ID Application in CI (same inside-out script,
   swap `-` for the identity)
-- `Uncorked.app`: signed with Developer ID Application + hardened runtime + notarized
+- `Crosswire.app`: signed with Developer ID Application + hardened runtime + notarized
 - PKG: signed with Developer ID Installer + notarized
 - Gatekeeper passes cleanly, no user workarounds, no Privacy & Security step
 - No structural changes to the pipeline — credentials only
@@ -227,21 +227,21 @@ Every `Wine`-prefixed symbol becomes the Uncorked equivalent:
 ## What Users Experience
 
 **Installing for the first time:**
-1. Download `Uncorked.pkg` (~200MB)
+1. Download `Crosswire.pkg` (~200MB)
 2. Double-click, click through standard macOS install screens
-3. Uncorked appears in /Applications, fully ready
+3. Crosswire appears in /Applications, fully ready
 4. **Phase 1 only:** first launch is blocked by Gatekeeper; user goes to System Settings →
    Privacy & Security → Open Anyway. This is a one-time step, documented prominently.
 5. **Phase 2:** no friction — app opens normally
 
 **Getting an update:**
-1. Uncorked shows a non-blocking banner: "Uncorked X.Y is available"
+1. Crosswire shows a non-blocking banner: "Crosswire X.Y is available"
 2. User clicks Update
 3. Sparkle downloads the DMG and replaces the app bundle (no admin prompt)
 4. App restarts on the new version
-5. User has no idea the engine changed — they just have a newer Uncorked
+5. User has no idea the engine changed — they just have a newer Crosswire
 
-**No user ever sees:** Wine, engine, wine64, uncorked64, Gcenx, or any internal name.
+**No user ever sees:** Wine, engine, wine64, Crosswire64, Gcenx, or any internal name.
 
 ## Out of Scope
 
@@ -254,12 +254,12 @@ Every `Wine`-prefixed symbol becomes the Uncorked equivalent:
 
 | File | Action |
 |------|--------|
-| `Uncorked/Views/Setup/UncorkedWineDownloadView.swift` | Delete |
-| `UncorkedKit/.../UncorkedWine/UncorkedWineInstaller.swift` | Rewrite as `Engine/UncorkedEngine.swift` |
-| `UncorkedKit/Sources/UncorkedKit/Wine/Wine.swift` | Update bin path to `Engine/bin/uncorked64` |
+| `Crosswire/Views/Setup/CrosswireWineDownloadView.swift` | Delete |
+| `CrosswireKit/.../CrosswireWine/CrosswireWineInstaller.swift` | Rewrite as `Engine/CrosswireEngine.swift` |
+| `CrosswireKit/Sources/CrosswireKit/Wine/Wine.swift` | Update bin path to `Engine/bin/Crosswire64` |
 | `.github/workflows/wine-update-check.yml` | Rename → `engine-update-check.yml`, trigger bundle pipeline |
 | `.github/workflows/release.yml` | Add PKG + Sparkle DMG build, keep existing flow as fallback |
 | New: `.github/workflows/engine-bundle.yml` | Full bundle pipeline (steps 1-14 above) |
-| New: `scripts/generate-wrappers.sh` | Generates `uncorked64` etc. wrapper scripts with correct permissions |
+| New: `scripts/generate-wrappers.sh` | Generates `Crosswire64` etc. wrapper scripts with correct permissions |
 | New: `scripts/sign-engine.sh` | Inside-out signing script (ad-hoc Phase 1, Developer ID Phase 2) |
 | `CLAUDE.md` | Update engine location, version scheme, wrapper script rationale |

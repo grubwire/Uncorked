@@ -1,32 +1,32 @@
 //
-//  UncorkedCmd.swift
-//  Uncorked
+//  CrosswireCmd.swift
+//  Crosswire
 //
-//  This file is part of Uncorked.
+//  This file is part of Crosswire.
 //
-//  Uncorked is free software: you can redistribute it and/or modify it under the terms
+//  Crosswire is free software: you can redistribute it and/or modify it under the terms
 //  of the GNU General Public License as published by the Free Software Foundation,
 //  either version 3 of the License, or (at your option) any later version.
 //
-//  Uncorked is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+//  Crosswire is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
 //  without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 //  See the GNU General Public License for more details.
 //
-//  You should have received a copy of the GNU General Public License along with Uncorked.
+//  You should have received a copy of the GNU General Public License along with Crosswire.
 //  If not, see https://www.gnu.org/licenses/.
 //
 
 import Foundation
 import AppKit
 
-class UncorkedCmd {
+class CrosswireCmd {
     static func install() async {
-        let uncorkedCmdURL = Bundle.main.url(forResource: "UncorkedCmd", withExtension: nil)
+        let CrosswireCmdURL = Bundle.main.url(forResource: "CrosswireCmd", withExtension: nil)
 
-        if let uncorkedCmdURL = uncorkedCmdURL {
+        if let CrosswireCmdURL = CrosswireCmdURL {
             // swiftlint:disable line_length
             let script = """
-            do shell script "ln -fs \(uncorkedCmdURL.path(percentEncoded: false)) /usr/local/bin/uncorked" with administrator privileges
+            do shell script "ln -fs \(CrosswireCmdURL.path(percentEncoded: false)) /usr/local/bin/Crosswire" with administrator privileges
             """
             // swiftlint:enable line_length
 

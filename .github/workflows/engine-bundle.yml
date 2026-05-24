@@ -98,15 +98,15 @@ jobs:
         if: steps.gate.outputs.needed == 'true'
         id: smoke_test
         run: |
-          # Initialize a throwaway prefix with uncorkedboot (wraps wineboot).
+          # Initialize a throwaway prefix with Crosswireboot (wraps wineboot).
           # A successful wineboot --init proves the engine can launch on this hardware.
           # That is the only check we need: wineboot initializes Wine internals, so if
           # it passes, the engine is functional. A separate wine64 --version invocation
           # on the same prefix is unreliable due to wineserver timing after wineboot exits.
           WINEPREFIX=$(mktemp -d)
           export WINEPREFIX
-          /tmp/engine/bin/uncorkedboot --init || {
-            echo "::error::uncorkedboot --init failed -- engine cannot launch. Aborting."
+          /tmp/engine/bin/Crosswireboot --init || {
+            echo "::error::Crosswireboot --init failed -- engine cannot launch. Aborting."
             rm -rf "$WINEPREFIX"
             exit 1
           }
@@ -141,8 +141,8 @@ jobs:
         if: steps.gate.outputs.needed == 'true'
         run: |
           TAG="${{ steps.gcenx.outputs.tag }}"
-          cd /tmp && tar -cJf "uncorked-engine-${TAG}.tar.xz" engine/
-          mv "/tmp/uncorked-engine-${TAG}.tar.xz" /tmp/engine.tar.xz
+          cd /tmp && tar -cJf "Crosswire-engine-${TAG}.tar.xz" engine/
+          mv "/tmp/Crosswire-engine-${TAG}.tar.xz" /tmp/engine.tar.xz
 
       - name: Compute SHA-256
         if: steps.gate.outputs.needed == 'true'
@@ -157,7 +157,7 @@ jobs:
           TAG="${{ steps.gcenx.outputs.tag }}"
           SHA="${{ steps.sha256.outputs.sha256 }}"
           SIZE="${{ steps.sizes.outputs.size_bytes }}"
-          URL="https://data.grubwire.io/engine/prod/archives/uncorked-engine-${TAG}.tar.xz"
+          URL="https://data.grubwire.io/engine/prod/archives/Crosswire-engine-${TAG}.tar.xz"
           printf '{\n  "schemaVersion": 1,\n  "engineVersion": "%s",\n  "upstreamTag": "%s",\n  "url": "%s",\n  "sha256": "%s",\n  "sizeBytes": %s,\n  "minAppVersion": "1.0.0"\n}\n' \
             "$TAG" "$TAG" "$URL" "$SHA" "$SIZE" > /tmp/engine-manifest.json
           cat /tmp/engine-manifest.json
@@ -176,7 +176,7 @@ jobs:
         if: steps.gate.outputs.needed == 'true'
         run: |
           TAG="${{ steps.gcenx.outputs.tag }}"
-          cp /tmp/engine.tar.xz "/tmp/uncorked-engine-${TAG}.tar.xz"
+          cp /tmp/engine.tar.xz "/tmp/Crosswire-engine-${TAG}.tar.xz"
 
       - name: Upload artifact
         if: steps.gate.outputs.needed == 'true'
@@ -184,7 +184,7 @@ jobs:
         with:
           name: engine-${{ steps.gcenx.outputs.tag }}
           path: |
-            /tmp/uncorked-engine-${{ steps.gcenx.outputs.tag }}.tar.xz
+            /tmp/Crosswire-engine-${{ steps.gcenx.outputs.tag }}.tar.xz
             /tmp/engine-manifest.json
             /tmp/engine-manifest.json.sig
           retention-days: 30

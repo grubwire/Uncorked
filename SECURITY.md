@@ -2,7 +2,7 @@
 
 ## Supported Versions
 
-Only the latest release receives security updates. Uncorked is in early development
+Only the latest release receives security updates. Crosswire is in early development
 and does not maintain backport fixes for older versions.
 
 | Version | Supported          |
@@ -14,14 +14,14 @@ and does not maintain backport fixes for older versions.
 
 Please do not report security vulnerabilities through public GitHub issues.
 
-Email **security@grubwire.io** with the subject line `[Uncorked] Security Vulnerability`.
+Email **security@grubwire.io** with the subject line `[Crosswire] Security Vulnerability`.
 Include a description of the issue, steps to reproduce, and any relevant logs or screenshots.
 
 You can expect an acknowledgement within 48 hours. We will keep you informed as we
 investigate and will let you know when a fix is released or if we determine the report
 is out of scope.
 
-Uncorked runs Windows software on macOS using Wine. Security reports most relevant to
+Crosswire runs Windows software on macOS using Wine. Security reports most relevant to
 this project include:
 
 - Sandbox or privilege escalation issues in the engine installation or update flow

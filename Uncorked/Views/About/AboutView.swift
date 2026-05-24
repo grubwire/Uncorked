@@ -1,18 +1,18 @@
 //
 //  AboutView.swift
-//  Uncorked
+//  Crosswire
 //
-//  This file is part of Uncorked.
+//  This file is part of Crosswire.
 //
-//  Uncorked is free software: you can redistribute it and/or modify it under the terms
+//  Crosswire is free software: you can redistribute it and/or modify it under the terms
 //  of the GNU General Public License as published by the Free Software Foundation,
 //  either version 3 of the License, or (at your option) any later version.
 //
-//  Uncorked is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+//  Crosswire is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
 //  without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 //  See the GNU General Public License for more details.
 //
-//  You should have received a copy of the GNU General Public License along with Uncorked.
+//  You should have received a copy of the GNU General Public License along with Crosswire.
 //  If not, see https://www.gnu.org/licenses/.
 //
 
@@ -33,7 +33,7 @@ struct AboutView: View {
                     .resizable()
                     .frame(width: 96, height: 96)
 
-                Text("Uncorked")
+                Text("Crosswire")
                     .font(.title2)
                     .fontWeight(.semibold)
 
@@ -60,7 +60,7 @@ struct AboutView: View {
 
                     AcknowledgementRow(
                         title: "Inspired by Whisky",
-                        detail: "Uncorked is a fork of Whisky, an open source Wine wrapper for macOS. "
+                        detail: "Crosswire is a fork of Whisky, an open source Wine wrapper for macOS. "
                             + "Whisky laid the groundwork this app builds on.",
                         url: "https://github.com/Whisky-App/Whisky"
                     )
@@ -96,14 +96,14 @@ struct AboutView: View {
             // License and links
             HStack(spacing: 16) {
                 Button("GPL-3.0 License") {
-                    if let url = URL(string: "https://github.com/grubwire/uncorked/blob/main/LICENSE") {
+                    if let url = URL(string: "https://github.com/grubwire/Crosswire/blob/main/LICENSE") {
                         openURL(url)
                     }
                 }
                 .buttonStyle(.link)
 
                 Button("Source Code") {
-                    if let url = URL(string: "https://github.com/grubwire/uncorked") {
+                    if let url = URL(string: "https://github.com/grubwire/Crosswire") {
                         openURL(url)
                     }
                 }

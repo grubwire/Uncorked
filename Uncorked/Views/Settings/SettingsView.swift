@@ -1,26 +1,26 @@
 //
 //  SettingsView.swift
-//  Uncorked
+//  Crosswire
 //
-//  This file is part of Uncorked.
+//  This file is part of Crosswire.
 //
-//  Uncorked is free software: you can redistribute it and/or modify it under the terms
+//  Crosswire is free software: you can redistribute it and/or modify it under the terms
 //  of the GNU General Public License as published by the Free Software Foundation,
 //  either version 3 of the License, or (at your option) any later version.
 //
-//  Uncorked is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+//  Crosswire is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
 //  without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 //  See the GNU General Public License for more details.
 //
-//  You should have received a copy of the GNU General Public License along with Uncorked.
+//  You should have received a copy of the GNU General Public License along with Crosswire.
 //  If not, see https://www.gnu.org/licenses/.
 //
 
 import SwiftUI
-import UncorkedKit
+import CrosswireKit
 
 struct SettingsView: View {
-    @AppStorage("SUEnableAutomaticChecks") var uncorkedUpdate = true
+    @AppStorage("SUEnableAutomaticChecks") var CrosswireUpdate = true
     @AppStorage("killOnTerminate") var killOnTerminate = true
     @AppStorage("checkEngineUpdates") var checkEngineUpdates = true
     @AppStorage("defaultBottleLocation") var defaultBottleLocation = BottleData.defaultBottleDir
@@ -48,7 +48,7 @@ struct SettingsView: View {
                 }
             }
             Section("settings.updates") {
-                Toggle("settings.toggle.uncorked.updates", isOn: $uncorkedUpdate)
+                Toggle("settings.toggle.Crosswire.updates", isOn: $CrosswireUpdate)
                 Toggle("settings.toggle.engine.updates", isOn: $checkEngineUpdates)
             }
         }

@@ -1,23 +1,23 @@
 //
 //  DiagnosticsView.swift
-//  Uncorked
+//  Crosswire
 //
-//  This file is part of Uncorked.
+//  This file is part of Crosswire.
 //
-//  Uncorked is free software: you can redistribute it and/or modify it under the terms
+//  Crosswire is free software: you can redistribute it and/or modify it under the terms
 //  of the GNU General Public License as published by the Free Software Foundation,
 //  either version 3 of the License, or (at your option) any later version.
 //
-//  Uncorked is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+//  Crosswire is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
 //  without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 //  See the GNU General Public License for more details.
 //
-//  You should have received a copy of the GNU General Public License along with Uncorked.
+//  You should have received a copy of the GNU General Public License along with Crosswire.
 //  If not, see https://www.gnu.org/licenses/.
 //
 
 import SwiftUI
-import UncorkedKit
+import CrosswireKit
 
 /// Shows technical state: app version, engine version, and beta channel state.
 /// Present from the first release so bug reports include this info.
@@ -28,8 +28,8 @@ struct DiagnosticsView: View {
         return "\(version) (\(build))"
     }
 
-    private var engineState: UncorkedKit.InstalledEngineVersion? {
-        UncorkedEngine.installedEngineState()
+    private var engineState: CrosswireKit.InstalledEngineVersion? {
+        CrosswireEngine.installedEngineState()
     }
 
     var body: some View {
@@ -54,8 +54,8 @@ struct DiagnosticsView: View {
             }
 
             Section("Paths") {
-                DiagnosticRow(label: "Engine", value: UncorkedEngine.engineFolder.path)
-                DiagnosticRow(label: "Libraries", value: UncorkedEngine.libraryFolder.path)
+                DiagnosticRow(label: "Engine", value: CrosswireEngine.engineFolder.path)
+                DiagnosticRow(label: "Libraries", value: CrosswireEngine.libraryFolder.path)
             }
         }
         .formStyle(.grouped)

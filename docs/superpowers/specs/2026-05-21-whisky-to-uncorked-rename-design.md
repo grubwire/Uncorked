@@ -1,11 +1,11 @@
-# Rename: Whisky → Uncorked
+# Rename: Whisky → Crosswire
 
 **Date:** 2026-05-21  
 **Status:** Approved  
 
 ## Goal
 
-Remove all remaining "Whisky" references from the Uncorked codebase. Uncorked is a maintained fork of Whisky and has already been renamed at the product level (bundle ID, app name, icon). This spec covers the remaining internal references visible in the GitHub repo and in code.
+Remove all remaining "Whisky" references from the Crosswire codebase. Crosswire is a maintained fork of Whisky and has already been renamed at the product level (bundle ID, app name, icon). This spec covers the remaining internal references visible in the GitHub repo and in code.
 
 ## Approach
 
@@ -28,7 +28,7 @@ All Swift source files in `Whisky/`, `WhiskyKit/`, `WhiskyCmd/`, `WhiskyThumbnai
 //  ... along with Whisky.
 ```
 
-Replace all four occurrences per file with "Uncorked".
+Replace all four occurrences per file with "Crosswire".
 
 ### 1.2 `Whisky/Localizable.xcstrings` — English strings
 
@@ -36,16 +36,16 @@ Ten English-locale string values to update (exact keys):
 
 | Key | Old value | New value |
 |---|---|---|
-| `install.cli` | "Install Whisky CLI..." | "Install Uncorked CLI..." |
-| `settings.toggle.kill.on.terminate` | "Terminate Wine processes when Whisky closes" | "Terminate Wine processes when Uncorked closes" |
-| `settings.toggle.whisky.updates` | "Automatically check for Whisky updates" | "Automatically check for Uncorked updates" |
-| `settings.toggle.whiskywine.updates` | "Automatically check for WhiskyWine updates" | "Automatically check for UncorkedWine updates" |
-| `setup.subtitle` | "Manage Whisky's required dependencies." | "Manage Uncorked's required dependencies." |
-| `setup.welcome` | "Welcome to Whisky" | "Welcome to Uncorked" |
-| `setup.whiskywine.download` | "Downloading WhiskyWine" | "Downloading UncorkedWine" |
-| `setup.whiskywine.install` | "Installing WhiskyWine" | "Installing UncorkedWine" |
-| `update.whiskywine.description` | "...WhiskyWine %@, but %@ is available..." | "...UncorkedWine %@, but %@ is available..." |
-| `update.whiskywine.title` | "New Version of WhiskyWine Available" | "New Version of UncorkedWine Available" |
+| `install.cli` | "Install Whisky CLI..." | "Install Crosswire CLI..." |
+| `settings.toggle.kill.on.terminate` | "Terminate Wine processes when Whisky closes" | "Terminate Wine processes when Crosswire closes" |
+| `settings.toggle.whisky.updates` | "Automatically check for Whisky updates" | "Automatically check for Crosswire updates" |
+| `settings.toggle.whiskywine.updates` | "Automatically check for WhiskyWine updates" | "Automatically check for CrosswireWine updates" |
+| `setup.subtitle` | "Manage Whisky's required dependencies." | "Manage Crosswire's required dependencies." |
+| `setup.welcome` | "Welcome to Whisky" | "Welcome to Crosswire" |
+| `setup.whiskywine.download` | "Downloading WhiskyWine" | "Downloading CrosswireWine" |
+| `setup.whiskywine.install` | "Installing WhiskyWine" | "Installing CrosswireWine" |
+| `update.whiskywine.description` | "...WhiskyWine %@, but %@ is available..." | "...CrosswireWine %@, but %@ is available..." |
+| `update.whiskywine.title` | "New Version of WhiskyWine Available" | "New Version of CrosswireWine Available" |
 
 Non-English translations are left as-is and will drift until Crowdin syncs.
 
@@ -56,16 +56,16 @@ Update the GPL header template to match the updated header text.
 ### 1.4 `README.md`
 
 - Keep: attribution line ("fork of [Whisky](https://github.com/Whisky-App/Whisky)") — factually accurate, good for discoverability
-- Update: any phrasing that treats Uncorked and Whisky as the same project
+- Update: any phrasing that treats Crosswire and Whisky as the same project
 
 ### 1.5 `CONTRIBUTING.md` / `CODE_OF_CONDUCT.md`
 
-Update Whisky references to Uncorked. Keep any links to upstream Whisky that are informational.
+Update Whisky references to Crosswire. Keep any links to upstream Whisky that are informational.
 
 ### 1.6 `.github/ISSUE_TEMPLATE/bug.yml`
 
-- Field label: "What version of Whisky are you using?" → "What version of Uncorked are you using?"
-- Field `id`: `whisky-version` → `uncorked-version`
+- Field label: "What version of Whisky are you using?" → "What version of Crosswire are you using?"
+- Field `id`: `whisky-version` → `Crosswire-version`
 - Any help text mentioning Whisky
 
 ### 1.7 `.github/workflows/wine-update-check.yml`
@@ -84,14 +84,14 @@ No file moves, no project file changes. Pure symbol renames:
 
 | Old | New | Location |
 |---|---|---|
-| `WhiskyApp` | `UncorkedApp` | `Whisky/Views/WhiskyApp.swift` |
-| `WhiskyCmd` (class) | `UncorkedCmd` | `Whisky/Utils/WhiskyCmd.swift` |
-| `struct Whisky` (CLI) | `struct Uncorked` | `WhiskyCmd/Main.swift` |
-| `WhiskyWineInstaller` | `UncorkedWineInstaller` | `WhiskyKit/.../WhiskyWineInstaller.swift` |
-| `WhiskyWineVersion` | `UncorkedWineVersion` | same file |
-| `WhiskyWineDownloadView` | `UncorkedWineDownloadView` | `Whisky/Views/Setup/WhiskyWineDownloadView.swift` |
-| `WhiskyWineInstallView` | `UncorkedWineInstallView` | `Whisky/Views/Setup/WhiskyWineInstallView.swift` |
-| `whiskyBundleIdentifier` | `uncorkedBundleIdentifier` | `WhiskyKit/.../Bundle+Extensions.swift` + all call sites |
+| `WhiskyApp` | `CrosswireApp` | `Whisky/Views/WhiskyApp.swift` |
+| `WhiskyCmd` (class) | `CrosswireCmd` | `Whisky/Utils/WhiskyCmd.swift` |
+| `struct Whisky` (CLI) | `struct Crosswire` | `WhiskyCmd/Main.swift` |
+| `WhiskyWineInstaller` | `CrosswireWineInstaller` | `WhiskyKit/.../WhiskyWineInstaller.swift` |
+| `WhiskyWineVersion` | `CrosswireWineVersion` | same file |
+| `WhiskyWineDownloadView` | `CrosswireWineDownloadView` | `Whisky/Views/Setup/WhiskyWineDownloadView.swift` |
+| `WhiskyWineInstallView` | `CrosswireWineInstallView` | `Whisky/Views/Setup/WhiskyWineInstallView.swift` |
+| `whiskyBundleIdentifier` | `CrosswireBundleIdentifier` | `WhiskyKit/.../Bundle+Extensions.swift` + all call sites |
 
 Also update `AppDelegate.swift` and any other call sites that reference these by their old names.
 
@@ -103,39 +103,39 @@ Rename files using `git mv`, then update every matching file reference in `Whisk
 
 | Old filename | New filename |
 |---|---|
-| `WhiskyApp.swift` | `UncorkedApp.swift` |
-| `WhiskyCmd.swift` | `UncorkedCmd.swift` |
-| `WhiskyWineDownloadView.swift` | `UncorkedWineDownloadView.swift` |
-| `WhiskyWineInstallView.swift` | `UncorkedWineInstallView.swift` |
-| `WhiskyWineInstaller.swift` | `UncorkedWineInstaller.swift` |
-| `Whisky.entitlements` | **Delete** — `Uncorked.entitlements` already exists and is the one referenced by `CODE_SIGN_ENTITLEMENTS`. `Whisky.entitlements` is a dead file. Remove the stale `PBXFileReference` entry from `project.pbxproj` too. |
-| `WhiskyThumbnail.entitlements` | `UncorkedThumbnail.entitlements` |
-| `Whisky.xcscheme` | `Uncorked.xcscheme` (or remove if redundant with existing) |
-| `WhiskyCmd.xcscheme` | `UncorkedCmd.xcscheme` |
-| `WhiskyThumbnail.xcscheme` | `UncorkedThumbnail.xcscheme` |
+| `WhiskyApp.swift` | `CrosswireApp.swift` |
+| `WhiskyCmd.swift` | `CrosswireCmd.swift` |
+| `WhiskyWineDownloadView.swift` | `CrosswireWineDownloadView.swift` |
+| `WhiskyWineInstallView.swift` | `CrosswireWineInstallView.swift` |
+| `WhiskyWineInstaller.swift` | `CrosswireWineInstaller.swift` |
+| `Whisky.entitlements` | **Delete** — `Crosswire.entitlements` already exists and is the one referenced by `CODE_SIGN_ENTITLEMENTS`. `Whisky.entitlements` is a dead file. Remove the stale `PBXFileReference` entry from `project.pbxproj` too. |
+| `WhiskyThumbnail.entitlements` | `CrosswireThumbnail.entitlements` |
+| `Whisky.xcscheme` | `Crosswire.xcscheme` (or remove if redundant with existing) |
+| `WhiskyCmd.xcscheme` | `CrosswireCmd.xcscheme` |
+| `WhiskyThumbnail.xcscheme` | `CrosswireThumbnail.xcscheme` |
 
 Also update Xcode target names in `project.pbxproj`:
-- Build phase "Embed WhiskyCmd" → "Embed UncorkedCmd"
-- Bundle identifier `app.uncorked.UncorkCmd` → `app.uncorked.UncorkedCmd`
-- Bundle identifier `app.uncorked.Uncorked.WhiskyThumbnail` → `app.uncorked.Uncorked.UncorkedThumbnail`
+- Build phase "Embed WhiskyCmd" → "Embed CrosswireCmd"
+- Bundle identifier `app.Crosswire.UncorkCmd` → `app.Crosswire.CrosswireCmd`
+- Bundle identifier `app.Crosswire.Crosswire.WhiskyThumbnail` → `app.Crosswire.Crosswire.CrosswireThumbnail`
 
 **Verify:** Push → CI green.
 
-### Sub-step 2C — Package rename: `WhiskyKit` → `UncorkedKit`
+### Sub-step 2C — Package rename: `WhiskyKit` → `CrosswireKit`
 
-1. `git mv WhiskyKit/ UncorkedKit/` (renames top-level directory)
-2. Rename internal source paths: `Sources/WhiskyKit/` → `Sources/UncorkedKit/`, `WhiskyWine/` → `UncorkedWine/`
-3. Update `UncorkedKit/Package.swift`: package name `"WhiskyKit"` → `"UncorkedKit"`, target names
-4. Update all `import WhiskyKit` → `import UncorkedKit` across the codebase
+1. `git mv WhiskyKit/ CrosswireKit/` (renames top-level directory)
+2. Rename internal source paths: `Sources/WhiskyKit/` → `Sources/CrosswireKit/`, `WhiskyWine/` → `CrosswireWine/`
+3. Update `CrosswireKit/Package.swift`: package name `"WhiskyKit"` → `"CrosswireKit"`, target names
+4. Update all `import WhiskyKit` → `import CrosswireKit` across the codebase
 5. Update `Whisky.xcodeproj/project.pbxproj`: package product dependency reference
 
 **Verify:** Push → CI green.
 
 ### Sub-step 2D — Top-level directory renames
 
-1. `git mv Whisky/ Uncorked/`
-2. `git mv WhiskyCmd/ UncorkedCmd/`
-3. `git mv WhiskyThumbnail/ UncorkedThumbnail/`
+1. `git mv Whisky/ Crosswire/`
+2. `git mv WhiskyCmd/ CrosswireCmd/`
+3. `git mv WhiskyThumbnail/ CrosswireThumbnail/`
 4. Update all path references in `project.pbxproj` (group paths, file references)
 5. Update `crowdin.yml` source/translation path if it references `Whisky/`
 

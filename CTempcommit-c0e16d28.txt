@@ -10,27 +10,27 @@ index 00000000..9af2aee4
 --- /dev/null
 +++ b/CLAUDE.md
 @@ -0,0 +1,169 @@
-+# Uncorked - Project Context for Claude
++# Crosswire - Project Context for Claude
 +
-+## What Uncorked Is
++## What Crosswire Is
 +
-+Uncorked is a standalone macOS app for running Windows software. It is a fork of
++Crosswire is a standalone macOS app for running Windows software. It is a fork of
 +[Whisky](https://github.com/Whisky-App/Whisky), fully rebranded in May 2026.
 +Published by Grubwire (grubwire.io) under GPL-3.0.
 +
-+**There is no "Wine" in Uncorked. There is no "engine" visible to users. There is only Uncorked.**
++**There is no "Wine" in Crosswire. There is no "engine" visible to users. There is only Crosswire.**
 +
 +The Windows compatibility engine (Wine, sourced from Gcenx) is an internal implementation
-+detail. Users install Uncorked, it works. That is the entire experience.
++detail. Users install Crosswire, it works. That is the entire experience.
 +
 +## Current Architecture (Stage 1 - cloud-hosted engine)
 +
 +```
-+Uncorked (SwiftUI app)
-+└── UncorkedKit (Swift package, local dependency)
-+    ├── Engine/         - UncorkedEngine, RosettaCheck, EngineManifest, bin path management
++Crosswire (SwiftUI app)
++└── CrosswireKit (Swift package, local dependency)
++    ├── Engine/         - CrosswireEngine, RosettaCheck, EngineManifest, bin path management
 +    ├── Wine/           - Wine process management (class name Wine kept for internal use)
-+    ├── Uncorked/       - Bottle, Program, BottleSettings models
++    ├── Crosswire/       - Bottle, Program, BottleSettings models
 +    ├── PE/             - PE binary parsing
 +    └── Extensions/     - Swift extensions
 +
@@ -40,8 +40,8 @@ index 00000000..9af2aee4
 +  staging/manifest.*  - staging copies (same content, for DEBUG builds)
 +  <tag>/engine.tar.xz - Gcenx archive, re-signed by Grubwire CI
 +
-+Engine installed at: ~/Library/Application Support/Uncorked/Libraries/Wine/
-+  bin/    - wine64, wineserver, wineboot, uncorked64 (wrapper), etc.
++Engine installed at: ~/Library/Application Support/Crosswire/Libraries/Wine/
++  bin/    - wine64, wineserver, wineboot, Crosswire64 (wrapper), etc.
 +  lib/    - .dylib and Mach-O .so files
 +  share/
 +```
@@ -54,7 +54,7 @@ index 00000000..9af2aee4
 +3. `engine-bundle.yml`: downloads from Gcenx, generates wrappers, signs all Mach-O files
 +   (Phase 1: ad-hoc), repacks, computes SHA-256, generates and signs `manifest.json`,
 +   uploads to R2 (Cloudflare), commits `engine-version.txt`, opens a tracking issue.
-+4. Human tests (fresh install, bottle creation, known .exe), ships a Uncorked release.
++4. Human tests (fresh install, bottle creation, known .exe), ships a Crosswire release.
 +5. App fetches manifest on first launch, downloads engine, verifies SHA-256, extracts to
 +   Application Support, clears quarantine.
 +
@@ -119,24 +119,24 @@ index 00000000..9af2aee4
 +
 +## Version Scheme
 +
-+Uncorked version is fully decoupled from engine version. Engine version never appears in
-+Uncorked's version string.
++Crosswire version is fully decoupled from engine version. Engine version never appears in
++Crosswire's version string.
 +
 +- Engine update: patch bump (1.0.2 → 1.0.3)
 +- Currently published engine tag recorded in `engine-version.txt` (repo root)
-+- In-app engine version stored in `UncorkedEngineVersion.plist` (under Libraries, diagnostics only)
++- In-app engine version stored in `CrosswireEngineVersion.plist` (under Libraries, diagnostics only)
 +
 +## Key Files
 +
 +| File | Purpose |
 +|------|---------|
-+| `UncorkedKit/.../Engine/UncorkedEngine.swift` | Engine install, verify, update check, bin paths |
-+| `UncorkedKit/.../Engine/EngineManifest.swift` | Manifest model, Ed25519 verification, SHA-256 |
-+| `UncorkedKit/.../Engine/RosettaCheck.swift` | Apple Silicon detection, Rosetta install |
-+| `Uncorked/Views/Setup/EngineSetupView.swift` | Unified download + verify + install setup UI |
++| `CrosswireKit/.../Engine/CrosswireEngine.swift` | Engine install, verify, update check, bin paths |
++| `CrosswireKit/.../Engine/EngineManifest.swift` | Manifest model, Ed25519 verification, SHA-256 |
++| `CrosswireKit/.../Engine/RosettaCheck.swift` | Apple Silicon detection, Rosetta install |
++| `Crosswire/Views/Setup/EngineSetupView.swift` | Unified download + verify + install setup UI |
 +| `scripts/sign-engine.sh` | Inside-out Mach-O signing (Phase 1 and 2) |
 +| `scripts/sign-manifest.sh` | Signs manifest.json with Ed25519 private key |
-+| `scripts/generate-wrappers.sh` | Generates uncorked64, uncorkedserver, uncorkedboot |
++| `scripts/generate-wrappers.sh` | Generates Crosswire64, Crosswireserver, Crosswireboot |
 +| `engine-version.txt` | Currently published engine tag (updated by CI) |
 +| `.github/workflows/engine-bundle.yml` | Full publish pipeline (Gcenx → R2) |
 +| `.github/workflows/engine-update-check.yml` | Weekly check for new Gcenx releases |
@@ -147,7 +147,7 @@ index 00000000..9af2aee4
 +**Requires Nick's Cloudflare account.** Not yet configured.
 +
 +Steps needed:
-+1. Create an R2 bucket (e.g. `uncorked-engine`)
++1. Create an R2 bucket (e.g. `Crosswire-engine`)
 +2. Create a Cloudflare Worker or public bucket URL at `data.grubwire.io`
 +3. Add GitHub secrets: `R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_BUCKET`
 +4. Add `ENGINE_MANIFEST_SIGNING_KEY` (hex private key seed) to GitHub secrets
@@ -160,12 +160,12 @@ index 00000000..9af2aee4
 +## Migration (existing users)
 +
 +On first launch after upgrade, `removeLegacyEngineIfNeeded()` runs once and deletes the stale
-+engine at `Libraries/Wine` only if `UncorkedEngineVersion.plist` is absent (indicating the
++engine at `Libraries/Wine` only if `CrosswireEngineVersion.plist` is absent (indicating the
 +pre-managed engine, not a freshly downloaded managed one). Bottles and wineprefixes are preserved.
 +
 +## Internal Naming Rules
 +
-+- All Swift code calls `uncorked64` by absolute path, never `wine64` directly.
++- All Swift code calls `Crosswire64` by absolute path, never `wine64` directly.
 +- No user-facing strings mention Wine, engine, wrappers, or internal version numbers.
 +- The `Wine` class in `Wine.swift` keeps its name internally (user decision, backward compat).
 +- Winetricks is a proper noun kept throughout (not renamed).
@@ -178,4 +178,4 @@ index 00000000..9af2aee4
 +
 +## Whisky Reference
 +
-+Uncorked is a fork of Whisky. For reference: `https://github.com/Whisky-App/Whisky`
++Crosswire is a fork of Whisky. For reference: `https://github.com/Whisky-App/Whisky`

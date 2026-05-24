@@ -1,4 +1,4 @@
 files:
-  - source: /Uncorked/Localizable.xcstrings
-    translation: /Uncorked/Localizable.xcstrings
+  - source: /Crosswire/Localizable.xcstrings
+    translation: /Crosswire/Localizable.xcstrings
     multilingual: 1

@@ -1,18 +1,18 @@
 //
 //  AppDelegate.swift
-//  Uncorked
+//  Crosswire
 //
-//  This file is part of Uncorked.
+//  This file is part of Crosswire.
 //
-//  Uncorked is free software: you can redistribute it and/or modify it under the terms
+//  Crosswire is free software: you can redistribute it and/or modify it under the terms
 //  of the GNU General Public License as published by the Free Software Foundation,
 //  either version 3 of the License, or (at your option) any later version.
 //
-//  Uncorked is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+//  Crosswire is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
 //  without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 //  See the GNU General Public License for more details.
 //
-//  You should have received a copy of the GNU General Public License along with Uncorked.
+//  You should have received a copy of the GNU General Public License along with Crosswire.
 //  If not, see https://www.gnu.org/licenses/.
 //
 
@@ -26,7 +26,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         // Test if automatic window tabbing is enabled
         // as it is disabled when ContentView appears
         if NSWindow.allowsAutomaticWindowTabbing, let url = urls.first {
-            // Reopen the file after Uncorked has been opened
+            // Reopen the file after Crosswire has been opened
             // so that the `onOpenURL` handler is actually called
             NSWorkspace.shared.open(url)
         }
@@ -44,7 +44,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     func applicationWillTerminate(_ notification: Notification) {
         if UserDefaults.standard.bool(forKey: "killOnTerminate") {
-            UncorkedApp.killBottles()
+            CrosswireApp.killBottles()
         }
     }
 
@@ -56,7 +56,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         Bundle.main.resourceURL?.deletingLastPathComponent().deletingLastPathComponent()
     }
 
-    private static let expectedUrl = URL(fileURLWithPath: "/Applications/Uncorked.app")
+    private static let expectedUrl = URL(fileURLWithPath: "/Applications/Crosswire.app")
 
     private static var insideAppsFolder: Bool {
         if let url = appUrl {

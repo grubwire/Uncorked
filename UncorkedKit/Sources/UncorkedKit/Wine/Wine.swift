@@ -1,18 +1,18 @@
 //
 //  Wine.swift
-//  Uncorked
+//  Crosswire
 //
-//  This file is part of Uncorked.
+//  This file is part of Crosswire.
 //
-//  Uncorked is free software: you can redistribute it and/or modify it under the terms
+//  Crosswire is free software: you can redistribute it and/or modify it under the terms
 //  of the GNU General Public License as published by the Free Software Foundation,
 //  either version 3 of the License, or (at your option) any later version.
 //
-//  Uncorked is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+//  Crosswire is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
 //  without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 //  See the GNU General Public License for more details.
 //
-//  You should have received a copy of the GNU General Public License along with Uncorked.
+//  You should have received a copy of the GNU General Public License along with Crosswire.
 //  If not, see https://www.gnu.org/licenses/.
 //
 
@@ -22,11 +22,11 @@ import os.log
 @MainActor
 public class Wine {
     /// URL to the installed `DXVK` folder
-    private nonisolated static let dxvkFolder: URL = UncorkedEngine.libraryFolder.appending(path: "DXVK")
-    /// Path to the uncorked64 wrapper (thin shell over wine64; all app code uses this, never wine64 directly)
-    public nonisolated static let wineBinary: URL = UncorkedEngine.binFolder.appending(path: "uncorked64")
-    /// Path to the uncorkedserver wrapper (thin shell over wineserver)
-    private nonisolated static let wineserverBinary: URL = UncorkedEngine.binFolder.appending(path: "uncorkedserver")
+    private nonisolated static let dxvkFolder: URL = CrosswireEngine.libraryFolder.appending(path: "DXVK")
+    /// Path to the Crosswire64 wrapper (thin shell over wine64; all app code uses this, never wine64 directly)
+    public nonisolated static let wineBinary: URL = CrosswireEngine.binFolder.appending(path: "Crosswire64")
+    /// Path to the Crosswireserver wrapper (thin shell over wineserver)
+    private nonisolated static let wineserverBinary: URL = CrosswireEngine.binFolder.appending(path: "Crosswireserver")
 
     /// Run a process on a executable file given by the `executableURL`
     private static func runProcess(
@@ -126,18 +126,18 @@ public class Wine {
 
     public static func generateTerminalEnvironmentCommand(bottle: Bottle) -> String {
         var cmd = """
-        export PATH=\"\(UncorkedEngine.binFolder.path):$PATH\"
-        export WINE=\"uncorked64\"
-        alias wine=\"uncorked64\"
-        alias winecfg=\"uncorked64 winecfg\"
-        alias msiexec=\"uncorked64 msiexec\"
-        alias regedit=\"uncorked64 regedit\"
-        alias regsvr32=\"uncorked64 regsvr32\"
-        alias wineboot=\"uncorked64 wineboot\"
-        alias wineconsole=\"uncorked64 wineconsole\"
-        alias winedbg=\"uncorked64 winedbg\"
-        alias winefile=\"uncorked64 winefile\"
-        alias winepath=\"uncorked64 winepath\"
+        export PATH=\"\(CrosswireEngine.binFolder.path):$PATH\"
+        export WINE=\"Crosswire64\"
+        alias wine=\"Crosswire64\"
+        alias winecfg=\"Crosswire64 winecfg\"
+        alias msiexec=\"Crosswire64 msiexec\"
+        alias regedit=\"Crosswire64 regedit\"
+        alias regsvr32=\"Crosswire64 regsvr32\"
+        alias wineboot=\"Crosswire64 wineboot\"
+        alias wineconsole=\"Crosswire64 wineconsole\"
+        alias winedbg=\"Crosswire64 winedbg\"
+        alias winefile=\"Crosswire64 winefile\"
+        alias winepath=\"Crosswire64 winepath\"
         """
 
         let env = constructWineEnvironment(for: bottle, environment: constructWineEnvironment(for: bottle))
@@ -270,7 +270,7 @@ enum RegistryType: String {
 extension Wine {
     public nonisolated static let logsFolder = FileManager.default.urls(
         for: .libraryDirectory, in: .userDomainMask
-    )[0].appending(path: "Logs").appending(path: Bundle.uncorkedBundleIdentifier)
+    )[0].appending(path: "Logs").appending(path: Bundle.CrosswireBundleIdentifier)
 
     public nonisolated static func makeFileHandle() throws -> FileHandle {
         if !FileManager.default.fileExists(atPath: Self.logsFolder.path) {

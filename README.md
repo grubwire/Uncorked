@@ -1,21 +1,21 @@
-# Uncorked
+# Crosswire
 
 Run Windows apps and games on macOS — no scripts, no Terminal, just download and go.
 
-Uncorked is a maintained fork of [Whisky](https://github.com/Whisky-App/Whisky), updated to use [Gcenx's actively maintained Wine builds](https://github.com/Gcenx/macOS_Wine_builds) instead of the original archived source.
+Crosswire is a maintained fork of [Whisky](https://github.com/Whisky-App/Whisky), updated to use [Gcenx's actively maintained Wine builds](https://github.com/Gcenx/macOS_Wine_builds) instead of the original archived source.
 
-## Why Uncorked?
+## Why Crosswire?
 
 - Whisky (the upstream project) was archived in April 2025
 - wine-stable on Homebrew is deprecated (disabled Sept 2026)
 - CrossOver costs $74
-- Uncorked is free, open source, and actively maintained
+- Crosswire is free, open source, and actively maintained
 
 ## Download
 
-[**Download the latest release →**](https://github.com/grubwire/uncorked/releases/latest)
+[**Download the latest release →**](https://github.com/grubwire/Crosswire/releases/latest)
 
-Double-click the DMG, drag Uncorked to Applications. That's it.
+Double-click the DMG, drag Crosswire to Applications. That's it.
 
 ## Requirements
 
@@ -24,14 +24,14 @@ Double-click the DMG, drag Uncorked to Applications. That's it.
 
 ## Usage
 
-1. Open Uncorked
+1. Open Crosswire
 2. Click **+** to create a new bottle
 3. Click **Install Software** and select your Windows `.exe`
 4. Launch it from the Programs list
 
 ## Support the project
 
-Uncorked needs an Apple Developer account ($99/year) to distribute signed, notarized builds.
+Crosswire needs an Apple Developer account ($99/year) to distribute signed, notarized builds.
 
 [**Sponsor on GitHub →**](https://github.com/sponsors/grubwire)
 
@@ -45,4 +45,4 @@ Built on the shoulders of:
 
 ## License
 
-GPL-3.0. Uncorked is a fork of Whisky, which is licensed GPL-3.0. See [LICENSE](LICENSE) for details.
+GPL-3.0. Crosswire is a fork of Whisky, which is licensed GPL-3.0. See [LICENSE](LICENSE) for details.

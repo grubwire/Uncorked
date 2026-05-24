@@ -1,24 +1,24 @@
 //
 //  Winetricks.swift
-//  Uncorked
+//  Crosswire
 //
-//  This file is part of Uncorked.
+//  This file is part of Crosswire.
 //
-//  Uncorked is free software: you can redistribute it and/or modify it under the terms
+//  Crosswire is free software: you can redistribute it and/or modify it under the terms
 //  of the GNU General Public License as published by the Free Software Foundation,
 //  either version 3 of the License, or (at your option) any later version.
 //
-//  Uncorked is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+//  Crosswire is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
 //  without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 //  See the GNU General Public License for more details.
 //
-//  You should have received a copy of the GNU General Public License along with Uncorked.
+//  You should have received a copy of the GNU General Public License along with Crosswire.
 //  If not, see https://www.gnu.org/licenses/.
 //
 
 import Foundation
 import AppKit
-import UncorkedKit
+import CrosswireKit
 
 enum WinetricksCategories: String {
     case apps
@@ -42,14 +42,14 @@ struct WinetricksCategory {
 }
 
 class Winetricks {
-    static let winetricksURL: URL = UncorkedEngine.libraryFolder
+    static let winetricksURL: URL = CrosswireEngine.libraryFolder
         .appending(path: "winetricks")
 
     @MainActor static func runCommand(command: String, bottle: Bottle) async {
         guard let resourcesURL = Bundle.main.url(forResource: "cabextract", withExtension: nil)?
             .deletingLastPathComponent() else { return }
         // swiftlint:disable:next line_length
-        let winetricksCmd = #"PATH=\"\#(UncorkedEngine.binFolder.path):\#(resourcesURL.path(percentEncoded: false)):$PATH\" WINE=uncorked64 WINEPREFIX=\"\#(bottle.url.path)\" \"\#(winetricksURL.path(percentEncoded: false))\" \#(command)"#
+        let winetricksCmd = #"PATH=\"\#(CrosswireEngine.binFolder.path):\#(resourcesURL.path(percentEncoded: false)):$PATH\" WINE=Crosswire64 WINEPREFIX=\"\#(bottle.url.path)\" \"\#(winetricksURL.path(percentEncoded: false))\" \#(command)"#
 
         let script = """
         tell application "Terminal"
@@ -82,7 +82,7 @@ class Winetricks {
 
     static func parseVerbs() async -> [WinetricksCategory] {
         // Grab the verbs file
-        let verbsURL = UncorkedEngine.libraryFolder.appending(path: "verbs.txt")
+        let verbsURL = CrosswireEngine.libraryFolder.appending(path: "verbs.txt")
         let verbs: String = await { () async -> String in
             do {
                 let (data, _) = try await URLSession.shared.data(from: verbsURL)

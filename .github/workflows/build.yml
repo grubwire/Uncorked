@@ -17,4 +17,4 @@ jobs:
       - name: Install SwiftLint
         run: brew install swiftlint
       - name: Build
-        run: xcodebuild build -scheme Uncorked -configuration Debug CODE_SIGNING_ALLOWED=NO
+        run: xcodebuild build -scheme Crosswire -configuration Debug CODE_SIGNING_ALLOWED=NO

@@ -27,14 +27,14 @@ body:
     id: logs
     attributes:
       label: Logs
-      description: Please provide the logs from the launched Wine process. These can be found by pressing `CMD + L` in Uncorked.
+      description: Please provide the logs from the launched Wine process. These can be found by pressing `CMD + L` in Crosswire.
       render: bash
     validations:
       required: true
   - type: dropdown
-    id: uncorked-version
+    id: Crosswire-version
     attributes:
-      label: What version of Uncorked are you using?
+      label: What version of Crosswire are you using?
       options:
         - "2.3.2"
         - "<2.3.2"

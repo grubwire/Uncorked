@@ -1,24 +1,24 @@
 //
 //  ContentView.swift
-//  Uncorked
+//  Crosswire
 //
-//  This file is part of Uncorked.
+//  This file is part of Crosswire.
 //
-//  Uncorked is free software: you can redistribute it and/or modify it under the terms
+//  Crosswire is free software: you can redistribute it and/or modify it under the terms
 //  of the GNU General Public License as published by the Free Software Foundation,
 //  either version 3 of the License, or (at your option) any later version.
 //
-//  Uncorked is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+//  Crosswire is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
 //  without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 //  See the GNU General Public License for more details.
 //
-//  You should have received a copy of the GNU General Public License along with Uncorked.
+//  You should have received a copy of the GNU General Public License along with Crosswire.
 //  If not, see https://www.gnu.org/licenses/.
 //
 
 import SwiftUI
 import UniformTypeIdentifiers
-import UncorkedKit
+import CrosswireKit
 import SemanticVersion
 
 struct ContentView: View {
@@ -103,18 +103,18 @@ struct ContentView: View {
                 }
             }
 
-            if !UncorkedEngine.isEnginePresent() {
+            if !CrosswireEngine.isEnginePresent() {
                 setupStartingStage = nil
                 showSetup = true
                 return
             }
 
-            let updateInfo = await UncorkedEngine.shouldUpdateEngine()
+            let updateInfo = await CrosswireEngine.shouldUpdateEngine()
             if checkEngineUpdates && updateInfo.0 {
                 let alert = NSAlert()
                 alert.messageText = String(localized: "update.engine.title")
                 alert.informativeText = String(format: String(localized: "update.engine.description"),
-                                               String(UncorkedEngine.engineVersion()
+                                               String(CrosswireEngine.engineVersion()
                                                       ?? SemanticVersion(0, 0, 0)),
                                                String(updateInfo.1))
                 alert.alertStyle = .warning
@@ -122,7 +122,7 @@ struct ContentView: View {
                 alert.addButton(withTitle: String(localized: "button.removeAlert.cancel"))
 
                 if alert.runModal() == .alertFirstButtonReturn {
-                    UncorkedEngine.uninstall()
+                    CrosswireEngine.uninstall()
                     setupStartingStage = .engineSetup
                     showSetup = true
                 }

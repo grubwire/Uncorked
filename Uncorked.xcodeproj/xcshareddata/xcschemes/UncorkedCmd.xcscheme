@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "6E70A4972A9A2197007799E9"
-               BuildableName = "UncorkedCmd"
-               BlueprintName = "UncorkedCmd"
-               ReferencedContainer = "container:Uncorked.xcodeproj">
+               BuildableName = "CrosswireCmd"
+               BlueprintName = "CrosswireCmd"
+               ReferencedContainer = "container:Crosswire.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -45,9 +45,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "6E70A4972A9A2197007799E9"
-            BuildableName = "UncorkedCmd"
-            BlueprintName = "UncorkedCmd"
-            ReferencedContainer = "container:Uncorked.xcodeproj">
+            BuildableName = "CrosswireCmd"
+            BlueprintName = "CrosswireCmd"
+            ReferencedContainer = "container:Crosswire.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <CommandLineArguments>
@@ -68,9 +68,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "6E70A4972A9A2197007799E9"
-            BuildableName = "UncorkedCmd"
-            BlueprintName = "UncorkedCmd"
-            ReferencedContainer = "container:Uncorked.xcodeproj">
+            BuildableName = "CrosswireCmd"
+            BlueprintName = "CrosswireCmd"
+            ReferencedContainer = "container:Crosswire.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

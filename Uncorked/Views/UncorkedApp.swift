@@ -1,28 +1,28 @@
 //
-//  UncorkedApp.swift
-//  Uncorked
+//  CrosswireApp.swift
+//  Crosswire
 //
-//  This file is part of Uncorked.
+//  This file is part of Crosswire.
 //
-//  Uncorked is free software: you can redistribute it and/or modify it under the terms
+//  Crosswire is free software: you can redistribute it and/or modify it under the terms
 //  of the GNU General Public License as published by the Free Software Foundation,
 //  either version 3 of the License, or (at your option) any later version.
 //
-//  Uncorked is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+//  Crosswire is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
 //  without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 //  See the GNU General Public License for more details.
 //
-//  You should have received a copy of the GNU General Public License along with Uncorked.
+//  You should have received a copy of the GNU General Public License along with Crosswire.
 //  If not, see https://www.gnu.org/licenses/.
 //
 
 import AppKit
 import SwiftUI
 import Sparkle
-import UncorkedKit
+import CrosswireKit
 
 @main
-struct UncorkedApp: App {
+struct CrosswireApp: App {
     @State var showSetup: Bool = false
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     @Environment(\.openURL) var openURL
@@ -43,10 +43,10 @@ struct UncorkedApp: App {
                     NSWindow.allowsAutomaticWindowTabbing = false
 
                     Task.detached {
-                        await UncorkedApp.deleteOldLogs()
+                        await CrosswireApp.deleteOldLogs()
                     }
                     Task.detached {
-                        UncorkedEngine.removeLegacyEngineIfNeeded()
+                        CrosswireEngine.removeLegacyEngineIfNeeded()
                     }
                 }
         }
@@ -63,7 +63,7 @@ struct UncorkedApp: App {
                 }
                 Button("install.cli") {
                     Task {
-                        await UncorkedCmd.install()
+                        await CrosswireCmd.install()
                     }
                 }
             }
@@ -88,20 +88,20 @@ struct UncorkedApp: App {
             }
             CommandGroup(after: .importExport) {
                 Button("open.logs") {
-                    UncorkedApp.openLogsFolder()
+                    CrosswireApp.openLogsFolder()
                 }
                 .keyboardShortcut("L", modifiers: [.command])
                 Button("kill.bottles") {
-                    UncorkedApp.killBottles()
+                    CrosswireApp.killBottles()
                 }
                 .keyboardShortcut("K", modifiers: [.command, .shift])
                 Button("wine.clearShaderCaches") {
-                    UncorkedApp.killBottles() // Better not make things more complicated for ourselves
-                    UncorkedApp.wipeShaderCaches()
+                    CrosswireApp.killBottles() // Better not make things more complicated for ourselves
+                    CrosswireApp.wipeShaderCaches()
                 }
             }
             CommandGroup(replacing: .appInfo) {
-                Button("About Uncorked") {
+                Button("About Crosswire") {
                     openAboutWindow()
                 }
             }
@@ -112,7 +112,7 @@ struct UncorkedApp: App {
                     }
                 }
                 Button("help.github") {
-                    if let url = URL(string: "https://github.com/grubwire/uncorked") {
+                    if let url = URL(string: "https://github.com/grubwire/Crosswire") {
                         openURL(url)
                     }
                 }
@@ -135,7 +135,7 @@ struct UncorkedApp: App {
     // MARK: - Window helpers
 
     @MainActor private func openAboutWindow() {
-        let existing = NSApp.windows.first { $0.title == "About Uncorked" }
+        let existing = NSApp.windows.first { $0.title == "About Crosswire" }
         if let existingWindow = existing {
             existingWindow.makeKeyAndOrderFront(nil)
             return
@@ -147,7 +147,7 @@ struct UncorkedApp: App {
             backing: .buffered,
             defer: false
         )
-        window.title = "About Uncorked"
+        window.title = "About Crosswire"
         window.contentView = view
         window.center()
         window.makeKeyAndOrderFront(nil)

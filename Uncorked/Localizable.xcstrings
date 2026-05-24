@@ -9393,109 +9393,109 @@
         "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "تثبيت Uncorked CLI..."
+            "value" : "تثبيت Crosswire CLI..."
           }
         },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Nainstalovat Uncorked CLI..."
+            "value" : "Nainstalovat Crosswire CLI..."
           }
         },
         "da" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Installer Uncorked CLI..."
+            "value" : "Installer Crosswire CLI..."
           }
         },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Uncorked CLI installieren..."
+            "value" : "Crosswire CLI installieren..."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Install Uncorked CLI..."
+            "value" : "Install Crosswire CLI..."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Instalar Uncorked CLI..."
+            "value" : "Instalar Crosswire CLI..."
           }
         },
         "fi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Asenna Uncorked CLI..."
+            "value" : "Asenna Crosswire CLI..."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Installer Uncorked CLI..."
+            "value" : "Installer Crosswire CLI..."
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Installa Uncorked CLI..."
+            "value" : "Installa Crosswire CLI..."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Uncorked CLI をインストール..."
+            "value" : "Crosswire CLI をインストール..."
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Uncorked CLI 설치..."
+            "value" : "Crosswire CLI 설치..."
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Installeer de Uncorked CLI..."
+            "value" : "Installeer de Crosswire CLI..."
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Zainstaluj Uncorked w formie CLI..."
+            "value" : "Zainstaluj Crosswire w formie CLI..."
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Instalar o Uncorked CLI..."
+            "value" : "Instalar o Crosswire CLI..."
           }
         },
         "pt-PT" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Instalar Uncorked CLI..."
+            "value" : "Instalar Crosswire CLI..."
           }
         },
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Instalează CLI Uncorked..."
+            "value" : "Instalează CLI Crosswire..."
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Установить Uncorked CLI..."
+            "value" : "Установить Crosswire CLI..."
           }
         },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Uncorked CLI'i Yükle..."
+            "value" : "Crosswire CLI'i Yükle..."
           }
         },
         "uk" : {
@@ -9507,19 +9507,19 @@
         "vi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Cài đặt Uncorked CLI..."
+            "value" : "Cài đặt Crosswire CLI..."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "安装 Uncorked CLI..."
+            "value" : "安装 Crosswire CLI..."
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "安裝Uncorked CLI⋯"
+            "value" : "安裝Crosswire CLI⋯"
           }
         }
       }
@@ -14563,167 +14563,167 @@
         "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "إنهاء عمليات Wine عند إغلاق Uncorked"
+            "value" : "إنهاء عمليات Wine عند إغلاق Crosswire"
           }
         },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ukončit Wine procesy při uzavření Uncorked"
+            "value" : "Ukončit Wine procesy při uzavření Crosswire"
           }
         },
         "da" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Afslut Wine-processer, når Uncorked lukkes"
+            "value" : "Afslut Wine-processer, når Crosswire lukkes"
           }
         },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Wine-Prozesse beim Schließen von Uncorked beenden"
+            "value" : "Wine-Prozesse beim Schließen von Crosswire beenden"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Terminate background processes when Uncorked closes"
+            "value" : "Terminate background processes when Crosswire closes"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Terminar procesos de Wine cuando Uncorked cierre"
+            "value" : "Terminar procesos de Wine cuando Crosswire cierre"
           }
         },
         "fi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Sulje Wine-prosessit kun Uncorked suljetaan"
+            "value" : "Sulje Wine-prosessit kun Crosswire suljetaan"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Terminer les processus de Wine à la fermeture de Uncorked"
+            "value" : "Terminer les processus de Wine à la fermeture de Crosswire"
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Termina i processi Wine quando Uncorked chiude"
+            "value" : "Termina i processi Wine quando Crosswire chiude"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Uncorked の終了時に Wine の全プロセスを停止する"
+            "value" : "Crosswire の終了時に Wine の全プロセスを停止する"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Uncorked를 종료할 때 Wine 프로세스도 종료"
+            "value" : "Crosswire를 종료할 때 Wine 프로세스도 종료"
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Beëindig de Wine processen wanneer Uncorked sluit"
+            "value" : "Beëindig de Wine processen wanneer Crosswire sluit"
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Zakończ proces Wine, gdy Uncorked zostanie zamknięte"
+            "value" : "Zakończ proces Wine, gdy Crosswire zostanie zamknięte"
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Terminate background processes when Uncorked closes"
+            "value" : "Terminate background processes when Crosswire closes"
           }
         },
         "pt-PT" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Termine processos Wine quando o Uncorked fechar"
+            "value" : "Termine processos Wine quando o Crosswire fechar"
           }
         },
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Închide procesele Wine atunci când Uncorked se închide"
+            "value" : "Închide procesele Wine atunci când Crosswire se închide"
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Закрывать процессы Wine при закрытии Uncorked"
+            "value" : "Закрывать процессы Wine при закрытии Crosswire"
           }
         },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Uncorked kapandığında Wine işlemlerini sonlandır"
+            "value" : "Crosswire kapandığında Wine işlemlerini sonlandır"
           }
         },
         "uk" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Завершити процеси Wine, коли закривається Uncorked"
+            "value" : "Завершити процеси Wine, коли закривається Crosswire"
           }
         },
         "vi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Buộc Wine phải tắt khi Uncorked tắt"
+            "value" : "Buộc Wine phải tắt khi Crosswire tắt"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "关闭 Uncorked 时结束 Wine 进程"
+            "value" : "关闭 Crosswire 时结束 Wine 进程"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Uncorked 關閉時終止 Wine 進程"
+            "value" : "Crosswire 關閉時終止 Wine 進程"
           }
         }
       }
     },
-    "settings.toggle.uncorked.updates" : {
+    "settings.toggle.Crosswire.updates" : {
       "localizations" : {
         "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "التحقق تلقائيا من تحديثات Uncorked"
+            "value" : "التحقق تلقائيا من تحديثات Crosswire"
           }
         },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Automaticky kontrolovat Uncorked aktualizace"
+            "value" : "Automaticky kontrolovat Crosswire aktualizace"
           }
         },
         "da" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Søg automatisk efter Uncorked-opdateringer"
+            "value" : "Søg automatisk efter Crosswire-opdateringer"
           }
         },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Automatisch nach Updates für Uncorked suchen"
+            "value" : "Automatisch nach Updates für Crosswire suchen"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Automatically check for Uncorked updates"
+            "value" : "Automatically check for Crosswire updates"
           }
         },
         "es" : {
@@ -14735,97 +14735,97 @@
         "fi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Automaattisesti tarkista Uncorked päivityksien varalta"
+            "value" : "Automaattisesti tarkista Crosswire päivityksien varalta"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Rechercher automatiquement les mises à jour de Uncorked"
+            "value" : "Rechercher automatiquement les mises à jour de Crosswire"
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Controlla automaticamente aggiornamenti di Uncorked"
+            "value" : "Controlla automaticamente aggiornamenti di Crosswire"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Uncorked のアップデートを自動的に確認する"
+            "value" : "Crosswire のアップデートを自動的に確認する"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Uncorked 업데이트를 자동으로 확인"
+            "value" : "Crosswire 업데이트를 자동으로 확인"
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Automatisch controleren op Uncorked updates"
+            "value" : "Automatisch controleren op Crosswire updates"
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Automatycznie sprawdzaj aktualizacje Uncorked"
+            "value" : "Automatycznie sprawdzaj aktualizacje Crosswire"
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Automatically check for Uncorked updates"
+            "value" : "Automatically check for Crosswire updates"
           }
         },
         "pt-PT" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Verifique automaticamente para atualizações do Uncorked"
+            "value" : "Verifique automaticamente para atualizações do Crosswire"
           }
         },
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Verifică automat pentru actualizări Uncorked"
+            "value" : "Verifică automat pentru actualizări Crosswire"
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Автоматически проверять на наличие обновлений Uncorked"
+            "value" : "Автоматически проверять на наличие обновлений Crosswire"
           }
         },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Uncorked güncellemelerini otomatik olarak kontrol et"
+            "value" : "Crosswire güncellemelerini otomatik olarak kontrol et"
           }
         },
         "uk" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Автоматична перевірка оновлень Uncorked"
+            "value" : "Автоматична перевірка оновлень Crosswire"
           }
         },
         "vi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tự động kiểm tra bản cập nhật của Uncorked"
+            "value" : "Tự động kiểm tra bản cập nhật của Crosswire"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "自动检查Uncorked更新"
+            "value" : "自动检查Crosswire更新"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "自動檢查 Uncorked 更新"
+            "value" : "自動檢查 Crosswire 更新"
           }
         }
       }
@@ -14835,85 +14835,85 @@
         "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "التحقق تلقائيا من تحديثات Uncorked"
+            "value" : "التحقق تلقائيا من تحديثات Crosswire"
           }
         },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Automaticky vyhledávat Uncorked aktualizace"
+            "value" : "Automaticky vyhledávat Crosswire aktualizace"
           }
         },
         "da" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Søg automatisk efter Uncorked-opdateringer"
+            "value" : "Søg automatisk efter Crosswire-opdateringer"
           }
         },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Automatisch nach Updates für Uncorked suchen"
+            "value" : "Automatisch nach Updates für Crosswire suchen"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Automatically check for Uncorked updates"
+            "value" : "Automatically check for Crosswire updates"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Buscar actualizaciones de Uncorked automáticamente"
+            "value" : "Buscar actualizaciones de Crosswire automáticamente"
           }
         },
         "fi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Automaattisesti tarkista Uncorked päivityksien varalta"
+            "value" : "Automaattisesti tarkista Crosswire päivityksien varalta"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Rechercher automatiquement les mises à jour de Uncorked"
+            "value" : "Rechercher automatiquement les mises à jour de Crosswire"
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Controlla automaticamente aggiornamenti di Uncorked"
+            "value" : "Controlla automaticamente aggiornamenti di Crosswire"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Uncorked のアップデートを自動的に確認する"
+            "value" : "Crosswire のアップデートを自動的に確認する"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Uncorked 업데이트를 자동으로 확인"
+            "value" : "Crosswire 업데이트를 자동으로 확인"
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Automatisch controleren op Uncorked updates"
+            "value" : "Automatisch controleren op Crosswire updates"
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Automatycznie sprawdzaj dostępność aktualizacji Uncorked"
+            "value" : "Automatycznie sprawdzaj dostępność aktualizacji Crosswire"
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Verificar automaticamente atualizações do Uncorked"
+            "value" : "Verificar automaticamente atualizações do Crosswire"
           }
         },
         "pt-PT" : {
@@ -14925,13 +14925,13 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Verifică automat pentru actualizări Uncorked"
+            "value" : "Verifică automat pentru actualizări Crosswire"
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Автоматически проверять на наличие обновлений Uncorked"
+            "value" : "Автоматически проверять на наличие обновлений Crosswire"
           }
         },
         "tr" : {
@@ -14943,25 +14943,25 @@
         "uk" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Автоматично перевіряти оновлення Uncorked"
+            "value" : "Автоматично перевіряти оновлення Crosswire"
           }
         },
         "vi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tự động kiểm tra bản cập nhật Uncorked"
+            "value" : "Tự động kiểm tra bản cập nhật Crosswire"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "自动检查 Uncorked 更新"
+            "value" : "自动检查 Crosswire 更新"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "自動檢查 Uncorked 更新"
+            "value" : "自動檢查 Crosswire 更新"
           }
         }
       }
@@ -16467,133 +16467,133 @@
         "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "إدارة التبعيات المطلوبة لـUncorked."
+            "value" : "إدارة التبعيات المطلوبة لـCrosswire."
           }
         },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Spravovat požadované závislosti Uncorked."
+            "value" : "Spravovat požadované závislosti Crosswire."
           }
         },
         "da" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Administrer Uncorked's nødvendige afhængigheder."
+            "value" : "Administrer Crosswire's nødvendige afhængigheder."
           }
         },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Verwalte Uncorkeds erforderliche Abhängigkeiten."
+            "value" : "Verwalte Crosswires erforderliche Abhängigkeiten."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Manage Uncorked's required dependencies."
+            "value" : "Manage Crosswire's required dependencies."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Administre las dependencias requeridas de Uncorked."
+            "value" : "Administre las dependencias requeridas de Crosswire."
           }
         },
         "fi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Hallitse Uncorkedn tarvittavia riippuvuuksia."
+            "value" : "Hallitse Crosswiren tarvittavia riippuvuuksia."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Gérer les dépendances requises de Uncorked."
+            "value" : "Gérer les dépendances requises de Crosswire."
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Gestisci le dipendenze richieste da Uncorked."
+            "value" : "Gestisci le dipendenze richieste da Crosswire."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Uncorked に必要な依存関係を管理します。"
+            "value" : "Crosswire に必要な依存関係を管理します。"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Uncorked의 필수 의존성 관리하기."
+            "value" : "Crosswire의 필수 의존성 관리하기."
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Beheer Uncorked's vereiste dependencies."
+            "value" : "Beheer Crosswire's vereiste dependencies."
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Zarządzaj wymaganymi zależnościami Uncorked."
+            "value" : "Zarządzaj wymaganymi zależnościami Crosswire."
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Gerir as dependências necessárias do Uncorked."
+            "value" : "Gerir as dependências necessárias do Crosswire."
           }
         },
         "pt-PT" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Gerencie dependências necessárias do Uncorked."
+            "value" : "Gerencie dependências necessárias do Crosswire."
           }
         },
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Gestionează dependențele cerute de Uncorked."
+            "value" : "Gestionează dependențele cerute de Crosswire."
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Управление требуемыми зависимостями Uncorked."
+            "value" : "Управление требуемыми зависимостями Crosswire."
           }
         },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Uncorked'nin gerekli yazılımlarını düzenle."
+            "value" : "Crosswire'nin gerekli yazılımlarını düzenle."
           }
         },
         "uk" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Керування необхідними залежностями Uncorked."
+            "value" : "Керування необхідними залежностями Crosswire."
           }
         },
         "vi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Quản lý những tệp quan trọng của Uncorked."
+            "value" : "Quản lý những tệp quan trọng của Crosswire."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "管理 Uncorked 所需依赖"
+            "value" : "管理 Crosswire 所需依赖"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "管理Uncorked需要的相依性套件"
+            "value" : "管理Crosswire需要的相依性套件"
           }
         }
       }
@@ -16875,133 +16875,133 @@
         "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "مرحبا بكم في Uncorked"
+            "value" : "مرحبا بكم في Crosswire"
           }
         },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Vítejte ve Uncorked"
+            "value" : "Vítejte ve Crosswire"
           }
         },
         "da" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Velkommen til Uncorked"
+            "value" : "Velkommen til Crosswire"
           }
         },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Willkommen zu Uncorked"
+            "value" : "Willkommen zu Crosswire"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Welcome to Uncorked"
+            "value" : "Welcome to Crosswire"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Bienvenido a Uncorked"
+            "value" : "Bienvenido a Crosswire"
           }
         },
         "fi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tervetuloa käyttämään Uncorkedä"
+            "value" : "Tervetuloa käyttämään Crosswireä"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Bienvenue sur Uncorked"
+            "value" : "Bienvenue sur Crosswire"
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Benvenuto su Uncorked"
+            "value" : "Benvenuto su Crosswire"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Uncorked へようこそ"
+            "value" : "Crosswire へようこそ"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Uncorked에 오신 것을 환영합니다"
+            "value" : "Crosswire에 오신 것을 환영합니다"
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Welkom bij Uncorked"
+            "value" : "Welkom bij Crosswire"
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Witaj w Uncorked"
+            "value" : "Witaj w Crosswire"
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Bem-vindo ao Uncorked"
+            "value" : "Bem-vindo ao Crosswire"
           }
         },
         "pt-PT" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Bem-vindo ao Uncorked"
+            "value" : "Bem-vindo ao Crosswire"
           }
         },
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Bine ați venit la Uncorked"
+            "value" : "Bine ați venit la Crosswire"
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Добро пожаловать в Uncorked"
+            "value" : "Добро пожаловать в Crosswire"
           }
         },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Uncorked'ye Hoşgeldiniz"
+            "value" : "Crosswire'ye Hoşgeldiniz"
           }
         },
         "uk" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ласкаво просимо до Uncorked"
+            "value" : "Ласкаво просимо до Crosswire"
           }
         },
         "vi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Chào mừng đến với Uncorked"
+            "value" : "Chào mừng đến với Crosswire"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "欢迎使用 Uncorked"
+            "value" : "欢迎使用 Crosswire"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "歡迎使用 Uncorked"
+            "value" : "歡迎使用 Crosswire"
           }
         }
       }
@@ -17147,13 +17147,13 @@
         "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "تنزيل Uncorked"
+            "value" : "تنزيل Crosswire"
           }
         },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Stahování Uncorked"
+            "value" : "Stahování Crosswire"
           }
         },
         "da" : {
@@ -17165,31 +17165,31 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Uncorked herunterladen"
+            "value" : "Crosswire herunterladen"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Downloading Uncorked"
+            "value" : "Downloading Crosswire"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Descargando Uncorked"
+            "value" : "Descargando Crosswire"
           }
         },
         "fi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ladataan Uncorked"
+            "value" : "Ladataan Crosswire"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Téléchargement de Uncorked"
+            "value" : "Téléchargement de Crosswire"
           }
         },
         "it" : {
@@ -17201,13 +17201,13 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Uncorked をダウンロード中"
+            "value" : "Crosswire をダウンロード中"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Uncorked를 다운로드 중입니다."
+            "value" : "Crosswire를 다운로드 중입니다."
           }
         },
         "nl" : {
@@ -17219,7 +17219,7 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Pobieranie Uncorked"
+            "value" : "Pobieranie Crosswire"
           }
         },
         "pt-BR" : {
@@ -17237,13 +17237,13 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Se descarcă Uncorked"
+            "value" : "Se descarcă Crosswire"
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Скачивание Uncorked"
+            "value" : "Скачивание Crosswire"
           }
         },
         "tr" : {
@@ -17255,7 +17255,7 @@
         "uk" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Завантаження Uncorked"
+            "value" : "Завантаження Crosswire"
           }
         },
         "vi" : {
@@ -17267,13 +17267,13 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "正在下载 Uncorked"
+            "value" : "正在下载 Crosswire"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "正在下載 Uncorked"
+            "value" : "正在下載 Crosswire"
           }
         }
       }
@@ -17555,13 +17555,13 @@
         "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "تثبيت Uncorked"
+            "value" : "تثبيت Crosswire"
           }
         },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Instalace Uncorked"
+            "value" : "Instalace Crosswire"
           }
         },
         "da" : {
@@ -17573,49 +17573,49 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Uncorked wird installiert"
+            "value" : "Crosswire wird installiert"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Installing Uncorked"
+            "value" : "Installing Crosswire"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Instalando Uncorked"
+            "value" : "Instalando Crosswire"
           }
         },
         "fi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Asennetaan Uncorked"
+            "value" : "Asennetaan Crosswire"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Installation de Uncorked"
+            "value" : "Installation de Crosswire"
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Installazione di Uncorked"
+            "value" : "Installazione di Crosswire"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Uncorked をインストール中"
+            "value" : "Crosswire をインストール中"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Uncorked 설치 중"
+            "value" : "Crosswire 설치 중"
           }
         },
         "nl" : {
@@ -17627,7 +17627,7 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Instalowanie Uncorked"
+            "value" : "Instalowanie Crosswire"
           }
         },
         "pt-BR" : {
@@ -17645,13 +17645,13 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Se instalează Uncorked"
+            "value" : "Se instalează Crosswire"
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Установка Uncorked"
+            "value" : "Установка Crosswire"
           }
         },
         "tr" : {
@@ -17663,7 +17663,7 @@
         "uk" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Встановлення Uncorked"
+            "value" : "Встановлення Crosswire"
           }
         },
         "vi" : {
@@ -17675,13 +17675,13 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "正在安装 Uncorked"
+            "value" : "正在安装 Crosswire"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "正在安裝 Uncorked"
+            "value" : "正在安裝 Crosswire"
           }
         }
       }
@@ -18235,67 +18235,67 @@
         "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "في بعض الحالات، Uncorked لن يكون قادراً على العمل بشكل صحيح من مجلد مختلف"
+            "value" : "في بعض الحالات، Crosswire لن يكون قادراً على العمل بشكل صحيح من مجلد مختلف"
           }
         },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "V některých případech nemusí být Uncorked schopna správně fungovat z jiné složky"
+            "value" : "V některých případech nemusí být Crosswire schopna správně fungovat z jiné složky"
           }
         },
         "da" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "I nogle tilfælde vil Uncorked ikke være i stand til at fungere korrekt fra en anden mappe"
+            "value" : "I nogle tilfælde vil Crosswire ikke være i stand til at fungere korrekt fra en anden mappe"
           }
         },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "In manchen Fällen wird Uncorked nicht richtig funktionieren, wenn es in einem anderen Ordner gespeichert ist"
+            "value" : "In manchen Fällen wird Crosswire nicht richtig funktionieren, wenn es in einem anderen Ordner gespeichert ist"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "In some cases, Uncorked won't be able to function properly from a different folder"
+            "value" : "In some cases, Crosswire won't be able to function properly from a different folder"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "En algunos casos, Uncorked podría no funcionar correctamente desde una carpeta diferente"
+            "value" : "En algunos casos, Crosswire podría no funcionar correctamente desde una carpeta diferente"
           }
         },
         "fi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Joissakin tapauksissa, Uncorkedn ei ole mahdollista toimia kunnolla muista kansioista"
+            "value" : "Joissakin tapauksissa, Crosswiren ei ole mahdollista toimia kunnolla muista kansioista"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Dans certains cas, Uncorked ne pourra pas fonctionner correctement depuis un dossier différent"
+            "value" : "Dans certains cas, Crosswire ne pourra pas fonctionner correctement depuis un dossier différent"
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "In alcuni casi, Uncorked non potrà funzionare correttamente da un cartella diversa"
+            "value" : "In alcuni casi, Crosswire non potrà funzionare correttamente da un cartella diversa"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "場合によっては、異なるフォルダから Uncorked を適切に使用できない場合があります"
+            "value" : "場合によっては、異なるフォルダから Crosswire を適切に使用できない場合があります"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "경우에 따라 다른 폴더에서는 Uncorked가 제대로 동작하지 않을 수 있습니다."
+            "value" : "경우에 따라 다른 폴더에서는 Crosswire가 제대로 동작하지 않을 수 있습니다."
           }
         },
         "nl" : {
@@ -18307,61 +18307,61 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "W niektórych przypadkach Uncorked nie będzie w stanie działać poprawnie w innym folderze"
+            "value" : "W niektórych przypadkach Crosswire nie będzie w stanie działać poprawnie w innym folderze"
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Em alguns casos, o Uncorked pode não funcionar corretamente numa pasta diferente"
+            "value" : "Em alguns casos, o Crosswire pode não funcionar corretamente numa pasta diferente"
           }
         },
         "pt-PT" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Em alguns casos, o Uncorked pode não funcionar corretamente numa pasta diferente"
+            "value" : "Em alguns casos, o Crosswire pode não funcionar corretamente numa pasta diferente"
           }
         },
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "În unele cazuri, Uncorked nu va putea funcționa corect dintr-un folder diferit"
+            "value" : "În unele cazuri, Crosswire nu va putea funcționa corect dintr-un folder diferit"
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "В некоторых случаях Uncorked не сможет правильно функционировать из другой папки"
+            "value" : "В некоторых случаях Crosswire не сможет правильно функционировать из другой папки"
           }
         },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Bazı durumlarda, Uncorked başka bir klasörden düzgün çalışamayabilir"
+            "value" : "Bazı durumlarda, Crosswire başka bir klasörden düzgün çalışamayabilir"
           }
         },
         "uk" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "У деяких випадках, Uncorked може не працювати належним чином з іншої папки"
+            "value" : "У деяких випадках, Crosswire може не працювати належним чином з іншої папки"
           }
         },
         "vi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Trong một số trường hợp, Uncorked sẽ không hoạt động đúng nếu không nằm trong Applications"
+            "value" : "Trong một số trường hợp, Crosswire sẽ không hoạt động đúng nếu không nằm trong Applications"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "在某些情况下，Uncorked 可能无法在其他的文件夹中正常工作"
+            "value" : "在某些情况下，Crosswire 可能无法在其他的文件夹中正常工作"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "在某些情況下，Uncorked 可能無法在不同的資料夾中正常運作"
+            "value" : "在某些情況下，Crosswire 可能無法在不同的資料夾中正常運作"
           }
         }
       }
@@ -18371,67 +18371,67 @@
         "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "هل ترغب في نقل Uncorked إلى مجلد التطبيقات الخاص بك؟"
+            "value" : "هل ترغب في نقل Crosswire إلى مجلد التطبيقات الخاص بك؟"
           }
         },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Chtěli byste přesunout Uncorked do složky s aplikacemi?"
+            "value" : "Chtěli byste přesunout Crosswire do složky s aplikacemi?"
           }
         },
         "da" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Vil du flytte Uncorked til Applications mappen?"
+            "value" : "Vil du flytte Crosswire til Applications mappen?"
           }
         },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Möchtest du Uncorked in deinen Programm-Ordner legen?"
+            "value" : "Möchtest du Crosswire in deinen Programm-Ordner legen?"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Would you like to move Uncorked to your Applications folder?"
+            "value" : "Would you like to move Crosswire to your Applications folder?"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "¿Te gustaría mover Uncorked a la carpeta de Aplicaciones?"
+            "value" : "¿Te gustaría mover Crosswire a la carpeta de Aplicaciones?"
           }
         },
         "fi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Haluatko siirtää Uncorkedn Applikaatio-kansioon?"
+            "value" : "Haluatko siirtää Crosswiren Applikaatio-kansioon?"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Souhaitez-vous déplacer Uncorked dans votre dossier Applications ?"
+            "value" : "Souhaitez-vous déplacer Crosswire dans votre dossier Applications ?"
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Vuoi spostare Uncorked nella tua cartella Applicazioni?"
+            "value" : "Vuoi spostare Crosswire nella tua cartella Applicazioni?"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Uncorked を「アプリケーション」フォルダに移動しますか？"
+            "value" : "Crosswire を「アプリケーション」フォルダに移動しますか？"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Uncorked를 애플리케이션 폴더로 옮기시겠습니까?"
+            "value" : "Crosswire를 애플리케이션 폴더로 옮기시겠습니까?"
           }
         },
         "nl" : {
@@ -18443,61 +18443,61 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Czy chcesz przenieść Uncorked do folderu Aplikacje?"
+            "value" : "Czy chcesz przenieść Crosswire do folderu Aplikacje?"
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Você gostaria de mover o Uncorked para a pasta dos Aplicativos?"
+            "value" : "Você gostaria de mover o Crosswire para a pasta dos Aplicativos?"
           }
         },
         "pt-PT" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Gostaria de mover o Uncorked para a pasta das Aplicações ?"
+            "value" : "Gostaria de mover o Crosswire para a pasta das Aplicações ?"
           }
         },
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Doriți să mutați Uncorked în folder-ul dvs. Aplicații?"
+            "value" : "Doriți să mutați Crosswire în folder-ul dvs. Aplicații?"
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Вы хотите переместить Uncorked в папку «Приложения»?"
+            "value" : "Вы хотите переместить Crosswire в папку «Приложения»?"
           }
         },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Uncorked'yi Uygulamalar klasörünüze taşımak ister misiniz?"
+            "value" : "Crosswire'yi Uygulamalar klasörünüze taşımak ister misiniz?"
           }
         },
         "uk" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Хотіли б ви перемістити Uncorked у вашу папку Застосунки?"
+            "value" : "Хотіли б ви перемістити Crosswire у вашу папку Застосунки?"
           }
         },
         "vi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Bạn có muốn chuyển Uncorked tới folder Applications?"
+            "value" : "Bạn có muốn chuyển Crosswire tới folder Applications?"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "你想要将 Uncorked 移动到你的应用程序文件夹吗？"
+            "value" : "你想要将 Crosswire 移动到你的应用程序文件夹吗？"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "你希望將 Uncorked 移動到你的應用程式資料夾嗎？"
+            "value" : "你希望將 Crosswire 移動到你的應用程式資料夾嗎？"
           }
         }
       }
@@ -18916,7 +18916,7 @@
         "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "أنت تقوم بتشغيل Uncorked %@، ولكن %@ متوفر. هل ترغب في التحديث؟"
+            "value" : "أنت تقوم بتشغيل Crosswire %@، ولكن %@ متوفر. هل ترغب في التحديث؟"
           }
         },
         "cs" : {
@@ -18928,121 +18928,121 @@
         "da" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Du kører Uncorked %@, men %@ er tilgængelig. Ønsker du at opdatere?"
+            "value" : "Du kører Crosswire %@, men %@ er tilgængelig. Ønsker du at opdatere?"
           }
         },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Sie verwenden Uncorked %@, die aktuelle Version ist %@. Möchten Sie Uncorked aktualisieren?"
+            "value" : "Sie verwenden Crosswire %@, die aktuelle Version ist %@. Möchten Sie Crosswire aktualisieren?"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "You are running Uncorked %@, but %@ is available. Would you like to update?"
+            "value" : "You are running Crosswire %@, but %@ is available. Would you like to update?"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Estás ejecutando Uncorked %@, pero %@ está disponible. ¿Quieres actualizar?"
+            "value" : "Estás ejecutando Crosswire %@, pero %@ está disponible. ¿Quieres actualizar?"
           }
         },
         "fi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Käytössäsi on Uncorked %@, mutta %@ on saatavilla. Haluatko päivittää sen?"
+            "value" : "Käytössäsi on Crosswire %@, mutta %@ on saatavilla. Haluatko päivittää sen?"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Vous utilisez Uncorked %@, mais %@ est disponible. Voulez-vous le mettre à jour ?"
+            "value" : "Vous utilisez Crosswire %@, mais %@ est disponible. Voulez-vous le mettre à jour ?"
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Stai utilizzando Uncorked %@, ma %@ è disponibile. Vuoi aggiornare?"
+            "value" : "Stai utilizzando Crosswire %@, ma %@ è disponibile. Vuoi aggiornare?"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "現在 Uncorked %@ を使用していますが、 %@ を利用可能です。アップデートしますか？"
+            "value" : "現在 Crosswire %@ を使用していますが、 %@ を利用可能です。アップデートしますか？"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Uncorked %@ 버전을 사용 중이지만 %@ 버전을 사용할 수 있습니다. 업데이트하시겠습니까?"
+            "value" : "Crosswire %@ 버전을 사용 중이지만 %@ 버전을 사용할 수 있습니다. 업데이트하시겠습니까?"
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "U gebruikt Uncorked %@, maar %@ is beschikbaar. Wilt u updaten?"
+            "value" : "U gebruikt Crosswire %@, maar %@ is beschikbaar. Wilt u updaten?"
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Używasz Uncorked %@, lecz nowsza wersja %@ jest dostępna. Czy chcesz zaktualizować?"
+            "value" : "Używasz Crosswire %@, lecz nowsza wersja %@ jest dostępna. Czy chcesz zaktualizować?"
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Uncorked %@ está sendo usada, mas %@ está disponível. Atualizar?"
+            "value" : "Crosswire %@ está sendo usada, mas %@ está disponível. Atualizar?"
           }
         },
         "pt-PT" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Está a usar o Uncorked %@, mas o %@ está disponível. Gostaria de atualizar?"
+            "value" : "Está a usar o Crosswire %@, mas o %@ está disponível. Gostaria de atualizar?"
           }
         },
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Dvs. rulați Uncorked %@, dar %@ este disponibil. Doriți să actualizați?"
+            "value" : "Dvs. rulați Crosswire %@, dar %@ este disponibil. Doriți să actualizați?"
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Вы используете Uncorked %@, но %@ доступен. Желаете обновить?"
+            "value" : "Вы используете Crosswire %@, но %@ доступен. Желаете обновить?"
           }
         },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Uncorked %@ versiyonu kullanıyorsunuz ama %@ versiyonu mevcut. Güncellemek ister misiniz?"
+            "value" : "Crosswire %@ versiyonu kullanıyorsunuz ama %@ versiyonu mevcut. Güncellemek ister misiniz?"
           }
         },
         "uk" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ви використовуєте Uncorked %@, але доступна версія %@. Оновити?"
+            "value" : "Ви використовуєте Crosswire %@, але доступна версія %@. Оновити?"
           }
         },
         "vi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Bạn đang sử dụng Uncorked phiên bản %@, nhưng phiên bản%@ đã được phát hành. Bạn có muốn cập nhật không?"
+            "value" : "Bạn đang sử dụng Crosswire phiên bản %@, nhưng phiên bản%@ đã được phát hành. Bạn có muốn cập nhật không?"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "您正在运行 Uncorked %@，但 %@ 可用。您想要更新吗？"
+            "value" : "您正在运行 Crosswire %@，但 %@ 可用。您想要更新吗？"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "您正在使用Uncorked %@, %@已可更新 請問是否要更新?"
+            "value" : "您正在使用Crosswire %@, %@已可更新 請問是否要更新?"
           }
         }
       }
@@ -19052,133 +19052,133 @@
         "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "إصدار جديد من Uncorked متوفر"
+            "value" : "إصدار جديد من Crosswire متوفر"
           }
         },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "K dispozici je nová verze Uncorked"
+            "value" : "K dispozici je nová verze Crosswire"
           }
         },
         "da" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ny version af Uncorked tilgængelig"
+            "value" : "Ny version af Crosswire tilgængelig"
           }
         },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Eine neue Uncorked Version ist verfügbar"
+            "value" : "Eine neue Crosswire Version ist verfügbar"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "New Version of Uncorked Available"
+            "value" : "New Version of Crosswire Available"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Nueva versión de Uncorked disponible"
+            "value" : "Nueva versión de Crosswire disponible"
           }
         },
         "fi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Uusi Uncorked versio on saatavilla"
+            "value" : "Uusi Crosswire versio on saatavilla"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Nouvelle version de Uncorked disponible"
+            "value" : "Nouvelle version de Crosswire disponible"
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Nuova versione di Uncorked disponibile"
+            "value" : "Nuova versione di Crosswire disponibile"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Uncorked の新しいバージョンがあります"
+            "value" : "Crosswire の新しいバージョンがあります"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "새로운 버전의 Uncorked를 사용할 수 있습니다"
+            "value" : "새로운 버전의 Crosswire를 사용할 수 있습니다"
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Nieuwe Uncorked versie is beschikbaar"
+            "value" : "Nieuwe Crosswire versie is beschikbaar"
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Nowa wersja Uncorked jest dostępna"
+            "value" : "Nowa wersja Crosswire jest dostępna"
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Nova versão do Uncorked disponível"
+            "value" : "Nova versão do Crosswire disponível"
           }
         },
         "pt-PT" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Nova versão do Uncorked disponível"
+            "value" : "Nova versão do Crosswire disponível"
           }
         },
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "O Nouă Versiune Uncorked este Disponibilă"
+            "value" : "O Nouă Versiune Crosswire este Disponibilă"
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Доступна новая версия Uncorked"
+            "value" : "Доступна новая версия Crosswire"
           }
         },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Uncorked'nin yeni versiyonu mevcut"
+            "value" : "Crosswire'nin yeni versiyonu mevcut"
           }
         },
         "uk" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Доступна нова версія Uncorked"
+            "value" : "Доступна нова версія Crosswire"
           }
         },
         "vi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Phiên bản mới của Uncorked đã được phát hành"
+            "value" : "Phiên bản mới của Crosswire đã được phát hành"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "有更新的 Uncorked 版本可用"
+            "value" : "有更新的 Crosswire 版本可用"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "有新的Uncorked版本可供安裝"
+            "value" : "有新的Crosswire版本可供安裝"
           }
         }
       }

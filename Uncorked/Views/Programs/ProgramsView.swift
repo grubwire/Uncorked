@@ -1,23 +1,23 @@
 //
 //  ProgramsView.swift
-//  Uncorked
+//  Crosswire
 //
-//  This file is part of Uncorked.
+//  This file is part of Crosswire.
 //
-//  Uncorked is free software: you can redistribute it and/or modify it under the terms
+//  Crosswire is free software: you can redistribute it and/or modify it under the terms
 //  of the GNU General Public License as published by the Free Software Foundation,
 //  either version 3 of the License, or (at your option) any later version.
 //
-//  Uncorked is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+//  Crosswire is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
 //  without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 //  See the GNU General Public License for more details.
 //
-//  You should have received a copy of the GNU General Public License along with Uncorked.
+//  You should have received a copy of the GNU General Public License along with Crosswire.
 //  If not, see https://www.gnu.org/licenses/.
 //
 
 import SwiftUI
-import UncorkedKit
+import CrosswireKit
 
 struct ProgramsView: View {
     @ObservedObject var bottle: Bottle
@@ -75,7 +75,7 @@ struct ProgramsView: View {
                     }
                 }
             }
-            .animation(.uncorkedDefault, value: sortedPrograms)
+            .animation(.CrosswireDefault, value: sortedPrograms)
 
             Section("program.blocklist", isExpanded: $isBlocklistExpanded) {
                 List(searchedBlocklists, id: \.self, selection: $selectedBlockitems) { blockedUrl in
@@ -103,11 +103,11 @@ struct ProgramsView: View {
             }
         }
         .formStyle(.grouped)
-        .animation(.uncorkedDefault, value: sortedPrograms)
-        .animation(.uncorkedDefault, value: bottle.settings.blocklist)
-        .animation(.uncorkedDefault, value: searchText)
-        .animation(.uncorkedDefault, value: areProgramsExpanded)
-        .animation(.uncorkedDefault, value: isBlocklistExpanded)
+        .animation(.CrosswireDefault, value: sortedPrograms)
+        .animation(.CrosswireDefault, value: bottle.settings.blocklist)
+        .animation(.CrosswireDefault, value: searchText)
+        .animation(.CrosswireDefault, value: areProgramsExpanded)
+        .animation(.CrosswireDefault, value: isBlocklistExpanded)
         .navigationTitle("tab.programs")
         .searchable(text: $searchText)
         .onAppear {

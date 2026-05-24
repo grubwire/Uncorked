@@ -48,7 +48,7 @@ jobs:
       - name: Verify artifact files present
         run: |
           TAG="${{ inputs.engine_tag }}"
-          test -f "/tmp/artifact/uncorked-engine-${TAG}.tar.xz" || { echo "Missing archive"; exit 1; }
+          test -f "/tmp/artifact/Crosswire-engine-${TAG}.tar.xz" || { echo "Missing archive"; exit 1; }
           test -f "/tmp/artifact/engine-manifest.json" || { echo "Missing manifest"; exit 1; }
           test -f "/tmp/artifact/engine-manifest.json.sig" || { echo "Missing signature"; exit 1; }
 
@@ -61,8 +61,8 @@ jobs:
           R2_BUCKET: ${{ secrets.R2_BUCKET }}
         run: |
           TAG="${{ inputs.engine_tag }}"
-          aws s3 cp "/tmp/artifact/uncorked-engine-${TAG}.tar.xz" \
-            "s3://${R2_BUCKET}/engine/prod/archives/uncorked-engine-${TAG}.tar.xz" \
+          aws s3 cp "/tmp/artifact/Crosswire-engine-${TAG}.tar.xz" \
+            "s3://${R2_BUCKET}/engine/prod/archives/Crosswire-engine-${TAG}.tar.xz" \
             --endpoint-url "$R2_ENDPOINT"
 
       - name: Upload manifest and signature to R2 (mutable prod pointer)

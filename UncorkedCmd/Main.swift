@@ -1,32 +1,32 @@
 //
 //  Main.swift
-//  UncorkedCmd
+//  CrosswireCmd
 //
-//  This file is part of Uncorked.
+//  This file is part of Crosswire.
 //
-//  Uncorked is free software: you can redistribute it and/or modify it under the terms
+//  Crosswire is free software: you can redistribute it and/or modify it under the terms
 //  of the GNU General Public License as published by the Free Software Foundation,
 //  either version 3 of the License, or (at your option) any later version.
 //
-//  Uncorked is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+//  Crosswire is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
 //  without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 //  See the GNU General Public License for more details.
 //
-//  You should have received a copy of the GNU General Public License along with Uncorked.
+//  You should have received a copy of the GNU General Public License along with Crosswire.
 //  If not, see https://www.gnu.org/licenses/.
 //
 
 import Foundation
-import UncorkedKit
+import CrosswireKit
 import SwiftyTextTable
 import Progress
 import SemanticVersion
 import ArgumentParser
 
 @main
-struct Uncorked: ParsableCommand {
+struct Crosswire: ParsableCommand {
     static let configuration = CommandConfiguration(
-        abstract: "A CLI interface for Uncorked.",
+        abstract: "A CLI interface for Crosswire.",
         subcommands: [List.self,
                       Create.self,
                       Add.self,
@@ -39,7 +39,7 @@ struct Uncorked: ParsableCommand {
                       Uninstall.self*/])
 }
 
-extension Uncorked {
+extension Crosswire {
     struct List: ParsableCommand {
         static let configuration = CommandConfiguration(abstract: "List existing bottles.")
 
@@ -145,7 +145,7 @@ extension Uncorked {
     }
 
     struct Remove: ParsableCommand {
-        static let configuration = CommandConfiguration(abstract: "Remove an existing bottle from Uncorked.",
+        static let configuration = CommandConfiguration(abstract: "Remove an existing bottle from Crosswire.",
                                                         discussion: "This will not remove the bottle from disk.")
 
         @Argument var name: String
@@ -167,7 +167,7 @@ extension Uncorked {
     }
 
     struct Run: ParsableCommand {
-        static let configuration = CommandConfiguration(abstract: "Run a program with Uncorked.")
+        static let configuration = CommandConfiguration(abstract: "Run a program with Crosswire.")
 
         @Argument var bottleName: String
         @Argument var path: String

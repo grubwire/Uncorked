@@ -1,23 +1,23 @@
 //
 //  EngineSetupView.swift
-//  Uncorked
+//  Crosswire
 //
-//  This file is part of Uncorked.
+//  This file is part of Crosswire.
 //
-//  Uncorked is free software: you can redistribute it and/or modify it under the terms
+//  Crosswire is free software: you can redistribute it and/or modify it under the terms
 //  of the GNU General Public License as published by the Free Software Foundation,
 //  either version 3 of the License, or (at your option) any later version.
 //
-//  Uncorked is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+//  Crosswire is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
 //  without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 //  See the GNU General Public License for more details.
 //
-//  You should have received a copy of the GNU General Public License along with Uncorked.
+//  You should have received a copy of the GNU General Public License along with Crosswire.
 //  If not, see https://www.gnu.org/licenses/.
 //
 
 import SwiftUI
-import UncorkedKit
+import CrosswireKit
 
 struct EngineSetupView: View {
     @State private var phase: Phase = .fetchingManifest
@@ -105,14 +105,14 @@ struct EngineSetupView: View {
 
         Task.detached {
             do {
-                let manifest = try await UncorkedEngine.fetchManifest()
+                let manifest = try await CrosswireEngine.fetchManifest()
 
                 await MainActor.run {
                     phase = .downloading
                     downloadStartTime = Date()
                 }
 
-                let archive = try await UncorkedEngine.downloadArchive(manifest: manifest) { written, total in
+                let archive = try await CrosswireEngine.downloadArchive(manifest: manifest) { written, total in
                     Task { @MainActor in
                         let elapsed = Date().timeIntervalSince(downloadStartTime ?? Date())
                         if written > 0 && elapsed > 0 {
@@ -124,7 +124,7 @@ struct EngineSetupView: View {
                 }
 
                 await MainActor.run { phase = .verifying }
-                try await UncorkedEngine.verifyAndInstall(archive: archive, manifest: manifest)
+                try await CrosswireEngine.verifyAndInstall(archive: archive, manifest: manifest)
                 await MainActor.run { phase = .done }
 
                 try await Task.sleep(for: .seconds(2))
