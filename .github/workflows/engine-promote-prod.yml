@@ -85,10 +85,16 @@ jobs:
             --cache-control "no-cache, no-store, must-revalidate"
 
       - name: Update engine-version.txt and push
+        env:
+          ENGINE_TAG: ${{ inputs.engine_tag }}
         run: |
-          echo "${{ inputs.engine_tag }}" > engine-version.txt
+          echo "$ENGINE_TAG" > engine-version.txt
+          if git diff --quiet engine-version.txt; then
+            echo "engine-version.txt already at $ENGINE_TAG, nothing to commit."
+            exit 0
+          fi
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add engine-version.txt
-          git commit -m "Promote engine ${{ inputs.engine_tag }} to prod"
+          git commit -m "Promote engine $ENGINE_TAG to prod"
           git push

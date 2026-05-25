@@ -59,7 +59,9 @@ representative at an online or offline event.
 ## Enforcement
 
 Instances of abusive, harassing, or otherwise unacceptable behavior may be
-reported to the community leaders responsible for enforcement on the [Crosswire Discord](https://discord.gg/CsqAfs9CnM).
+reported to the community leaders responsible for enforcement by emailing
+[contact@grubwire.io](mailto:contact@grubwire.io) or by opening a confidential
+report via [github.com/grubwire/crosswire/security/advisories/new](https://github.com/grubwire/crosswire/security/advisories/new).
 
 All complaints will be reviewed and investigated promptly and fairly.
 

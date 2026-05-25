@@ -20,12 +20,16 @@ import SwiftUI
 import UniformTypeIdentifiers
 import CrosswireKit
 import SemanticVersion
+import Sparkle
 
 struct ContentView: View {
     @AppStorage("selectedBottleURL") private var selectedBottleURL: URL?
     @AppStorage("checkEngineUpdates") private var checkEngineUpdates = true
     @EnvironmentObject var bottleVM: BottleVM
     @Binding var showSetup: Bool
+    @Environment(\.openURL) private var openURL
+    let updater: SPUUpdater
+    @StateObject private var updateChecker: CheckForUpdatesViewModel
 
     @State private var selected: URL?
     @State private var showBottleCreation: Bool = false
@@ -38,6 +42,12 @@ struct ContentView: View {
     @State private var setupStartingStage: SetupStage?
 
     @State private var bottleFilter = ""
+
+    init(showSetup: Binding<Bool>, updater: SPUUpdater) {
+        self._showSetup = showSetup
+        self.updater = updater
+        self._updateChecker = StateObject(wrappedValue: CheckForUpdatesViewModel(updater: updater))
+    }
 
     var body: some View {
         NavigationSplitView {
@@ -70,6 +80,36 @@ struct ContentView: View {
                     Image(systemName: "arrow.triangle.2.circlepath")
                         .help("button.refresh")
                         .rotationEffect(refreshAnimation)
+                }
+            }
+            ToolbarItem(placement: .primaryAction) {
+                Menu {
+                    SettingsLink {
+                        Label("settings.title", systemImage: "gearshape")
+                    }
+                    Button("check.updates", systemImage: "arrow.down.circle") {
+                        updater.checkForUpdates()
+                    }
+                    .disabled(!updateChecker.canCheckForUpdates)
+                    Divider()
+                    Button("help.wiki", systemImage: "book") {
+                        if let url = URL(string: "https://grubwire.io/crosswire/wiki/") {
+                            openURL(url)
+                        }
+                    }
+                    Button("help.website", systemImage: "globe") {
+                        if let url = URL(string: "https://grubwire.io") {
+                            openURL(url)
+                        }
+                    }
+                    Button("help.github", systemImage: "chevron.left.forwardslash.chevron.right") {
+                        if let url = URL(string: "https://github.com/grubwire/Crosswire") {
+                            openURL(url)
+                        }
+                    }
+                } label: {
+                    Image(systemName: "ellipsis.circle")
+                        .help("button.more")
                 }
             }
         }

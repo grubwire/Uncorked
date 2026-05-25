@@ -36,7 +36,7 @@ struct CrosswireApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView(showSetup: $showSetup)
+            ContentView(showSetup: $showSetup, updater: updaterController.updater)
                 .frame(minWidth: ViewWidth.large, minHeight: 316)
                 .environmentObject(BottleVM.shared)
                 .onAppear {
@@ -111,13 +111,13 @@ struct CrosswireApp: App {
                         openURL(url)
                     }
                 }
-                Button("help.github") {
-                    if let url = URL(string: "https://github.com/grubwire/Crosswire") {
+                Button("help.wiki") {
+                    if let url = URL(string: "https://grubwire.io/crosswire/wiki/") {
                         openURL(url)
                     }
                 }
-                Button("help.discord") {
-                    if let url = URL(string: "https://discord.gg/CsqAfs9CnM") {
+                Button("help.github") {
+                    if let url = URL(string: "https://github.com/grubwire/Crosswire") {
                         openURL(url)
                     }
                 }
