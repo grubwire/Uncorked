@@ -36,31 +36,33 @@ jobs:
       - name: Open or update failure issue
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          WORKFLOW: ${{ github.event.workflow_run.name }}
+          BRANCH: ${{ github.event.workflow_run.head_branch }}
+          RUN_URL: ${{ github.event.workflow_run.html_url }}
+          SHA: ${{ github.event.workflow_run.head_sha }}
         run: |
-          WORKFLOW="${{ github.event.workflow_run.name }}"
-          BRANCH="${{ github.event.workflow_run.head_branch }}"
-          RUN_URL="${{ github.event.workflow_run.html_url }}"
-          SHA="${{ github.event.workflow_run.head_sha }}"
           SHORT_SHA="${SHA:0:7}"
 
           # Deduplicate: if there is already an open ci-failure issue mentioning
           # this workflow name (title or body), post a comment with the new run
           # instead of opening a second issue. Substring match in JQ so that
           # repurposed/renamed tracker issues still count.
+          WORKFLOW_LOWER=$(echo "$WORKFLOW" | tr '[:upper:]' '[:lower:]')
           EXISTING=$(gh issue list \
-            --repo "${{ github.repository }}" \
+            --repo "$REPO" \
             --state open \
             --label ci-failure \
             --json number,title,body \
-            --jq "[.[] | select((.title + \" \" + .body) | ascii_downcase | contains(\"$(echo "$WORKFLOW" | tr '[:upper:]' '[:lower:]')\"))] | .[0].number // empty")
+            --jq "[.[] | select((.title + \" \" + .body) | ascii_downcase | contains(\"$WORKFLOW_LOWER\"))] | .[0].number // empty")
 
           if [ -n "$EXISTING" ]; then
             gh issue comment "$EXISTING" \
-              --repo "${{ github.repository }}" \
+              --repo "$REPO" \
               --body "Another **${WORKFLOW}** failure on \`${BRANCH}\` at \`${SHORT_SHA}\`. Run: ${RUN_URL}"
           else
             gh issue create \
-              --repo "${{ github.repository }}" \
+              --repo "$REPO" \
               --title "CI: ${WORKFLOW} failed on ${BRANCH} (${SHORT_SHA})" \
               --label "ci-failure" \
               --body "**${WORKFLOW}** failed on branch \`${BRANCH}\` at commit \`${SHORT_SHA}\`.
