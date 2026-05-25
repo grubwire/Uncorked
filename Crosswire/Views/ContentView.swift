@@ -248,6 +248,13 @@ struct ContentView: View {
 }
 
 #Preview {
-    ContentView(showSetup: .constant(false))
-        .environmentObject(BottleVM.shared)
+    ContentView(
+        showSetup: .constant(false),
+        updater: SPUStandardUpdaterController(
+            startingUpdater: false,
+            updaterDelegate: nil,
+            userDriverDelegate: nil
+        ).updater
+    )
+    .environmentObject(BottleVM.shared)
 }
