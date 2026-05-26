@@ -48,6 +48,7 @@ public struct BottleInfo: Codable, Equatable {
     var name: String = "Bottle"
     var pins: [PinnedProgram] = []
     var blocklist: [URL] = []
+    var primaryProgramURL: URL?
 
     public init() {}
 
@@ -56,6 +57,7 @@ public struct BottleInfo: Codable, Equatable {
         self.name = try container.decodeIfPresent(String.self, forKey: .name) ?? "Bottle"
         self.pins = try container.decodeIfPresent([PinnedProgram].self, forKey: .pins) ?? []
         self.blocklist = try container.decodeIfPresent([URL].self, forKey: .blocklist) ?? []
+        self.primaryProgramURL = try container.decodeIfPresent(URL.self, forKey: .primaryProgramURL)
     }
 }
 
@@ -203,6 +205,15 @@ public struct BottleSettings: Codable, Equatable {
     public var blocklist: [URL] {
         get { return info.blocklist }
         set { info.blocklist = newValue }
+    }
+
+    /// The primary program launched when the user clicks the play button on this
+    /// bottle's row in the main app list. Optional; if nil the UI falls back to
+    /// the first available program when exactly one exists, or prompts the user
+    /// when multiple exist.
+    public var primaryProgramURL: URL? {
+        get { return info.primaryProgramURL }
+        set { info.primaryProgramURL = newValue }
     }
 
     public var enhancedSync: EnhancedSync {
