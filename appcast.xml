@@ -6,6 +6,15 @@
         <description>Crosswire changelog</description>
         <language>en</language>
         <item>
+            <title>Version 1.1.2</title>
+            <pubDate>Tue, 26 May 2026 05:01:17 GMT</pubDate>
+            <sparkle:version>53</sparkle:version>
+            <sparkle:shortVersionString>1.1.2</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
+            <sparkle:releaseNotesLink>https://github.com/grubwire/crosswire/releases/tag/v1.1.2</sparkle:releaseNotesLink>
+            <enclosure url="https://data.grubwire.io/app/Crosswire-v1.1.2.dmg" sparkle:edSignature="oeEkP55+nf+OPT+LtQKWaJrO0RJ6I1mnjwesx+5lpqd+xKuYg/iGEmwkzR8KTDEcN+mWZlPCUG72PQQUbaiICQ==" length="4613071" type="application/octet-stream" />
+        </item>
+        <item>
             <title>Version 1.1.1</title>
             <pubDate>Tue, 26 May 2026 04:16:40 GMT</pubDate>
             <sparkle:version>52</sparkle:version>
