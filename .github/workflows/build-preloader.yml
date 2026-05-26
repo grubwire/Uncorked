@@ -1,24 +1,34 @@
-name: Build wine-preloader (experimental)
+name: Build wine with reserve segments (experimental)
 
-# Builds wine-preloader from upstream Wine source on macOS, with the preloader
-# explicitly enabled. Gcenx's Wine builds ship neither the preloader binary
-# nor a wine with WINE_RESERVE segments embedded, so the 0x1000-0x1FFFFFFFF
-# region is unreserved at process load on Apple Silicon. That's the SWG
-# Legends mmap failure root cause. Producing the preloader is the smallest
-# patch that fixes it.
+# Builds the wine loader binary from upstream Wine source with the
+# segments-in-wine address-space reserve path active: -no_pie, image
+# base 0x200000000, -no_huge, and WINE_RESERVE / WINE_TOP_DOWN segments
+# placed at fixed addresses by the linker. That reserves the
+# 0x1000-0x1FFFFFFFF region at process load time, which is what's
+# missing from Gcenx's shipped wine (verified Case B: their binary is
+# a plain PIE at image_base 0x100000000 with no WINE_RESERVE segment).
 #
-# This workflow is intentionally standalone right now so we can iterate the
-# build before wiring it into engine-bundle.yml. Once green, the artifact
-# (wine-preloader binary) gets consumed by engine-bundle.yml and placed at
-# Engine/bin/wine-preloader.
+# We deliberately do NOT build a separate wine-preloader binary -- the
+# ABI-matching risk between a separately-built preloader and Gcenx's
+# wine is the thing we want to avoid. The wine binary itself has main.c
+# only, links against libSystem + pthread, and embeds wine_info.plist.
+# It calls into libwine/ntdll at runtime via dlopen, so it stays
+# ABI-compatible with Gcenx's runtime as long as the Wine version
+# matches.
 #
-# Outputs an artifact: wine-preloader-<tag>.
+# Verification before shipping is mandatory: otool -l must show
+# WINE_RESERVE present AND __TEXT vmaddr 0x200000000. If either is
+# missing the segments path didn't engage and the workflow fails loud.
+#
+# Standalone for now so we can iterate on the build. Once green this
+# folds into engine-bundle.yml as a step that runs after the Gcenx
+# extract and replaces /tmp/engine/bin/wine with the newly built one.
 
 on:
   workflow_dispatch:
     inputs:
       tag:
-        description: 'Wine source tag (e.g. wine-11.9). Should match the Gcenx tarball version we use at runtime.'
+        description: 'Wine source tag (e.g. wine-11.9). Should match the Gcenx tarball version.'
         required: true
         default: 'wine-11.9'
         type: string
@@ -38,70 +48,48 @@ jobs:
           xcode-select -p
           clang --version
           ld -v 2>&1 || true
+          xcrun --show-sdk-version
+          xcrun --show-sdk-path
 
       - name: Install build deps
         run: |
-          # Minimum deps. Almost everything else is disabled via --without-* below.
-          brew install bison pkg-config
+          # Apple's bundled bison is 2.3; Wine requires >=3.0. Brew bison
+          # is keg-only so prepend to PATH.
+          # mingw-w64 is required at configure time for the PE cross-compile
+          # toolchain check even if we only build loader/wine (no DLLs).
+          brew install bison pkg-config autoconf mingw-w64
+          echo "$(brew --prefix bison)/bin" >> "$GITHUB_PATH"
+          ls "$(brew --prefix bison)/bin/bison"
+          which x86_64-w64-mingw32-gcc || ls -la "$(brew --prefix mingw-w64)/bin/" | head -20
 
       - name: Clone Wine source
         run: |
           set -euo pipefail
-          # Wine source mirror on GitHub is fast and clones cleanly without auth.
-          git clone --depth=1 --branch "${WINE_TAG}" \
-            https://github.com/wine-mirror/wine.git /tmp/wine-src
+          # Gcenx's fork at the matching version. We keep Gcenx's macOS
+          # patches in scope so the wine binary we build is ABI-consistent
+          # with Gcenx's runtime libs that we'll keep using.
+          git clone --depth=1 --branch master \
+            https://github.com/Gcenx/wine.git /tmp/wine-src
           cd /tmp/wine-src
-          head -1 VERSION
-          ls loader/preloader_mac.c loader/preloader.c
-          ls loader/Makefile.in
+          echo "VERSION: $(head -1 VERSION)"
+          ls loader/Makefile.in loader/main.c
 
-      - name: Force preloader build on darwin x86_64
+      - name: Configure (cross-compile to x86_64, segments-in-wine path)
         run: |
           set -euo pipefail
           cd /tmp/wine-src
-          # configure.ac decides on darwin x86_64 whether to use the preloader
-          # via a WINE_TRY_CFLAGS([-Wl,-no_huge]) probe. If -no_huge is supported
-          # (Xcode 15.3+), it picks the segments-in-wine path and skips building
-          # the preloader. We want the preloader specifically.
-          # Replace -Wl,-no_huge with a guaranteed-fail flag so the else-branch
-          # (wine_use_preloader=yes) is taken on x86_64.
-          python3 -c "
-          import re, sys
-          p = '/tmp/wine-src/configure.ac'
-          with open(p) as f: s = f.read()
-          pat = r'WINE_TRY_CFLAGS\(\[-Wl,-no_huge\]'
-          new = 'WINE_TRY_CFLAGS([-Wl,-crosswire-force-preloader-fallback]'
-          n = len(re.findall(pat, s))
-          if n != 1:
-              print(f'ERROR: expected 1 match for {pat}, got {n}', file=sys.stderr)
-              sys.exit(1)
-          s = re.sub(pat, new, s)
-          with open(p, 'w') as f: f.write(s)
-          print('Patched configure.ac: forced preloader path on darwin x86_64')
-          "
-          # Regenerate configure from the patched configure.ac. autoreconf needs autoconf.
-          brew list autoconf >/dev/null 2>&1 || brew install autoconf
-          autoreconf -fi 2>&1 | tail -20
-
-      - name: Configure (cross-compile to x86_64)
-        run: |
-          set -euo pipefail
-          cd /tmp/wine-src
-          # Homebrew bison is keg-only on macOS; prepend it so ./configure sees it.
-          export PATH="$(brew --prefix bison)/bin:$PATH"
-          bison --version | head -1
-          # Runner is arm64; Gcenx wine is x86_64 (Rosetta on user Macs). The
-          # preloader must be x86_64 to match the ABI of the wine binary it
-          # launches. clang on Apple Silicon targets x86_64 natively.
-          # --host=x86_64-apple-darwin marks this as cross-compile so autoconf
-          # skips "does it execute" runtime tests.
+          which bison; bison --version | head -1
+          # Runner is arm64; Gcenx wine is x86_64 (Rosetta on user Macs).
+          # The wine binary we produce must be x86_64 to ABI-match.
+          # clang on Apple Silicon targets x86_64 natively, no Rosetta needed
+          # for the compile itself. --host=x86_64-apple-darwin marks this as
+          # cross-compile so autoconf skips runtime execution tests.
+          # Don't patch configure -- we WANT the -no_huge probe to succeed so
+          # configure picks wine_use_preloader=no + segments-in-wine path.
           export CC="clang -arch x86_64"
           export CXX="clang++ -arch x86_64"
           export CFLAGS="-arch x86_64"
           export LDFLAGS="-arch x86_64"
-          # Trim --without flags this configure rejected last time
-          # (jpeg/mpg123/openal/png/tiff/unwind/vkd3d/xattr -- not separate options
-          # in modern Wine configure).
           ./configure \
             --host=x86_64-apple-darwin \
             --enable-win64 \
@@ -117,43 +105,81 @@ jobs:
             --without-xinerama --without-xinput --without-xinput2 \
             --without-xrandr --without-xrender --without-xshape --without-xshm \
             --without-xxf86vm 2>&1 | tail -60
-          echo "--- preloader-relevant vars from configure ---"
-          grep -E "WINELOADER_PROGRAMS|wine_use_preloader|HAVE_WINE_PRELOADER|WINEPRELOADER_LDFLAGS|host_cpu" config.status config.log 2>&1 \
-            | head -20
+          echo "--- which mechanism did configure pick? ---"
+          # If wine_use_preloader=no AND -no_huge was accepted, we should
+          # see the segments LDFLAGS in config.log/Makefile.
+          grep -E "WINELOADER_PROGRAMS|wine_use_preloader|WINELOADER_LDFLAGS|HOST_ARCH" config.status config.log Makefile 2>&1 | head -20
+          echo "--- explicit grep for segments link flags ---"
+          grep -E "segaddr,WINE_RESERVE|no_huge|image_base,0x200" Makefile config.status config.log 2>&1 | head -10
 
-      - name: Build wine-preloader only
+      - name: Build wine binary only
         run: |
           set -euo pipefail
           cd /tmp/wine-src
-          # Build just the loader target. Saves ~30+ minutes vs a full wine build.
-          make -j2 loader/wine-preloader 2>&1 | tail -40
+          # The wine binary is loader/wine -- compiled from loader/main.c,
+          # links against libSystem + pthread, embeds wine_info.plist via
+          # -sectcreate. No transitive deps from the rest of wine, so this
+          # is fast.
+          make -j2 loader/wine 2>&1 | tail -40
 
-      - name: Inspect the binary
+      - name: Verify segments (HARD FAIL if missing)
         run: |
           set -euo pipefail
-          BIN=/tmp/wine-src/loader/wine-preloader
+          BIN=/tmp/wine-src/loader/wine
           ls -la "$BIN"
           file "$BIN"
-          echo "--- segments ---"
-          otool -l "$BIN" | grep -E "segname|cmd LC_SEGMENT|vmaddr|vmsize" | head -40
-          echo "--- WINE_RESERVE/WINE_TOP_DOWN check ---"
-          if otool -l "$BIN" | grep -q WINE_RESERVE; then
-            echo "SUCCESS: WINE_RESERVE segment present"
-            otool -l "$BIN" | grep -B 1 -A 4 WINE_RESERVE
+          echo "--- mach header (PIE flag should be absent) ---"
+          otool -hv "$BIN"
+          echo "--- all segments ---"
+          otool -l "$BIN" | grep -B 1 -A 5 "segname __\|cmd LC_SEGMENT" | head -60
+          echo "--- specific WINE_RESERVE / WINE_TOP_DOWN check ---"
+          otool -l "$BIN" | grep -B 1 -A 5 "WINE_RESERVE\|WINE_TOP_DOWN" || true
+          echo
+          echo "--- verification gates ---"
+          fail=0
+          if ! otool -l "$BIN" | grep -q "segname WINE_RESERVE"; then
+            echo "FAIL: WINE_RESERVE segment missing"
+            fail=1
           else
-            echo "ERROR: WINE_RESERVE segment missing"
+            echo "PASS: WINE_RESERVE present"
+          fi
+          if ! otool -l "$BIN" | grep -q "segname WINE_TOP_DOWN"; then
+            echo "FAIL: WINE_TOP_DOWN segment missing"
+            fail=1
+          else
+            echo "PASS: WINE_TOP_DOWN present"
+          fi
+          # __TEXT vmaddr should be 0x200000000, NOT the default PIE 0x100000000.
+          TEXT_ADDR=$(otool -l "$BIN" | awk '/segname __TEXT$/{seen=1} seen && /vmaddr/{print $2; exit}')
+          echo "__TEXT vmaddr: $TEXT_ADDR"
+          if [ "$TEXT_ADDR" = "0x0000000200000000" ]; then
+            echo "PASS: image base 0x200000000"
+          else
+            echo "FAIL: image base is $TEXT_ADDR, expected 0x0000000200000000"
+            fail=1
+          fi
+          # PIE flag should be absent (we used -no_pie).
+          if otool -hv "$BIN" | grep -q PIE; then
+            echo "FAIL: binary is PIE (should be -no_pie)"
+            fail=1
+          else
+            echo "PASS: binary is not PIE"
+          fi
+          if [ $fail -ne 0 ]; then
+            echo "Segments-in-wine path did NOT engage. Aborting."
             exit 1
           fi
+          echo "All verification gates passed."
 
       - name: Ad-hoc sign
         run: |
-          codesign --force --sign - /tmp/wine-src/loader/wine-preloader
-          codesign -dvv /tmp/wine-src/loader/wine-preloader 2>&1 | head
+          codesign --force --sign - /tmp/wine-src/loader/wine
+          codesign -dvv /tmp/wine-src/loader/wine 2>&1 | head
 
       - name: Upload artifact
         uses: actions/upload-artifact@v7
         with:
-          name: wine-preloader-${{ inputs.tag }}
-          path: /tmp/wine-src/loader/wine-preloader
+          name: wine-segments-${{ inputs.tag }}
+          path: /tmp/wine-src/loader/wine
           if-no-files-found: error
           retention-days: 14
