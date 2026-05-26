@@ -126,3 +126,84 @@ jobs:
             --endpoint-url "$R2_ENDPOINT" \
             --content-type "application/x-apple-diskimage" \
             --cache-control "no-cache, no-store, must-revalidate"
+
+      # Sign the DMG with Sparkle's EdDSA key and commit a new <item> to
+      # appcast.xml on main. The in-app "Check for Updates..." menu reads
+      # this file. Gated on SPARKLE_PRIVATE_KEY existing so the workflow
+      # still succeeds before the secret is configured.
+      - name: Publish Sparkle appcast entry
+        env:
+          SPARKLE_PRIVATE_KEY: ${{ secrets.SPARKLE_PRIVATE_KEY }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        if: env.SPARKLE_PRIVATE_KEY != ''
+        run: |
+          set -euo pipefail
+          SHORT_VERSION="${VERSION#v}"
+          BUILD_NUMBER=$(defaults read \
+            "$RUNNER_TEMP/export/Crosswire.app/Contents/Info" CFBundleVersion)
+          DMG_PATH="$RUNNER_TEMP/Crosswire-${VERSION}.dmg"
+          DMG_URL="https://data.grubwire.io/app/Crosswire-${VERSION}.dmg"
+          DMG_LENGTH=$(stat -f%z "$DMG_PATH")
+
+          # Sparkle ships sign_update inside its release tarball.
+          SPARKLE_VERSION="2.6.4"
+          curl -sSL "https://github.com/sparkle-project/Sparkle/releases/download/${SPARKLE_VERSION}/Sparkle-${SPARKLE_VERSION}.tar.xz" \
+            | tar -xJ -C "$RUNNER_TEMP"
+          SIGN_UPDATE="$RUNNER_TEMP/bin/sign_update"
+
+          KEY_FILE="$RUNNER_TEMP/sparkle_private.key"
+          printf '%s' "$SPARKLE_PRIVATE_KEY" > "$KEY_FILE"
+          chmod 600 "$KEY_FILE"
+
+          SIG_OUTPUT=$("$SIGN_UPDATE" -f "$KEY_FILE" "$DMG_PATH")
+          rm -f "$KEY_FILE"
+          # sign_update output: sparkle:edSignature="..." length="..."
+          SIGNATURE=$(printf '%s' "$SIG_OUTPUT" \
+            | sed -nE 's/.*edSignature="([^"]+)".*/\1/p')
+          if [[ -z "$SIGNATURE" ]]; then
+            echo "Failed to extract signature from sign_update output: $SIG_OUTPUT"
+            exit 1
+          fi
+
+          WORK="$RUNNER_TEMP/appcast-checkout"
+          git clone --depth=1 --branch main \
+            "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" \
+            "$WORK"
+          (
+            cd "$WORK"
+            python3 scripts/update-appcast.py \
+              --appcast appcast.xml \
+              --version "$SHORT_VERSION" \
+              --build "$BUILD_NUMBER" \
+              --url "$DMG_URL" \
+              --length "$DMG_LENGTH" \
+              --signature "$SIGNATURE" \
+              --release-notes-url "https://github.com/${GITHUB_REPOSITORY}/releases/tag/${VERSION}"
+            git -c user.email="github-actions[bot]@users.noreply.github.com" \
+                -c user.name="github-actions[bot]" \
+                commit -am "Publish appcast entry for ${VERSION}"
+            git push origin main
+          )
+
+      - name: Note appcast not published
+        env:
+          SPARKLE_PRIVATE_KEY: ${{ secrets.SPARKLE_PRIVATE_KEY }}
+        if: env.SPARKLE_PRIVATE_KEY == ''
+        run: |
+          cat >> "$GITHUB_STEP_SUMMARY" << 'NOTE'
+          ### Sparkle appcast NOT published
+
+          No `SPARKLE_PRIVATE_KEY` repo secret is configured. The DMG built
+          and uploaded successfully, but `appcast.xml` was not updated, so
+          the in-app "Check for Updates..." will not find this release.
+
+          One-time setup:
+          1. On the Mac that originally generated the Sparkle key, run
+             `generate_keys -x ~/sparkle-private.key` (the binary ships in
+             the Sparkle release tarball under `bin/`). The file holds the
+             base64-encoded EdDSA private key on a single line.
+          2. Add its full contents as a GitHub repo secret named
+             `SPARKLE_PRIVATE_KEY` (Settings > Secrets and variables > Actions).
+          3. Re-run this workflow (Actions > Release > Re-run failed jobs)
+             or push a fresh tag.
+          NOTE

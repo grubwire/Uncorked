@@ -45,6 +45,7 @@ struct ContentView: View {
             actionRow
             Divider()
             content
+            footer
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         .sheet(item: $settingsBottle) { bottle in
@@ -87,14 +88,21 @@ struct ContentView: View {
             }
             .buttonStyle(.borderless)
             .help("Settings")
-
-            Text(versionString)
-                .font(.system(size: 11))
-                .foregroundStyle(.secondary)
         }
         .padding(.horizontal, 20)
         .padding(.top, 16)
         .padding(.bottom, 12)
+    }
+
+    private var footer: some View {
+        HStack {
+            Spacer()
+            Text(versionString)
+                .font(.system(size: 10))
+                .foregroundStyle(.tertiary)
+        }
+        .padding(.horizontal, 10)
+        .padding(.bottom, 4)
     }
 
     private var actionRow: some View {
