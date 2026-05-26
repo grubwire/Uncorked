@@ -83,34 +83,43 @@ jobs:
           brew list autoconf >/dev/null 2>&1 || brew install autoconf
           autoreconf -fi 2>&1 | tail -20
 
-      - name: Configure (minimal)
+      - name: Configure (cross-compile to x86_64)
         run: |
           set -euo pipefail
           cd /tmp/wine-src
           # Homebrew bison is keg-only on macOS; prepend it so ./configure sees it.
           export PATH="$(brew --prefix bison)/bin:$PATH"
-          # Disable everything we don't need so configure completes fast and
-          # without exotic deps. The preloader doesn't link against most of
-          # Wine's runtime libraries.
+          bison --version | head -1
+          # Runner is arm64; Gcenx wine is x86_64 (Rosetta on user Macs). The
+          # preloader must be x86_64 to match the ABI of the wine binary it
+          # launches. clang on Apple Silicon targets x86_64 natively.
+          # --host=x86_64-apple-darwin marks this as cross-compile so autoconf
+          # skips "does it execute" runtime tests.
+          export CC="clang -arch x86_64"
+          export CXX="clang++ -arch x86_64"
+          export CFLAGS="-arch x86_64"
+          export LDFLAGS="-arch x86_64"
+          # Trim --without flags this configure rejected last time
+          # (jpeg/mpg123/openal/png/tiff/unwind/vkd3d/xattr -- not separate options
+          # in modern Wine configure).
           ./configure \
+            --host=x86_64-apple-darwin \
             --enable-win64 \
             --disable-tests \
             --without-alsa --without-capi --without-coreaudio --without-cups \
             --without-dbus --without-fontconfig --without-freetype --without-gettext \
             --without-gphoto --without-gnutls --without-gssapi --without-gstreamer \
-            --without-inotify --without-jpeg --without-krb5 --without-mingw \
-            --without-mpg123 --without-netapi --without-openal --without-opencl \
-            --without-opengl --without-pcap --without-pcsclite --without-png \
-            --without-pulse --without-sane --without-sdl --without-tiff \
-            --without-udev --without-unwind --without-usb --without-v4l2 \
-            --without-vkd3d --without-vulkan --without-x --without-xattr \
-            --without-xcomposite --without-xcursor --without-xfixes \
+            --without-inotify --without-krb5 --without-mingw \
+            --without-netapi --without-opencl --without-opengl --without-pcap \
+            --without-pcsclite --without-pulse --without-sane --without-sdl \
+            --without-udev --without-usb --without-v4l2 --without-vulkan \
+            --without-x --without-xcomposite --without-xcursor --without-xfixes \
             --without-xinerama --without-xinput --without-xinput2 \
             --without-xrandr --without-xrender --without-xshape --without-xshm \
-            --without-xxf86vm 2>&1 | tail -40
-          echo "--- WINELOADER_PROGRAMS in config.status ---"
-          grep -E "WINELOADER_PROGRAMS|wine_use_preloader|HAVE_WINE_PRELOADER" config.status config.log 2>&1 \
-            | head -10
+            --without-xxf86vm 2>&1 | tail -60
+          echo "--- preloader-relevant vars from configure ---"
+          grep -E "WINELOADER_PROGRAMS|wine_use_preloader|HAVE_WINE_PRELOADER|WINEPRELOADER_LDFLAGS|host_cpu" config.status config.log 2>&1 \
+            | head -20
 
       - name: Build wine-preloader only
         run: |
