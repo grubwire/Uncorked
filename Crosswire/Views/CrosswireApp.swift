@@ -22,6 +22,7 @@ import Sparkle
 import CrosswireKit
 
 @main
+// swiftlint:disable:next type_body_length
 struct CrosswireApp: App {
     @State var showSetup: Bool = false
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate

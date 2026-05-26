@@ -80,10 +80,26 @@ struct ContentView: View {
     // MARK: - Header & action row
 
     private var header: some View {
-        HStack(alignment: .firstTextBaseline) {
+        HStack(alignment: .firstTextBaseline, spacing: 12) {
             Text("Crosswire")
                 .font(.system(size: 22, weight: .semibold))
             Spacer()
+            Button {
+                updater.checkForUpdates()
+            } label: {
+                Image(systemName: "arrow.down.circle")
+                    .imageScale(.large)
+            }
+            .buttonStyle(.borderless)
+            .help("Check for Updates")
+
+            SettingsLink {
+                Image(systemName: "gearshape")
+                    .imageScale(.large)
+            }
+            .buttonStyle(.borderless)
+            .help("Settings")
+
             Text(versionString)
                 .font(.system(size: 11))
                 .foregroundStyle(.secondary)
