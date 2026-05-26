@@ -137,20 +137,34 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         if: env.SPARKLE_PRIVATE_KEY != ''
         run: |
+          # Force unbuffered output so log capture sees every line in
+          # order; previous v1.1.2 runs failed silently because the
+          # default buffering swallowed all stderr before exit.
+          exec 2>&1
+          set -x
           set -euo pipefail
+          echo "::group::resolve build metadata"
           SHORT_VERSION="${VERSION#v}"
+          echo "VERSION=$VERSION SHORT_VERSION=$SHORT_VERSION"
+          ls -la "$RUNNER_TEMP/export/Crosswire.app/Contents/" || true
           BUILD_NUMBER=$(defaults read \
             "$RUNNER_TEMP/export/Crosswire.app/Contents/Info" CFBundleVersion)
           DMG_PATH="$RUNNER_TEMP/Crosswire-${VERSION}.dmg"
           DMG_URL="https://data.grubwire.io/app/Crosswire-${VERSION}.dmg"
           DMG_LENGTH=$(stat -f%z "$DMG_PATH")
+          echo "BUILD_NUMBER=$BUILD_NUMBER DMG_LENGTH=$DMG_LENGTH"
+          echo "::endgroup::"
 
           # Sparkle ships sign_update inside its release tarball.
+          echo "::group::install sparkle tools"
           SPARKLE_VERSION="2.6.4"
           curl -sSL "https://github.com/sparkle-project/Sparkle/releases/download/${SPARKLE_VERSION}/Sparkle-${SPARKLE_VERSION}.tar.xz" \
             | tar -xJ -C "$RUNNER_TEMP"
           SIGN_UPDATE="$RUNNER_TEMP/bin/sign_update"
+          ls -la "$SIGN_UPDATE"
+          echo "::endgroup::"
 
+          echo "::group::sign DMG"
           KEY_FILE="$RUNNER_TEMP/sparkle_private.key"
           printf '%s' "$SPARKLE_PRIVATE_KEY" > "$KEY_FILE"
           chmod 600 "$KEY_FILE"
@@ -164,7 +178,10 @@ jobs:
             echo "Failed to extract signature from sign_update output: $SIG_OUTPUT"
             exit 1
           fi
+          echo "signature length: ${#SIGNATURE}"
+          echo "::endgroup::"
 
+          echo "::group::commit appcast.xml to main"
           WORK="$RUNNER_TEMP/appcast-checkout"
           git clone --depth=1 --branch main \
             "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" \
@@ -184,6 +201,7 @@ jobs:
                 commit -am "Publish appcast entry for ${VERSION}"
             git push origin main
           )
+          echo "::endgroup::"
 
       - name: Note appcast not published
         env:
