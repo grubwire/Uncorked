@@ -18805,6 +18805,56 @@
         }
       }
     },
+    "uninstall.confirm.cancel": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cancel"
+          }
+        }
+      }
+    },
+    "uninstall.confirm.message": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This will permanently delete the Wine engine, every bottle and its installed apps, all logs, caches, and preferences. After this completes, drag Crosswire from /Applications to the Trash to finish. This cannot be undone."
+          }
+        }
+      }
+    },
+    "uninstall.confirm.title": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Uninstall Crosswire?"
+          }
+        }
+      }
+    },
+    "uninstall.confirm.uninstall": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Uninstall"
+          }
+        }
+      }
+    },
+    "uninstall.menu": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Uninstall Crosswire…"
+          }
+        }
+      }
+    },
     "update.engine.description": {
       "localizations": {
         "ar": {

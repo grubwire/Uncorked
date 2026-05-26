@@ -66,6 +66,10 @@ struct CrosswireApp: App {
                         await CrosswireCmd.install()
                     }
                 }
+                Divider()
+                Button("uninstall.menu") {
+                    CrosswireApp.confirmUninstall()
+                }
             }
             CommandGroup(replacing: .newItem) {}
             CommandGroup(after: .newItem) {
@@ -180,6 +184,51 @@ struct CrosswireApp: App {
                 print("Failed to kill bottle: \(error)")
             }
         }
+    }
+
+    /// Shows a confirmation alert, and on confirm wipes the engine, every
+    /// bottle, the bottle index, every cache and preference, then reveals the
+    /// app in Finder and quits. The user just has to drag the app to the
+    /// Trash to complete the uninstall; nothing about Crosswire stays on disk.
+    @MainActor static func confirmUninstall() {
+        let alert = NSAlert()
+        alert.messageText = String(localized: "uninstall.confirm.title")
+        alert.informativeText = String(localized: "uninstall.confirm.message")
+        alert.alertStyle = .warning
+        alert.addButton(withTitle: String(localized: "uninstall.confirm.uninstall"))
+        alert.addButton(withTitle: String(localized: "uninstall.confirm.cancel"))
+        guard alert.runModal() == .alertFirstButtonReturn else { return }
+        performUninstall()
+    }
+
+    @MainActor static func performUninstall() {
+        // Kill any running Wine processes so file handles release.
+        killBottles()
+
+        // Remove every known bottle directory. Bottles can live outside the
+        // default container if the user picked a custom location.
+        for bottle in BottleVM.shared.bottles {
+            try? FileManager.default.removeItem(at: bottle.url)
+        }
+
+        // Wipe the engine, manifest, and engine-version state.
+        CrosswireEngine.uninstall()
+
+        // Drop every persisted preference for this app (selected bottle,
+        // toggles, sidebar state, etc).
+        if let domain = Bundle.main.bundleIdentifier {
+            UserDefaults.standard.removePersistentDomain(forName: domain)
+            UserDefaults.standard.synchronize()
+        }
+
+        // Clear logs and shader caches.
+        try? FileManager.default.removeItem(at: Wine.logsFolder)
+
+        // Reveal the app in Finder so the user can drag it to the Trash.
+        NSWorkspace.shared.activateFileViewerSelecting([Bundle.main.bundleURL])
+
+        // Quit. The bundle is the only thing left.
+        NSApp.terminate(nil)
     }
 
     static func openLogsFolder() {
