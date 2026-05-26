@@ -205,29 +205,70 @@ struct CrosswireApp: App {
         // Kill any running Wine processes so file handles release.
         killBottles()
 
-        // Remove every known bottle directory. Bottles can live outside the
-        // default container if the user picked a custom location.
-        for bottle in BottleVM.shared.bottles {
+        // Remove every known bottle directory that lives outside the sandbox
+        // container. Inside-container bottles are wiped by the detached
+        // cleanup script below, which can do it after the app exits.
+        let containerPrefix = NSHomeDirectory() + "/Library/Containers/"
+        for bottle in BottleVM.shared.bottles
+            where !bottle.url.path.hasPrefix(containerPrefix) {
             try? FileManager.default.removeItem(at: bottle.url)
         }
 
-        // Wipe the engine, manifest, and engine-version state.
-        CrosswireEngine.uninstall()
-
-        // Drop every persisted preference for this app (selected bottle,
-        // toggles, sidebar state, etc).
+        // Drop every persisted preference for this app.
         if let domain = Bundle.main.bundleIdentifier {
             UserDefaults.standard.removePersistentDomain(forName: domain)
             UserDefaults.standard.synchronize()
         }
 
-        // Clear logs and shader caches.
-        try? FileManager.default.removeItem(at: Wine.logsFolder)
+        // Spawn a detached cleanup script that waits for this process to
+        // exit, then removes every remaining trace: the sandbox container
+        // (which holds the bottles and we cannot remove from inside the app),
+        // Application Support, Logs, Caches, Saved Application State, and
+        // finally reveals the .app in Finder so the user can drag it to
+        // Trash. The script then deletes itself.
+        let bundleID = Bundle.main.bundleIdentifier ?? "app.Crosswire.Crosswire"
+        let home = NSHomeDirectory()
+        let appBundlePath = Bundle.main.bundleURL.path
+        let pid = ProcessInfo.processInfo.processIdentifier
+        let scriptPath = "/tmp/crosswire-uninstall-\(UUID().uuidString.prefix(8)).sh"
+        let script = """
+        #!/bin/bash
+        # Wait for the Crosswire process to fully exit before touching its
+        # sandbox container, otherwise macOS will refuse the removal.
+        while kill -0 \(pid) 2>/dev/null; do sleep 0.3; done
+        sleep 1
 
-        // Reveal the app in Finder so the user can drag it to the Trash.
-        NSWorkspace.shared.activateFileViewerSelecting([Bundle.main.bundleURL])
+        rm -rf "\(home)/Library/Containers/\(bundleID)"
+        rm -rf "\(home)/Library/Application Support/\(bundleID)"
+        rm -rf "\(home)/Library/Logs/\(bundleID)"
+        rm -rf "\(home)/Library/Caches/\(bundleID)"
+        rm -rf "\(home)/Library/Saved Application State/\(bundleID).savedState"
 
-        // Quit. The bundle is the only thing left.
+        # Surface the app bundle in Finder so the user can drag it to Trash.
+        open -R "\(appBundlePath)"
+
+        # Self-delete.
+        rm -f "$0"
+        """
+        try? script.write(toFile: scriptPath, atomically: true, encoding: .utf8)
+        try? FileManager.default.setAttributes(
+            [.posixPermissions: 0o755],
+            ofItemAtPath: scriptPath
+        )
+
+        // Launch the script fully detached so it survives our termination.
+        let launcher = Process()
+        launcher.executableURL = URL(fileURLWithPath: "/bin/sh")
+        launcher.arguments = ["-c", "nohup bash \(scriptPath) >/dev/null 2>&1 </dev/null & disown"]
+        try? launcher.run()
+
+        // Final dialog so the user knows something is actually happening.
+        let done = NSAlert()
+        done.messageText = String(localized: "uninstall.done.title")
+        done.informativeText = String(localized: "uninstall.done.message")
+        done.addButton(withTitle: String(localized: "uninstall.done.ok"))
+        done.runModal()
+
         NSApp.terminate(nil)
     }
 
