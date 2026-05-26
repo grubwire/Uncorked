@@ -243,8 +243,8 @@ extension Bottle {
         }
 
         settings.userVisibleProgramURLs = visible
-        if settings.primaryProgramURL == nil
-            || !visible.contains(settings.primaryProgramURL!) {
+        let primaryStillVisible = settings.primaryProgramURL.map { visible.contains($0) } ?? false
+        if !primaryStillVisible {
             settings.primaryProgramURL = visible[0]
         }
     }
