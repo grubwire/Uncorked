@@ -52,34 +52,44 @@ struct EnvironmentArgView: View {
 
     var body: some View {
         Section(isExpanded: $isExpanded) {
-            List(environmentKeys, id: \.id) { key in
-                KeyItem(focus: _focus,
-                        environmentKeys: $environmentKeys,
-                        key: key)
-            }
-            .alternatingRowBackgrounds(.enabled)
-            .onAppear {
-                let keys = program.settings.environment.map { (key: String, value: String) in
-                    return Key(key: key, value: value)
+            if environmentKeys.isEmpty {
+                emptyRow
+            } else {
+                List(environmentKeys, id: \.id) { key in
+                    KeyItem(focus: _focus,
+                            environmentKeys: $environmentKeys,
+                            key: key)
+                        .listRowSeparator(.hidden)
+                        .listRowInsets(EdgeInsets(top: 2, leading: 8, bottom: 2, trailing: 8))
                 }
-                environmentKeys = keys.sorted(by: { $0.key < $1.key })
-            }
-            .onDisappear {
-                program.settings.environment.removeAll()
-                for key in environmentKeys where !key.key.isEmpty {
-                    program.settings.environment[key.key] = key.value
-                }
+                .listStyle(.plain)
+                .scrollContentBackground(.hidden)
             }
         } header: {
-            HStack {
-                Text("program.env").frame(maxWidth: .infinity, alignment: .leading)
+            HStack(spacing: 8) {
+                Text("program.env")
+                    .frame(maxWidth: .infinity, alignment: .leading)
                     .multilineTextAlignment(.leading)
-                Button("environment.add", systemImage: "plus") {
-                    createNewKey()
+                if isExpanded {
+                    Button("environment.add", systemImage: "plus") {
+                        createNewKey()
+                    }
+                    .buttonStyle(.borderless)
+                    .labelStyle(.titleAndIcon)
+                    .controlSize(.small)
                 }
-                .buttonStyle(.plain)
-                .labelStyle(.titleAndIcon)
-                .opacity(isExpanded ? 1 : 0)
+            }
+        }
+        .onAppear {
+            let keys = program.settings.environment.map { (key: String, value: String) in
+                return Key(key: key, value: value)
+            }
+            environmentKeys = keys.sorted(by: { $0.key < $1.key })
+        }
+        .onDisappear {
+            program.settings.environment.removeAll()
+            for key in environmentKeys where !key.key.isEmpty {
+                program.settings.environment[key.key] = key.value
             }
         }
         .onChange(of: focus) { oldValue, newValue in
@@ -124,6 +134,27 @@ struct EnvironmentArgView: View {
         }
     }
 
+    @ViewBuilder
+    private var emptyRow: some View {
+        HStack {
+            Image(systemName: "terminal")
+                .font(.system(size: 13))
+                .foregroundStyle(.tertiary)
+            Text("No environment variables")
+                .font(.system(size: 12))
+                .foregroundStyle(.secondary)
+            Spacer()
+            Button("environment.add", systemImage: "plus") {
+                createNewKey()
+            }
+            .buttonStyle(.borderless)
+            .labelStyle(.titleAndIcon)
+            .controlSize(.small)
+        }
+        .padding(.vertical, 6)
+        .padding(.horizontal, 4)
+    }
+
     func createNewKey() {
         if let key = environmentKeys.first(where: { $0.key.isEmpty }) {
             focus = .row(id: key.id, section: .key)
@@ -143,9 +174,10 @@ struct KeyItem: View {
     @State var hovered: Bool = false
 
     var body: some View {
-        HStack {
-            TextField(String(), text: $key.key)
+        HStack(spacing: 6) {
+            TextField("VARIABLE_NAME", text: $key.key)
                 .textFieldStyle(.roundedBorder)
+                .font(.system(size: 12, design: .monospaced))
                 .labelsHidden()
                 .frame(maxHeight: .infinity)
                 .focused($focus, equals: .row(id: key.id, section: .key))
@@ -153,25 +185,30 @@ struct KeyItem: View {
                     key.key = key.key.trimmingCharacters(in: .whitespacesAndNewlines)
                 }
                 .onSubmit {
-                    // Try to move on to value
                     focus = .row(id: key.id, section: .value)
                 }
-            TextField(String(), text: $key.value)
+            Text("=")
+                .font(.system(size: 12, weight: .medium, design: .monospaced))
+                .foregroundStyle(.tertiary)
+            TextField("value", text: $key.value)
                 .textFieldStyle(.roundedBorder)
+                .font(.system(size: 12, design: .monospaced))
                 .labelsHidden()
                 .frame(maxHeight: .infinity)
                 .focused($focus, equals: .row(id: key.id, section: .value))
             Button {
                 environmentKeys.removeAll(where: { $0.id == key.id })
             } label: {
-                Image(systemName: "xmark.circle.fill")
+                Image(systemName: "minus.circle.fill")
+                    .font(.system(size: 13))
                     .help("environment.remove")
             }
             .buttonStyle(.plain)
             .foregroundStyle(.secondary)
             .opacity(hovered ? 1 : 0)
+            .padding(.leading, 2)
         }
-        .padding(.vertical, 4)
+        .padding(.vertical, 3)
         .onHover { hover in
             hovered = hover
         }
