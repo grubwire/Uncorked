@@ -53,14 +53,18 @@
 			</array>
 		</dict>
 	</array>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict/>
+	</array>
 	<key>SUEnableAutomaticChecks</key>
 	<true/>
-	<key>SUScheduledCheckInterval</key>
-	<integer>86400</integer>
 	<key>SUFeedURL</key>
 	<string>https://raw.githubusercontent.com/grubwire/Crosswire/main/appcast.xml</string>
 	<key>SUPublicEDKey</key>
 	<string>PlL6ARfKPfkp6vsKvsmCZUZ1AasD1VQ+soATAiwX7e8=</string>
+	<key>SUScheduledCheckInterval</key>
+	<integer>86400</integer>
 	<key>UTExportedTypeDeclarations</key>
 	<array>
 		<dict>

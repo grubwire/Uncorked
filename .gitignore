@@ -94,3 +94,6 @@ iOSInjectionProject/
 # Design scratch dirs
 icon-preview/
 images/
+
+# Xcode workspace shared settings (per-machine; not portable)
+*.xcworkspace/xcshareddata/WorkspaceSettings.xcsettings
