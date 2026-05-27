@@ -31,6 +31,7 @@ struct AppSettingsSheet: View {
 
     @State private var primarySelection: URL?
     @State private var showAdvanced: Bool = false
+    @State private var showRuntimesSheet: Bool = false
 
     var body: some View {
         NavigationStack {
@@ -55,6 +56,9 @@ struct AppSettingsSheet: View {
             }
         }
         .frame(minWidth: 480, minHeight: 420)
+        .sheet(isPresented: $showRuntimesSheet) {
+            CommonRuntimesView(bottle: bottle)
+        }
         .onAppear {
             primarySelection = bottle.settings.primaryProgramURL
             if bottle.programs.isEmpty {
@@ -151,6 +155,16 @@ struct AppSettingsSheet: View {
                 }
             }
         }
+
+        Button {
+            showRuntimesSheet = true
+        } label: {
+            HStack(spacing: 6) {
+                Image(systemName: "shippingbox")
+                Text("Install common runtimes…")
+            }
+        }
+        .help("Adds Microsoft fonts, Visual C++, .NET, and DirectX to this app's environment")
 
         Button("Rescan installed programs") {
             bottle.finalizeAppIdentity()
