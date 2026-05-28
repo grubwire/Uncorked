@@ -38,10 +38,11 @@ enum AppRoute: Equatable, Hashable {
     /// Replaces the prior separate-window SwiftUI Settings scene.
     case settings
 
-    /// Per-entry detail view. The associated value is the bottle's UUID
-    /// so the route is `Equatable`/`Hashable` (a `Bottle` reference would
-    /// break both). The view resolves the bottle from `BottleVM.bottles`
-    /// at render time; if it's been removed (uninstalled while showing),
-    /// the navigation falls back to `.library`.
-    case entryDetail(UUID)
+    /// Per-entry detail view. The associated value is the bottle's stable
+    /// identity (`Bottle.id`, which is the bottle directory URL) so the
+    /// route is `Equatable`/`Hashable` — a `Bottle` reference would break
+    /// both. The view resolves the bottle from `BottleVM.bottles` at render
+    /// time; if it's been removed (uninstalled while showing), the overlay
+    /// disappears and the library shows through underneath.
+    case entryDetail(URL)
 }

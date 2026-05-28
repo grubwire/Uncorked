@@ -288,9 +288,12 @@ extension ContentView {
         } else if programs.count == 1 {
             run(program: programs[0], bottle: bottle)
         } else {
-            // No detection has run and no primary is set; open settings
-            // so the user can pick one explicitly.
-            settingsBottle = bottle
+            // No detection has run and no primary is set; open the entry's
+            // detail view so the user can pick a primary launcher explicitly
+            // (the picker lives under Advanced).
+            withAnimation(.easeInOut(duration: 0.2)) {
+                route = .entryDetail(bottle.id)
+            }
         }
     }
 

@@ -35,7 +35,9 @@ struct InlineSettingsView: View {
     let updater: SPUUpdater?
     var onDone: () -> Void
 
-    @State private var selectedSection: SettingsSection = .general
+    // Optional to satisfy `List(selection:)` single-selection binding. nil is
+    // treated as `.general` when resolving content.
+    @State private var selectedSection: SettingsSection? = .general
 
     enum SettingsSection: String, CaseIterable, Identifiable {
         case general = "General"
@@ -74,7 +76,9 @@ struct InlineSettingsView: View {
             Divider().opacity(0.3)
             footer
         }
-        .background(CrosswireTheme.backgroundGradient)
+        // Transient overlay → material blur over the library shell, per the
+        // materials-vs-branded-hex rule.
+        .background(.regularMaterial)
     }
 
     // MARK: - Title bar
@@ -93,55 +97,40 @@ struct InlineSettingsView: View {
 
     // MARK: - Sidebar
 
+    /// Native sidebar `List` — inherits sidebar material + vibrancy, free
+    /// keyboard navigation, resize and accessibility. The system renders the
+    /// selection highlight (the project accent is Crosswire blue, so it's
+    /// on-brand); we overlay our 3pt blue left-edge accent bar on the selected
+    /// row for brand continuity. No custom selection background.
     private var sidebar: some View {
-        VStack(alignment: .leading, spacing: 2) {
-            ForEach(SettingsSection.allCases) { section in
+        List(selection: $selectedSection) {
+            // `id: \.self` so each row's selection identity is the
+            // `SettingsSection` value itself, matching the `SettingsSection?`
+            // binding. Relying on `Identifiable.id` (a String here) would make
+            // the selection type mismatch and silently never update.
+            ForEach(SettingsSection.allCases, id: \.self) { section in
                 sidebarRow(section: section)
             }
-            Spacer()
         }
-        .padding(.vertical, 12)
-        .padding(.horizontal, 10)
+        .listStyle(.sidebar)
+        .scrollContentBackground(.hidden)
         .frame(width: 200)
     }
 
     @ViewBuilder
     private func sidebarRow(section: SettingsSection) -> some View {
         let isSelected = selectedSection == section
-        Button {
-            selectedSection = section
-        } label: {
-            HStack(spacing: 10) {
-                // Battle.net's signature: blue left-edge accent bar on the
-                // selected item. 3pt wide, full row height, only visible
-                // when selected.
-                RoundedRectangle(cornerRadius: 1.5, style: .continuous)
-                    .fill(isSelected ? CrosswireTheme.accent : Color.clear)
-                    .frame(width: 3, height: 22)
-                Image(systemName: section.icon)
-                    .font(.system(size: 13, weight: .regular))
-                    .foregroundStyle(isSelected
-                                     ? CrosswireTheme.textPrimary
-                                     : CrosswireTheme.textSecondary)
-                    .frame(width: 18)
-                Text(section.rawValue)
-                    .font(CrosswireTheme.Typography.body)
-                    .foregroundStyle(isSelected
-                                     ? CrosswireTheme.textPrimary
-                                     : CrosswireTheme.textSecondary)
-                Spacer()
-            }
-            .padding(.vertical, 8)
-            .padding(.trailing, 8)
-            .background(
-                RoundedRectangle(cornerRadius: 6, style: .continuous)
-                    .fill(isSelected ? CrosswireTheme.surfaceSelected : Color.clear)
-                    .padding(.leading, 6)
-            )
-            .contentShape(Rectangle())
+        HStack(spacing: 10) {
+            // Battle.net signature: blue left-edge accent bar on the selected
+            // row, layered over the system selection highlight.
+            RoundedRectangle(cornerRadius: 1.5, style: .continuous)
+                .fill(isSelected ? CrosswireTheme.accent : Color.clear)
+                .frame(width: 3, height: 18)
+            Image(systemName: section.icon)
+                .font(.system(size: 13, weight: .regular))
+            Text(section.rawValue)
+                .font(CrosswireTheme.Typography.body)
         }
-        .buttonStyle(.plain)
-        .animation(CrosswireTheme.Motion.hover, value: isSelected)
     }
 
     // MARK: - Content pane
@@ -150,7 +139,7 @@ struct InlineSettingsView: View {
     private var content: some View {
         ScrollView {
             Group {
-                switch selectedSection {
+                switch selectedSection ?? .general {
                 case .general:  generalSection
                 case .updates:  updatesSection
                 case .privacy:  privacySection
@@ -217,8 +206,8 @@ struct InlineSettingsView: View {
         VStack(alignment: .leading, spacing: 18) {
             sectionHeader("Advanced")
             Text(
-                "Power-user controls coming soon. Existing per-app advanced "
-                + "settings still live under the gear icon on each library entry."
+                "Power-user controls coming soon. Per-app advanced settings "
+                + "live in each app's detail view — click an app in your library."
             )
             .font(CrosswireTheme.Typography.body)
             .foregroundStyle(CrosswireTheme.textSecondary)

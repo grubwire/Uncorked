@@ -39,10 +39,6 @@ struct ContentView: View {
     /// library view. See `AppRoute` for the full rationale.
     @State var route: AppRoute = .library
 
-    /// Retained for compatibility with the install flow's existing alerts;
-    /// the per-entry settings sheet is no longer driven by this (now it's
-    /// navigation via `route = .entryDetail(bottle.id)`).
-    @State var settingsBottle: Bottle?
     @State var provisioningMessage: String?
     @State var runtimesPrompt: RuntimesPrompt?
 
@@ -69,18 +65,24 @@ struct ContentView: View {
                 .transition(.move(edge: .trailing).combined(with: .opacity))
                 .zIndex(1)
             }
+
+            if case let .entryDetail(id) = route,
+               let bottle = bottleVM.bottles.first(where: { $0.id == id }) {
+                EntryDetailView(
+                    bottle: bottle,
+                    onBack: { withAnimation(.easeInOut(duration: 0.2)) { route = .library } },
+                    onRun: { runPrimary(for: bottle) },
+                    onRunProgram: { program in run(program: program, bottle: bottle) },
+                    onUninstall: { uninstall(bottle) }
+                )
+                .transition(.move(edge: .trailing).combined(with: .opacity))
+                .zIndex(1)
+            }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         .background(CrosswireTheme.backgroundGradient.ignoresSafeArea())
         .navigationTitle("Crosswire")
         .toolbar { crosswireToolbar }
-        .sheet(item: $settingsBottle) { bottle in
-            // Per-entry settings still uses .sheet for this commit. Section 2
-            // of the brief converts it to inline routing via .entryDetail.
-            AppSettingsSheet(bottle: bottle, onDelete: {
-                settingsBottle = nil
-            })
-        }
         .sheet(item: $openedFileURL) { url in
             FileOpenView(fileURL: url,
                          currentBottle: nil,
@@ -336,7 +338,11 @@ struct ContentView: View {
                             onRunSpecific: { program in
                                 run(program: program, bottle: bottle)
                             },
-                            onShowDetails: { settingsBottle = bottle },
+                            onShowDetails: {
+                                withAnimation(.easeInOut(duration: 0.2)) {
+                                    route = .entryDetail(bottle.id)
+                                }
+                            },
                             onUninstall: { uninstall(bottle) }
                         )
                     }
@@ -467,6 +473,9 @@ struct ContentView: View {
         try? FileManager.default.removeItem(at: bottle.url)
         bottleVM.bottlesList.paths.removeAll { $0 == bottle.url }
         bottleVM.loadBottles()
+        // If we were uninstalling from the entry's detail view, return to the
+        // library (the overlay would otherwise lose its now-deleted bottle).
+        withAnimation(.easeInOut(duration: 0.2)) { route = .library }
     }
 }
 
