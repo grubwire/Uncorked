@@ -51,8 +51,13 @@ jobs:
           DEVEL=$(echo "$RESPONSE" | jq -r '[.assets[] | select(.name | endswith(".tar.xz")) | select(.name | contains("wine-devel"))] | .[0].browser_download_url // empty')
           ANY=$(echo "$RESPONSE" | jq -r '[.assets[] | select(.name | endswith(".tar.xz"))] | .[0].browser_download_url // empty')
           URL="${STABLE:-${STAGING:-${DEVEL:-$ANY}}}"
+          # Pull the asset's size out of the same API response. The GitHub
+          # API itself is authenticated and TLS-protected, so the size is a
+          # signed integrity reference we can compare the download against.
+          SIZE=$(echo "$RESPONSE" | jq -r --arg url "$URL" '[.assets[] | select(.browser_download_url == $url) | .size] | .[0] // empty')
           echo "tag=${TAG}" >> "$GITHUB_OUTPUT"
           echo "url=${URL}" >> "$GITHUB_OUTPUT"
+          echo "size=${SIZE}" >> "$GITHUB_OUTPUT"
 
       - name: Check if bundle needed
         id: gate
@@ -70,8 +75,27 @@ jobs:
 
       - name: Download Gcenx archive
         if: steps.gate.outputs.needed == 'true'
+        env:
+          URL: ${{ steps.gcenx.outputs.url }}
+          EXPECTED_SIZE: ${{ steps.gcenx.outputs.size }}
         run: |
-          curl -L -o /tmp/wine.tar.xz "${{ steps.gcenx.outputs.url }}"
+          curl -L --fail -o /tmp/wine.tar.xz "$URL"
+          # Verify the download matches the size GitHub reported for the
+          # release asset. Gcenx doesn't publish per-asset SHA256, so this
+          # is a partial-integrity check — it catches truncation, mirror
+          # poisoning that doesn't preserve byte count, and accidental URL
+          # rewrites, but not same-size payload substitution. The SHA is
+          # also logged so the human promoting an engine can pin it in
+          # engine-version-sha256.txt in a follow-up if we want stronger
+          # guarantees per upgrade.
+          ACTUAL_SIZE=$(stat -c%s /tmp/wine.tar.xz 2>/dev/null || stat -f%z /tmp/wine.tar.xz)
+          ACTUAL_SHA=$(sha256sum /tmp/wine.tar.xz 2>/dev/null | awk '{print $1}' \
+            || shasum -a 256 /tmp/wine.tar.xz | awk '{print $1}')
+          echo "Gcenx download: size=${ACTUAL_SIZE} expected=${EXPECTED_SIZE} sha256=${ACTUAL_SHA}"
+          if [[ -n "$EXPECTED_SIZE" && "$ACTUAL_SIZE" != "$EXPECTED_SIZE" ]]; then
+            echo "::error::Gcenx archive size mismatch (got $ACTUAL_SIZE, expected $EXPECTED_SIZE)"
+            exit 1
+          fi
 
       - name: Extract and locate Wine root
         if: steps.gate.outputs.needed == 'true'

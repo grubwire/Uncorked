@@ -157,10 +157,26 @@ jobs:
           echo "::endgroup::"
 
           # Sparkle ships sign_update inside its release tarball.
+          #
+          # Pin SPARKLE_TARBALL_SHA256 alongside SPARKLE_VERSION. The hash
+          # is verified before extraction so a compromised mirror / MITM
+          # can't substitute a malicious tool that would steal the Sparkle
+          # private signing key. Bump both when upgrading Sparkle.
           echo "::group::install sparkle tools"
           SPARKLE_VERSION="2.6.4"
-          curl -sSL "https://github.com/sparkle-project/Sparkle/releases/download/${SPARKLE_VERSION}/Sparkle-${SPARKLE_VERSION}.tar.xz" \
-            | tar -xJ -C "$RUNNER_TEMP"
+          SPARKLE_TARBALL_SHA256="50612a06038abc931f16011d7903b8326a362c1074dabccb718404ce8e585f0b"
+          SPARKLE_TARBALL="$RUNNER_TEMP/sparkle.tar.xz"
+          curl -sSL --fail \
+            "https://github.com/sparkle-project/Sparkle/releases/download/${SPARKLE_VERSION}/Sparkle-${SPARKLE_VERSION}.tar.xz" \
+            -o "$SPARKLE_TARBALL"
+          ACTUAL_SHA=$(shasum -a 256 "$SPARKLE_TARBALL" | awk '{print $1}')
+          if [[ "$ACTUAL_SHA" != "$SPARKLE_TARBALL_SHA256" ]]; then
+            echo "::error::Sparkle tarball SHA256 mismatch."
+            echo "  expected: $SPARKLE_TARBALL_SHA256"
+            echo "  actual:   $ACTUAL_SHA"
+            exit 1
+          fi
+          tar -xJ -C "$RUNNER_TEMP" -f "$SPARKLE_TARBALL"
           SIGN_UPDATE="$RUNNER_TEMP/bin/sign_update"
           ls -la "$SIGN_UPDATE"
           echo "::endgroup::"
