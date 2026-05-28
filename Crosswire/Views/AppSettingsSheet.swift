@@ -21,9 +21,10 @@ import AppKit
 import UniformTypeIdentifiers
 import CrosswireKit
 
-/// Per-app settings sheet. Default view is name + Run + Uninstall. Anything
-/// that exposes the underlying Wine prefix (path, Windows version, DXVK,
-/// raw exe list) lives behind the Advanced disclosure.
+// swiftlint:disable type_body_length
+// Per-app settings sheet. Default view is name + Run + Uninstall. Anything
+// that exposes the underlying Wine prefix (path, Windows version, DXVK,
+// raw exe list) lives behind the Advanced disclosure.
 struct AppSettingsSheet: View {
     @ObservedObject var bottle: Bottle
     var onDelete: () -> Void
@@ -32,6 +33,8 @@ struct AppSettingsSheet: View {
     @State private var primarySelection: URL?
     @State private var showAdvanced: Bool = false
     @State private var showRuntimesSheet: Bool = false
+    @State private var isEditingName: Bool = false
+    @State private var nameDraft: String = ""
 
     var body: some View {
         NavigationStack {
@@ -73,9 +76,30 @@ struct AppSettingsSheet: View {
             HStack(spacing: 12) {
                 AppTileIcon(name: bottle.displayName)
                 VStack(alignment: .leading, spacing: 2) {
-                    Text(bottle.displayName)
-                        .font(.system(size: 16, weight: .semibold))
-                        .lineLimit(1)
+                    if isEditingName {
+                        TextField("App name", text: $nameDraft)
+                            .textFieldStyle(.roundedBorder)
+                            .font(.system(size: 14, weight: .semibold))
+                            .onSubmit { commitRename() }
+                            .submitLabel(.done)
+                            .onExitCommand { isEditingName = false }
+                    } else {
+                        HStack(spacing: 6) {
+                            Text(bottle.displayName)
+                                .font(.system(size: 16, weight: .semibold))
+                                .lineLimit(1)
+                            Button {
+                                nameDraft = bottle.displayName
+                                isEditingName = true
+                            } label: {
+                                Image(systemName: "pencil")
+                                    .font(.system(size: 11))
+                                    .foregroundStyle(.secondary)
+                            }
+                            .buttonStyle(.borderless)
+                            .help("Rename app")
+                        }
+                    }
                     if bottle.userVisiblePrograms.count > 1 {
                         Text("^[\(bottle.userVisiblePrograms.count) launcher](inflect: true)")
                             .font(.system(size: 11))
@@ -244,6 +268,19 @@ struct AppSettingsSheet: View {
         }
     }
 
+    /// Persist the renamed app display name to the bottle. Empty / unchanged
+    /// input clears the override so the bottle falls back to its detected
+    /// name. Trims whitespace.
+    private func commitRename() {
+        let trimmed = nameDraft.trimmingCharacters(in: .whitespacesAndNewlines)
+        isEditingName = false
+        if trimmed.isEmpty {
+            bottle.settings.appDisplayName = nil
+        } else if trimmed != bottle.displayName {
+            bottle.settings.appDisplayName = trimmed
+        }
+    }
+
     private func pickAdHocExecutable() {
         let panel = NSOpenPanel()
         panel.allowsMultipleSelection = false
@@ -292,3 +329,4 @@ struct AppSettingsSheet: View {
         }
     }
 }
+// swiftlint:enable type_body_length
