@@ -187,6 +187,13 @@ public class Wine {
 
     /// Load the per-program plist for an exe inside a bottle, if one exists on disk.
     /// Returns nil when the program has no plist (the common case).
+    ///
+    /// If the full Codable decode fails (e.g. a hand-edited plist has one bad
+    /// field like a wrong locale raw value), salvages the rest via a raw
+    /// `PropertyListSerialization` read so the user's env vars and arguments
+    /// still apply. Silent decode-failure was a real footgun: it caused the
+    /// SWG launcher to keep sliver-rendering after a hand-written plist used
+    /// `<string>auto</string>` for locale (`.auto` decodes from `""`).
     private static func loadProgramSettings(for url: URL, in bottle: Bottle) -> ProgramSettings? {
         let plistURL = bottle.url
             .appending(path: "Program Settings")
@@ -195,13 +202,40 @@ public class Wine {
         guard FileManager.default.fileExists(atPath: plistURL.path(percentEncoded: false)) else {
             return nil
         }
+        let data: Data
         do {
-            let data = try Data(contentsOf: plistURL)
-            return try PropertyListDecoder().decode(ProgramSettings.self, from: data)
+            data = try Data(contentsOf: plistURL)
         } catch {
             Logger.wineKit.error("Failed to read per-program settings at \(plistURL.path): \(error)")
             return nil
         }
+        if let full = try? PropertyListDecoder().decode(ProgramSettings.self, from: data) {
+            return full
+        }
+        // Full decode failed — try a salvage read so env/args survive a single
+        // malformed field. Logged so the failure is still visible.
+        Logger.wineKit.error("Full decode failed for \(plistURL.path); attempting env/args salvage")
+        return salvageProgramSettings(from: data)
+    }
+
+    /// Best-effort recovery of env + args from a per-program plist whose full
+    /// decode failed. Reads the plist as a loose dictionary, accepts only the
+    /// fields it knows how to coerce safely, and skips anything dubious (like
+    /// `locale`, which is the most common cause of full-decode failure).
+    private static func salvageProgramSettings(from data: Data) -> ProgramSettings? {
+        guard let plist = try? PropertyListSerialization.propertyList(
+            from: data, options: [], format: nil
+        ) as? [String: Any] else {
+            return nil
+        }
+        var settings = ProgramSettings()
+        if let env = plist["environment"] as? [String: String] {
+            settings.environment = env
+        }
+        if let args = plist["arguments"] as? String {
+            settings.arguments = args
+        }
+        return settings
     }
 
     public static func generateRunCommand(
