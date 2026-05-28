@@ -74,9 +74,9 @@ extension ContentView {
             print("Failed to run installer: \(error)")
         }
         bottle.finalizeAppIdentity()
-        provisioningMessage = nil
 
         if let installerError {
+            provisioningMessage = nil
             showInstallAlert(
                 title: "Installer could not start",
                 body: "\(installerError.localizedDescription)\n\n"
@@ -86,6 +86,21 @@ extension ContentView {
             return
         }
 
+        // If the install scan found nothing AND the picked file was a
+        // portable .exe (no .msi, no .bat), treat the .exe itself as the
+        // app — copy it into the bottle so Crosswire's program scan picks
+        // it up and the Run button works. Without this, self-contained
+        // tools like the SWG Legends launcher (10MB Java launcher with
+        // bundled JRE) trigger a "no apps detected" warning even though
+        // the .exe IS the app the user wanted to run.
+        if bottle.userVisiblePrograms.isEmpty,
+           pickedURL.pathExtension.lowercased() == "exe",
+           adoptPortableExe(pickedURL, into: bottle) {
+            provisioningMessage = nil
+            return
+        }
+        provisioningMessage = nil
+
         if bottle.userVisiblePrograms.isEmpty {
             showInstallAlert(
                 title: "Installer finished but no apps were detected",
@@ -94,6 +109,32 @@ extension ContentView {
                     + "You can delete the app from its settings panel and try again."
             )
         }
+    }
+
+    /// Copy a portable .exe the user picked into the bottle's
+    /// `Program Files (x86)/<stem>/` so subsequent program scans and the
+    /// Run button can find it. Sets primaryProgramURL + userVisible to
+    /// the in-bottle path. Returns true on success.
+    private func adoptPortableExe(_ source: URL, into bottle: Bottle) -> Bool {
+        let stem = source.deletingPathExtension().lastPathComponent
+        let targetDir = bottle.url
+            .appending(path: "drive_c")
+            .appending(path: "Program Files (x86)")
+            .appending(path: stem)
+        let targetURL = targetDir.appending(path: source.lastPathComponent)
+        do {
+            try FileManager.default.createDirectory(at: targetDir, withIntermediateDirectories: true)
+            if !FileManager.default.fileExists(atPath: targetURL.path(percentEncoded: false)) {
+                try FileManager.default.copyItem(at: source, to: targetURL)
+            }
+        } catch {
+            print("Failed to adopt portable exe \(source.lastPathComponent): \(error)")
+            return false
+        }
+        bottle.updateInstalledPrograms()
+        bottle.settings.primaryProgramURL = targetURL
+        bottle.settings.userVisibleProgramURLs = [targetURL]
+        return true
     }
 
     private func showInstallAlert(title: String, body: String) {
