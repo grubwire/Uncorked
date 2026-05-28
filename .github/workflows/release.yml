@@ -17,12 +17,13 @@ on:
         required: true
         type: string
 
-permissions:
-  contents: write
+permissions: {}
 
 jobs:
   release:
     runs-on: macos-latest
+    permissions:
+      contents: write
     env:
       VERSION: ${{ inputs.tag || github.ref_name }}
     steps:

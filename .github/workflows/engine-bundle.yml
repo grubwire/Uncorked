@@ -16,9 +16,7 @@ on:
         type: boolean
         default: false
 
-permissions:
-  contents: write
-  issues: write
+permissions: {}
 
 env:
   IDENTITY: '-'         # Phase 1: ad-hoc. Phase 2: "Developer ID Application: NAME (ID)"
@@ -28,6 +26,9 @@ env:
 jobs:
   bundle:
     runs-on: macos-latest
+    permissions:
+      contents: read
+      issues: write
     steps:
       - uses: actions/checkout@v6
 
