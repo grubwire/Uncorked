@@ -1,57 +1,92 @@
-# Session state — handoff at 2026-05-28 02:30 CDT
+# Session state — handoff at 2026-05-28 16:05 CDT
 
-Snapshot of where the in-flight brief stands. Use this to decide whether to compact or start fresh.
+Snapshot of where Task D (the HIG-aligned visual redesign build pass) stands.
+Source of truth for the design is `docs/specs/visual-design-direction.md`
+(amended with the HIG fold-ins, commit `8a67081`).
 
-## What's done (committed + pushed)
+Standing constraint: **native bones, custom skin** — use native mechanics
+(toolbar, List, materials) while keeping the branded identity. No user-facing
+strings mention Wine / engine / wrappers / version numbers.
 
-Latest shipped commit on `main`: **`c04e208` (Brief 2 / main window pass)** — the visual identity, naming, theme, library row redesign, and empty state are all green and validated as the new HEAD that's running in `/Applications/Crosswire.app`.
+## What's done (committed; all pushed to `origin/main`)
 
-Earlier this session, **Brief 1 fully shipped** (commits `9ca8ccf` through `93a5425`): foundation bug fixes (#91, #92, #94, #95, #98), MainActor install guard, validation against fresh SWG + Notepad++ installs, killBottle after install + auto-launch.
+Task D runs as a sequence of small, surgical commits over the visual spec:
 
-## What's half-done (uncommitted, in working tree)
+| # | Commit | What landed |
+|---|--------|-------------|
+| spec | `8a67081` | Six HIG amendments to `visual-design-direction.md` (native toolbar, native sidebar List, materials for overlays, SF Symbol metrics, a11y labels, metrics legend). |
+| 1 | `cf35f24` | Project AccentColor orange → Crosswire blue (`0x418DF7`); inline Settings Done shortcut `.defaultAction` → `.cancelAction` (Esc dismisses; Return no longer intercepted by the sidebar List). |
+| 2 | `08967c3` | Header restructure: custom header `HStack` replaced by the native unified toolbar (`.unifiedCompact`). Leading brand icon + chevron `Menu` (Settings / About / Check for Updates / Quit), inline "Crosswire" title, trailing primary-action group (sparkle / bell / gear placeholders + prominent blue "+" install). Tab control dropped. |
+| 2-fix | `d6af693` | Toolbar brand icon: block-based Retina redraw + `.resizable().frame(18,18)` (fixes blur + the giant-icon bug). |
+| 3 | `e937c13` | Library as a contained surface: region card `#1f232b`, 12pt radius, 1px `#262b34` hairline, small-caps `LIBRARY` header. Rows carry their own persistent surface (`#262b34` rest / `#2a2f38` hover). Branded hex, not material (persistent-shell rule). |
+| 4 | `a86fa7e` | Library row redesign: circular play glyph + row gear removed, replaced by one discrete blue "Launch" pill; row-body click → detail. Right-click context menu (Launch / Show Details / Rename / Check Dependencies / Show in Finder / — / Uninstall…) with inline rename + dependencies sheet. |
+| 2-fix | `3a24689` | Vertically center the toolbar brand icon: the Menu control seats its label ~1.75pt high and ignores SwiftUI offset/padding, so the nudge is baked into the bitmap. See the `do NOT "fix" to y:0` comment in `brandToolbarIcon`. |
 
-**Section 1 of the inline-navigation brief.** I'm in the middle of converting Settings from a separate window (SwiftUI Settings scene) to a full-bleed inline destination via the Battle.net pattern. The code compiles clean; it has NOT been runtime-tested yet. Files modified/added below.
+All verified building clean (Debug) and runtime-checked against the real SWG
+bottle. Theme tokens added in `CrosswireTheme`: `rowSurface`,
+`rowSurfaceHover`, `regionBorder`, `Typography.sectionHeader`.
 
-### New files (added to pbxproj via `xcodeproj` Ruby gem)
-- `Crosswire/Views/AppRoute.swift` — the top-level navigation enum (`.library / .settings / .entryDetail(UUID)`)
-- `Crosswire/Views/Settings/InlineSettingsView.swift` — the new inline Settings panel. Battle.net layout: title bar, sidebar nav with 5 sections (General/Updates/Privacy/About/Advanced), content pane, footer with version chip left + blue Done button right. Content is wrapped via three group views (`SettingsGeneralGroup`, `SettingsUpdatesGroup`, `SettingsAboutGroup`) that preserve existing behavior — Section 3 of the brief is the content-cleanup pass that relabels the duplicate Crosswire/Engine updates toggles and rebuilds About.
+### Deliberate deviation to revisit
+**"Change Icon…" is omitted from the row context menu.** There is no
+icon-customization backing yet (deferred this session), and a no-op menu item
+would mislead. The spec lists it — add it together with the storage + render
+support, most naturally alongside the Commit 5 detail view.
 
-### Modified files
-- `Crosswire/Views/ContentView.swift` — added `@State var route: AppRoute = .library`, added `sparkleUpdater` parameter (passed from `CrosswireApp`), wrapped library content in `libraryRoot` computed var, added `ZStack` overlay branch for `.settings` route with slide-in `.transition(.move(edge: .trailing))`, replaced `SettingsLink` with `Button` that sets `route = .settings` (kept `Cmd+,` via `.keyboardShortcut(",", modifiers: .command)`), `swiftlint:disable file_length` added because the file passed 400.
-- `Crosswire/Views/CrosswireApp.swift` — removed the `Settings { SettingsView(updater:) }` scene block (replaced with a comment explaining the inline conversion). Passes `updaterController.updater` to `ContentView`.
-- `Crosswire.xcodeproj/project.pbxproj` — adds for `AppRoute.swift` + `InlineSettingsView.swift` via xcodeproj gem.
+## What's remaining
 
-### Status
-- ✅ Builds clean (`xcodebuild ... build` succeeds)
-- ❓ **Not runtime-tested.** I built it but didn't deploy to `/Applications` or relaunch. Sparkle import is one of the SourceKit "no such module" warnings that always fires in indexer noise but compiles fine — but to be safe, runtime check before declaring Section 1 done.
-- ⚠️ The `.keyboardShortcut(",", modifiers: .command)` interaction with the standard Mac Settings shortcut might conflict if the old `Settings` scene's auto-bound shortcut still lingers somehow. Worth verifying.
-- ⚠️ The original `Crosswire/Views/Settings/SettingsView.swift` is **still on disk** (not deleted). It's no longer mounted as a scene; reference-only. Safe to remove later, but leaving for the Section 1 review.
+### Commit 5 — inline per-app detail + Settings sidebar → List + materials
+- **Inline per-app detail.** Replace the `AppSettingsSheet` `.sheet(item:)`
+  with an inline `.entryDetail(UUID)` route (the enum case already exists in
+  `AppRoute`). Slide-in from the right, same pattern/animation as inline
+  Settings. Back chevron + "Library" top-left. Content: large icon + editable
+  name, category line, big blue Launch, secondary actions (Uninstall red /
+  Check Dependencies / Show in Finder), Advanced disclosure (prefix path,
+  Windows version, DLL overrides). This is the natural home for **Change Icon**
+  (see deviation above) and the place to **rewire the row-body tap** from
+  "open sheet" to `route = .entryDetail(bottle.id)`.
+- **Settings sidebar → `List(selection:)`** (HIG fold-in). Rebuild
+  `InlineSettingsView`'s hand-rolled `VStack` of buttons as a native
+  `List(selection:)`. Inherits sidebar material + vibrancy, free keyboard nav
+  (which is *why* Return was being intercepted — that was the native List
+  doing its job), resize/AX for free. Overlay the 3pt blue left-edge accent bar
+  on the selected row; drop the custom `surfaceSelected` background.
+- **Materials on transient overlays** (HIG fold-in). Inline Settings + inline
+  detail + popovers/menus use SwiftUI materials (`.regularMaterial`, or
+  `.sidebar` for the Settings sidebar). The persistent library shell stays
+  branded hex. Light mode is therefore NOT free — materials cover only the
+  transient overlays.
 
-## What's untouched from the current brief
+### Commit 6 — atmospheric polish + single-instance (final stop)
+- **Single-instance enforcement.** When Launch is clicked on an
+  already-running program, bring the existing window to front instead of
+  spawning a new process. Track by bottle UUID + primary exe path. Add an
+  Advanced toggle "Allow multiple instances" defaulting off. (`Wine.runProgram`
+  currently allows arbitrary duplicate launches.)
+- **Atmospheric polish.** 150ms hover / 200ms slide-in consistency, monogram
+  tile shadow, single surface-separation convention (1px border OR inner
+  highlight, used everywhere).
+- **Accessibility-label sweep** (HIG fold-in). Every symbol-only button
+  (row Launch glyph, search, etc.) MUST carry an `.accessibilityLabel`. The
+  toolbar buttons already have them; sweep the rest.
+- **SF Symbol metrics** (HIG fold-in). Standardize toolbar/header symbols to
+  13pt medium, monochrome at small sizes. Could be folded here or split into an
+  optional Commit 7.
 
-All sections beyond Section 1:
+### Out of scope for this build pass
+Notifications panel (bell is a placeholder), What's New panel (sparkle is a
+placeholder), background-install rework, light mode, icon-extraction debug,
+Sentry, the post-login SWG crash #84.
 
-- **Section 2 — per-entry inline detail.** No code touched. `AppSettingsSheet` is still a `.sheet(item:)` modal in `ContentView`. Brief calls for `.entryDetail(UUID)` route + back-chevron + same slide animation.
-- **Section 3 — settings content cleanup.** Toggle labels, default-path "Show in Finder", About icon+versions+links, blue toggle tint (partially done — `SettingsGeneralGroup` and `SettingsUpdatesGroup` already have `.tint(CrosswireTheme.accent)`). Full About card rebuild not done.
-- **Section 4 — per-entry detail content.** Blocked on Section 2.
-- **Section 5 — single-instance enforcement.** No code touched. `Wine.runProgram` still allows arbitrary duplicate launches.
-- **Section 6 — library row interaction.** Row currently runs on tap (shipped in `c04e208` as part of main-window pass). Brief calls for tap → detail nav, run-button → run. Two-line change in `AppRow.swift` + `ContentView.swift` once Section 2's `.entryDetail` route exists.
-- **Section 7 — theme + animation consistency.** Largely already in place from Brief 2 main-window work; would need a small audit pass at the end.
-
-## Files NOT modified this session beyond what's listed
-
-The Brief 2 main-window surfaces (`AppRow`, `AppTileIcon`, `CrosswireTheme`) are at their `c04e208` shipped state. The original `SettingsView.swift` is unchanged. `AppSettingsSheet.swift` is at its post-Brief-1 state (no Brief 2 changes yet).
-
-## To resume
-
-1. Verify the WIP build runs and the inline Settings actually slides in over the library when the gear icon is clicked. If runtime issues, fix and re-commit before continuing.
-2. Section 1 commit-and-review: ask the user to confirm the Settings slide-in feels right (sidebar layout, blue accent bar on selected item, Done button behavior, version chip) before going to Section 2.
-3. Then Section 2 (per-entry detail) is the next chunk — should reuse the same `AppRoute` infrastructure + slide-in pattern from Section 1.
+## To resume (fresh session runs Commit 5)
+1. Read `docs/specs/visual-design-direction.md` (source of truth) — sections
+   "Inline per-app detail view", "Inline Settings", "Materials vs branded hex".
+2. Build Commit 5 as scoped above. Stop point after it: show the inline detail
+   view AND the converted Settings sidebar.
+3. Then Commit 6 (final stop).
 
 ## Repo state
-
 - Branch: `main`
-- HEAD pre-WIP: `c04e208`
-- WIP commit: see commit hash after this doc lands
-- CI: green on `c04e208`
-- Working tree: clean after the WIP commit lands
+- HEAD: `3a24689` (+ this doc/comment housekeeping commit on top)
+- Pushed: all Task D commits are on `origin/main`
+- CI: confirm green on the pushed HEAD
+- Working tree: clean after the housekeeping commit lands

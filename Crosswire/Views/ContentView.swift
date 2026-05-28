@@ -148,11 +148,18 @@ struct ContentView: View {
         // invoked at the backing scale so it stays crisp on Retina. Drawing
         // into the full rect centers the source content within the bounds.
         return NSImage(size: NSSize(width: side, height: side), flipped: false) { _ in
-            // The toolbar Menu button seats this 18pt label ~1.75pt high in its
-            // capsule, and SwiftUI offset/padding on the label is ignored, so
-            // we bake the downward nudge into the bitmap. Non-flipped origin is
-            // bottom-left, so a negative y shifts the glyph down; the source's
-            // built-in bottom margin absorbs the shift without clipping content.
+            // INTENTIONAL off-center draw — do NOT "fix" this to y: 0.
+            //
+            // The toolbar Menu button seats its label ~1.75pt high in the
+            // bordered capsule, and the control ignores SwiftUI .offset/.padding
+            // on the label (verified: a 2pt .offset moved the icon only ~0.25pt).
+            // So we compensate by baking the downward nudge into the bitmap.
+            // Drawing the source centered (y: 0) makes the icon visibly sit
+            // high in the capsule again — that is the bug this shift corrects.
+            //
+            // Non-flipped origin is bottom-left, so a negative y shifts the
+            // glyph down; the source's built-in bottom margin absorbs the shift
+            // without clipping glyph content.
             let shift: CGFloat = 1.75
             source.draw(in: NSRect(x: 0, y: -shift, width: side, height: side),
                         from: .zero, operation: .sourceOver, fraction: 1.0)
