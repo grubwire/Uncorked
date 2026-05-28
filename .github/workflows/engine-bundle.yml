@@ -461,17 +461,37 @@ jobs:
         if: failure() && steps.smoke_test.outcome == 'failure'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          TAG: ${{ steps.gcenx.outputs.tag }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         run: |
-          TAG="${{ steps.gcenx.outputs.tag }}"
-          gh issue create \
-            --repo "${{ github.repository }}" \
-            --title "Engine ${TAG} failed smoke test" \
-            --body "Engine **${TAG}** downloaded from Gcenx but failed the boot smoke test.
+          set -euo pipefail
+          TITLE="Engine ${TAG} failed smoke test"
+          COMMENT_BODY="Another smoke-test failure for engine **${TAG}** — run: ${RUN_URL}"
+          ISSUE_BODY="Engine **${TAG}** downloaded from Gcenx but failed the boot smoke test.
 
           The engine binary could not launch or \`wineboot --init\` returned an error.
           No artifact was produced. Do not promote this engine to prod.
 
-          Run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          Run: ${RUN_URL}"
+
+          # Dedup: if an open issue with the exact same title exists, comment
+          # on it instead of opening a new one. Avoids the every-failed-run
+          # duplicate flood we saw on 2026-05-28 (issues #87, #89...). Title
+          # is engine-tag-scoped so a new Gcenx release would still open a
+          # fresh issue.
+          EXISTING=$(gh issue list \
+            --repo "$REPO" \
+            --state open \
+            --search "in:title \"$TITLE\"" \
+            --json number,title \
+            | jq -r --arg t "$TITLE" '[.[] | select(.title == $t)] | .[0].number // empty')
+
+          if [ -n "$EXISTING" ]; then
+            gh issue comment "$EXISTING" --repo "$REPO" --body "$COMMENT_BODY"
+          else
+            gh issue create --repo "$REPO" --title "$TITLE" --body "$ISSUE_BODY"
+          fi
 
       - name: Measure uncompressed engine size
         if: steps.gate.outputs.needed == 'true'

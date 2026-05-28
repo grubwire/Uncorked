@@ -282,7 +282,7 @@ struct AppSettingsSheet: View {
     }
 
     private func pickAdHocExecutable() {
-        // TODO(backlog): this path does NOT invoke JavaAppDetector. If the
+        // NOTE(backlog): this path does NOT invoke JavaAppDetector. If the
         // user picks a self-contained JavaFX launcher here (rather than via
         // the create-new-bottle install flow), the per-program plist + the
         // bottle's dwrite=builtin override are never seeded automatically.
