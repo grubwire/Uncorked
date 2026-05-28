@@ -143,14 +143,14 @@ struct ContentView: View {
     private static let brandToolbarIcon: NSImage = {
         let side: CGFloat = 18
         let source = NSApplication.shared.applicationIconImage ?? NSImage()
-        let image = NSImage(size: NSSize(width: side, height: side))
-        image.lockFocus()
-        source.draw(in: NSRect(x: 0, y: 0, width: side, height: side),
-                    from: .zero,
-                    operation: .sourceOver,
-                    fraction: 1.0)
-        image.unlockFocus()
-        return image
+        // Block-based redraw: intrinsic size is a true 18pt (fixes the toolbar
+        // Menu label keeping the source's full-size reps), and the closure is
+        // invoked at the backing scale so it stays crisp on Retina. Drawing
+        // into the full rect centers the source content within the bounds.
+        return NSImage(size: NSSize(width: side, height: side), flipped: false) { rect in
+            source.draw(in: rect, from: .zero, operation: .sourceOver, fraction: 1.0)
+            return true
+        }
     }()
 
     @ToolbarContentBuilder
@@ -166,6 +166,8 @@ struct ContentView: View {
                 Button("Quit Crosswire") { NSApp.terminate(nil) }
             } label: {
                 Image(nsImage: Self.brandToolbarIcon)
+                    .resizable()
+                    .frame(width: 18, height: 18)
             }
             .menuIndicator(.visible)
             .help("Crosswire")
