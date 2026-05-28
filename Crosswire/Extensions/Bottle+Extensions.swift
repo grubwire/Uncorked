@@ -300,7 +300,14 @@ extension Bottle {
         settings.userVisibleProgramURLs = visible
         let primaryStillVisible = settings.primaryProgramURL.map { visible.contains($0) } ?? false
         if !primaryStillVisible {
-            settings.primaryProgramURL = visible[0]
+            // Bug #95: blindly picking `visible[0]` chose deep runtime
+            // binaries over the user-facing app .exe — a SWG install with
+            // no Start Menu shortcut named the bottle "Java(TM) Platform SE
+            // 8" because the bundled `lib/jre/bin/javaw.exe` outranked
+            // `Program Files (x86)/SWG Legends/SWGLegendsLauncher.exe`.
+            // Heuristic: rank shallower paths above deeper ones; among same
+            // depth, prefer .exes outside known runtime directories.
+            settings.primaryProgramURL = Self.pickUserFacingPrimary(from: visible)
         }
 
         // Same VERSIONINFO -> registry preference (no Start Menu fallback
@@ -325,6 +332,47 @@ extension Bottle {
             return regName
         }
         return nil
+    }
+
+    /// Rank-by-heuristic primary picker for the no-Start-Menu branch. Returns
+    /// the .exe most likely to be the user-facing app:
+    ///
+    ///   1. Drop URLs whose path traverses a known runtime/bundled directory
+    ///      (`lib/`, `jre/`, `jdk/`, `runtime/`, `redist/`, `vendor/`,
+    ///      `node_modules/`, or a nested `bin/` under another folder). These
+    ///      are JRE/JDK/.NET/Node payloads, never the headline launcher.
+    ///   2. Among the rest, prefer the shallowest path (fewest /-segments
+    ///      inside drive_c). Top-level `Program Files (x86)/Foo/Foo.exe` is
+    ///      depth 4 from drive_c; `Program Files (x86)/Foo/lib/jre/bin/javaw.exe`
+    ///      is depth 7. Shallower wins.
+    ///   3. Ties broken by case-insensitive alphabetical order on the basename
+    ///      so the choice is deterministic across runs.
+    ///   4. If filtering removes every candidate (an app whose primary .exe
+    ///      *is* in a runtime-shaped path, unusual but possible), fall back
+    ///      to the same ranking applied to the unfiltered list.
+    static func pickUserFacingPrimary(from candidates: [URL]) -> URL {
+        guard let head = candidates.first else {
+            preconditionFailure("pickUserFacingPrimary called with empty candidates")
+        }
+        let runtimeMarkers: Set<String> = [
+            "lib", "jre", "jdk", "runtime", "redist", "vendor", "node_modules"
+        ]
+        func isRuntimePath(_ url: URL) -> Bool {
+            let lowered = url.pathComponents.map { $0.lowercased() }
+            if lowered.contains(where: { runtimeMarkers.contains($0) }) { return true }
+            // A `bin` dir that is nested under another non-drive-root folder
+            // is almost always a runtime payload. drive_c top-level `bin` is
+            // not a thing we ship; this only catches `app/server/bin/util.exe`
+            // style nestings.
+            if let binIdx = lowered.firstIndex(of: "bin"), binIdx >= 2 { return true }
+            return false
+        }
+        func rank(_ url: URL) -> (Int, String) {
+            return (url.pathComponents.count, url.lastPathComponent.lowercased())
+        }
+        let filtered = candidates.filter { !isRuntimePath($0) }
+        let pool = filtered.isEmpty ? candidates : filtered
+        return pool.min(by: { rank($0) < rank($1) }) ?? head
     }
 
     /// Programs the user should see in the main UI. Built from the

@@ -159,6 +159,81 @@ public class Wine {
         return report
     }
 
+    /// Run an installer .exe and wait for IT SPECIFICALLY to exit, without
+    /// waiting for any background processes it may have launched (e.g. an
+    /// Inno Setup wizard's "Run after install" Finish-step launcher).
+    ///
+    /// Bug #94 was that `runProgram(at:)` uses `wine start /unix <path>`,
+    /// which fires the .exe as a detached child of wineserver and then exits
+    /// — but only after wineserver decides to release its grip, which it
+    /// won't do while any child process (including the installer-spawned
+    /// launcher) is still running. That blocks the install flow's await for
+    /// minutes-to-forever, blocking finalizeAppIdentity + JavaAppDetector
+    /// from running until the user closes the unrelated launcher window.
+    ///
+    /// This method runs the installer with a direct `wine <path>` invocation
+    /// (no `start`). Direct invocation makes the foreground wine process
+    /// represent the installer's own process: it lives as long as the .exe
+    /// lives, exits when the .exe exits. Grandchildren the installer
+    /// `ShellExecute`s do NOT extend this method's await — they keep running
+    /// under wineserver but the install flow is free to proceed to its
+    /// post-install code.
+    ///
+    /// Used by the install flow (`ContentView+Install.provisionAndInstall`)
+    /// for the installer step only. The user's Run button + ad-hoc launch
+    /// paths still use `runProgram(at:)` because they want detached
+    /// `start /unix` semantics (the app keeps running after Crosswire's
+    /// invocation completes).
+    @discardableResult
+    public static func runInstaller(
+        at url: URL, bottle: Bottle, environment: [String: String] = [:]
+    ) async throws -> ProgramRunReport {
+        var finalEnv = environment
+        if let settings = loadProgramSettings(for: url, in: bottle) {
+            for (key, value) in settings.environment where finalEnv[key] == nil {
+                finalEnv[key] = value
+            }
+            if settings.locale != .auto, finalEnv["LC_ALL"] == nil {
+                finalEnv["LC_ALL"] = settings.locale.rawValue
+            }
+        }
+        if bottle.settings.dxvk {
+            try enableDXVK(bottle: bottle)
+        }
+
+        let startedAt = Date()
+        var exitCode: Int32 = 0
+        var logURL: URL?
+        // Direct wine invocation: foreground wine wraps the installer's own
+        // process. Exits when the installer exits, independent of any
+        // wineserver children the installer may have spawned.
+        for await output in try Self.runWineProcess(
+            name: url.lastPathComponent,
+            args: [url.path(percentEncoded: false)],
+            bottle: bottle, environment: finalEnv
+        ) {
+            switch output {
+            case .terminated(let process):
+                exitCode = process.terminationStatus
+            case .started:
+                if logURL == nil { logURL = latestRunLogURL() }
+            case .message, .error:
+                break
+            }
+        }
+
+        let report = ProgramRunReport(
+            executableURL: url,
+            bottleURL: bottle.url,
+            bottleDisplayName: bottle.settings.name,
+            exitCode: exitCode,
+            duration: Date().timeIntervalSince(startedAt),
+            logFileURL: logURL ?? latestRunLogURL()
+        )
+        NotificationCenter.default.post(name: .crosswireProgramDidExit, object: report)
+        return report
+    }
+
     /// Best-effort lookup of the run log file `runWineProcess` just opened.
     /// `makeFileHandle()` (in Extensions) writes to
     /// `~/Library/Logs/app.Crosswire.Crosswire/<timestamp>.log`; the most

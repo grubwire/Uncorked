@@ -23,6 +23,20 @@ import CrosswireKit
 
 extension ContentView {
     func installWindowsApp() {
+        // Concurrent-install guard. provisionAndInstall is @MainActor and
+        // its `await`s suspend the main actor. Two of these in flight at
+        // the same time deadlocked the UI on 2026-05-28 when bug #94's
+        // wineserver-await held the first install open and the second
+        // install was started. provisioningMessage is set synchronously on
+        // entry and cleared on exit, so it's a reliable in-flight signal.
+        if provisioningMessage != nil {
+            showInstallAlert(
+                title: "Install already in progress",
+                body: "Wait for the current install to finish before starting a new one. "
+                    + "You can see its progress in the status row at the bottom of the window."
+            )
+            return
+        }
         let panel = NSOpenPanel()
         panel.allowsMultipleSelection = false
         panel.canChooseFiles = true
@@ -34,7 +48,17 @@ extension ContentView {
         ]
         panel.begin { result in
             guard result == .OK, let pickedURL = panel.urls.first else { return }
+            // Defense in depth: re-check at the actual Task entry in case
+            // the user re-opened the panel via a different code path while
+            // the previous panel was open.
             Task { @MainActor in
+                if provisioningMessage != nil {
+                    showInstallAlert(
+                        title: "Install already in progress",
+                        body: "Wait for the current install to finish."
+                    )
+                    return
+                }
                 await provisionAndInstall(pickedURL: pickedURL)
             }
         }
@@ -85,7 +109,14 @@ extension ContentView {
         NSApp.miniaturizeAll(nil)
         var installerError: Error?
         do {
-            try await Wine.runProgram(at: pickedURL, bottle: bottle)
+            // runInstaller uses direct `wine <path>` invocation (not
+            // `start /unix`) so this await returns as soon as the
+            // installer's own .exe exits, NOT when wineserver releases.
+            // Bug #94: with `start /unix` semantics, an installer that
+            // ShellExecutes a "Run after install" launcher kept this await
+            // open until the user closed the launcher, blocking
+            // finalizeAppIdentity + JavaAppDetector from running.
+            try await Wine.runInstaller(at: pickedURL, bottle: bottle)
         } catch {
             installerError = error
             print("Failed to run installer: \(error)")

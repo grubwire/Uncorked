@@ -35,6 +35,14 @@ struct AppSettingsSheet: View {
     @State private var showRuntimesSheet: Bool = false
     @State private var isEditingName: Bool = false
     @State private var nameDraft: String = ""
+    // Explicit focus state for the rename TextField. Bug #98: without
+    // `@FocusState` + `.focused(...)`, the macOS Form + `.confirmationAction`
+    // toolbar swallowed the spacebar — the Done button was implicitly the
+    // first responder, so pressing Space registered as a button activation
+    // (Space activates buttons under macOS Accessibility default), not as
+    // text input. Binding the TextField's focus explicitly routes the
+    // keystrokes back into the field.
+    @FocusState private var nameFieldFocused: Bool
 
     var body: some View {
         NavigationStack {
@@ -80,6 +88,7 @@ struct AppSettingsSheet: View {
                         TextField("App name", text: $nameDraft)
                             .textFieldStyle(.roundedBorder)
                             .font(.system(size: 14, weight: .semibold))
+                            .focused($nameFieldFocused)
                             .onSubmit { commitRename() }
                             .submitLabel(.done)
                             .onExitCommand { isEditingName = false }
@@ -91,6 +100,10 @@ struct AppSettingsSheet: View {
                             Button {
                                 nameDraft = bottle.displayName
                                 isEditingName = true
+                                // Defer focus to next runloop turn so the
+                                // TextField has been mounted by the time we
+                                // try to bind focus to it.
+                                DispatchQueue.main.async { nameFieldFocused = true }
                             } label: {
                                 Image(systemName: "pencil")
                                     .font(.system(size: 11))
