@@ -71,6 +71,16 @@ public struct ProgramSettings: Codable {
     public var environment: [String: String] = [:]
     public var arguments: String = ""
 
+    public init(
+        locale: Locales = .auto,
+        environment: [String: String] = [:],
+        arguments: String = ""
+    ) {
+        self.locale = locale
+        self.environment = environment
+        self.arguments = arguments
+    }
+
     static func decode(from settingsURL: URL) throws -> ProgramSettings {
         guard FileManager.default.fileExists(atPath: settingsURL.path(percentEncoded: false)) else {
             let settings = ProgramSettings()
@@ -82,7 +92,7 @@ public struct ProgramSettings: Codable {
         return try PropertyListDecoder().decode(ProgramSettings.self, from: data)
     }
 
-    func encode(to settingsURL: URL) throws {
+    public func encode(to settingsURL: URL) throws {
         let encoder = PropertyListEncoder()
         encoder.outputFormat = .xml
         let data = try encoder.encode(self)

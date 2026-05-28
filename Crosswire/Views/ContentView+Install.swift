@@ -116,6 +116,18 @@ extension ContentView {
             provisioningMessage = nil
             return
         }
+
+        // After a regular installer run, scan the detected programs for
+        // self-contained Java launchers (e.g. JavaFX game launchers that
+        // ship their own JRE next to the .exe). For each match with no
+        // existing per-program plist, seed one with _JAVA_OPTIONS so the
+        // first launch doesn't sliver-render under Prism d3d. Runs
+        // before any auto-launch attempt. Orthogonal to RuntimeDetector,
+        // which only sees Win32 PE imports.
+        for program in bottle.userVisiblePrograms {
+            JavaAppDetector.writeDefaultPlistIfNeeded(forExeAt: program.url, in: bottle)
+        }
+
         provisioningMessage = nil
 
         if bottle.userVisiblePrograms.isEmpty {
@@ -168,6 +180,13 @@ extension ContentView {
         bottle.updateInstalledPrograms()
         bottle.settings.primaryProgramURL = targetURL
         bottle.settings.userVisibleProgramURLs = [targetURL]
+
+        // Check the SOURCE dir tree for a bundled JRE — that's where the
+        // lib/jre layout lives; we only copy the .exe into the bottle,
+        // not the surrounding tree. The plist is written for the
+        // in-bottle target path (same basename as source, so the helper
+        // keys it correctly off lastPathComponent).
+        JavaAppDetector.writeDefaultPlistIfNeeded(forExeAt: source, in: bottle)
         return true
     }
 
