@@ -41,6 +41,7 @@ extension ContentView {
     }
 
     @MainActor
+    // swiftlint:disable:next function_body_length
     func provisionAndInstall(pickedURL: URL) async {
         let bottleName = pickedURL.deletingPathExtension().lastPathComponent
         let defaultLocation = UserDefaults.standard.url(forKey: "defaultBottleLocation")
