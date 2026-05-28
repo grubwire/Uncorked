@@ -21,6 +21,8 @@ import AppKit
 import CrosswireKit
 import os.log
 
+// swiftlint:disable file_length
+
 extension Bottle {
     func openCDrive() {
         NSWorkspace.shared.open(url.appending(path: "drive_c"))
@@ -255,12 +257,17 @@ extension Bottle {
     func finalizeAppIdentity() {
         let startMenu = scanStartMenuEntries()
         if !startMenu.isEmpty {
-            settings.appDisplayName = startMenu[0].displayName
             settings.userVisibleProgramURLs = startMenu.map(\.url)
             if settings.primaryProgramURL == nil
                 || !startMenu.contains(where: { $0.url == settings.primaryProgramURL }) {
                 settings.primaryProgramURL = startMenu[0].url
             }
+            // Name preference: VERSIONINFO -> registry uninstall name -> Start
+            // Menu shortcut name. Bug #92 was that the Start Menu shortcut
+            // name (often just the .lnk stem) always won and VERSIONINFO
+            // never had a chance to produce the polished ProductName.
+            settings.appDisplayName = identityName(for: settings.primaryProgramURL)
+                ?? startMenu[0].displayName
             updateInstalledPrograms()
             return
         }
@@ -296,17 +303,28 @@ extension Bottle {
             settings.primaryProgramURL = visible[0]
         }
 
-        // Identity preference (best -> worst) in this no-Start-Menu branch:
-        // VS_VERSIONINFO (ProductName/FileDescription/InternalName), then
-        // registry uninstall DisplayName, then installer filename (default).
-        if let primary = settings.primaryProgramURL {
-            if let peFile = try? PEFile(url: primary),
-               let viName = peFile.displayName(), !viName.isEmpty {
-                settings.appDisplayName = viName
-            } else if let regName = registryDisplayName(for: primary) {
-                settings.appDisplayName = regName
-            }
+        // Same VERSIONINFO -> registry preference (no Start Menu fallback
+        // available in this branch since scanStartMenuEntries was empty).
+        if let name = identityName(for: settings.primaryProgramURL) {
+            settings.appDisplayName = name
         }
+    }
+
+    /// Try to derive a polished display name for `primary` from, in order:
+    ///   1. PE VS_VERSIONINFO (ProductName -> FileDescription -> InternalName)
+    ///   2. Registry uninstall DisplayName
+    /// Returns nil if neither produced a usable value, so the caller can
+    /// fall back further (e.g. to a Start Menu shortcut name).
+    private func identityName(for primary: URL?) -> String? {
+        guard let primary else { return nil }
+        if let peFile = try? PEFile(url: primary),
+           let viName = peFile.displayName(), !viName.isEmpty {
+            return viName
+        }
+        if let regName = registryDisplayName(for: primary) {
+            return regName
+        }
+        return nil
     }
 
     /// Programs the user should see in the main UI. Built from the

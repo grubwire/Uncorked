@@ -81,11 +81,16 @@ public struct ProgramSettings: Codable {
         self.arguments = arguments
     }
 
+    /// Read program settings from disk, or return defaults if no plist exists yet.
+    ///
+    /// This function MUST NOT have file-write side effects when the plist is
+    /// absent. Bug #91: an earlier implementation auto-persisted an empty
+    /// default plist on first read, which trips JavaAppDetector's
+    /// respect-existing-plist guard and blocks `_JAVA_OPTIONS` auto-seeding.
+    /// Callers that want to persist defaults must call `encode(to:)` themselves.
     static func decode(from settingsURL: URL) throws -> ProgramSettings {
         guard FileManager.default.fileExists(atPath: settingsURL.path(percentEncoded: false)) else {
-            let settings = ProgramSettings()
-            try settings.encode(to: settingsURL)
-            return settings
+            return ProgramSettings()
         }
 
         let data = try Data(contentsOf: settingsURL)
