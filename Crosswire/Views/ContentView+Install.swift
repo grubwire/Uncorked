@@ -40,8 +40,8 @@ extension ContentView {
         }
     }
 
+    // swiftlint:disable function_body_length
     @MainActor
-    // swiftlint:disable:next function_body_length
     func provisionAndInstall(pickedURL: URL) async {
         let bottleName = pickedURL.deletingPathExtension().lastPathComponent
         let defaultLocation = UserDefaults.standard.url(forKey: "defaultBottleLocation")
@@ -139,6 +139,7 @@ extension ContentView {
             )
         }
     }
+    // swiftlint:enable function_body_length
 
     /// Present the runtimes-detected sheet and suspend until the user
     /// makes a decision. Returns the verbs that were actually installed
