@@ -206,12 +206,33 @@ jobs:
               (r'dlls/winemac\.drv/.*\.[cm]$',   'dlls/winemac.drv/winemac.so',               'dlls/winemac.drv/winemac.so'),
           ]
 
+          # Co-rebuild invariants: rebuilding X requires also rebuilding Y to
+          # keep ABI in sync. The ntdll<->wineserver pair is the headline case:
+          # every CI build of ntdll.so regenerates server_protocol.h via
+          # tools/make_requests, which auto-bumps SERVER_PROTOCOL_VERSION
+          # whenever the regenerated content differs from on-disk (whitespace
+          # / Perl-version drift versus what Gcenx pre-generated). The
+          # Gcenx-shipped wineserver speaks the older version, so we must
+          # ship a freshly-built wineserver too so the pair handshakes
+          # regardless of which version make_requests lands on.
+          CO_REBUILD = {
+              'dlls/ntdll/ntdll.so': [('server/wineserver', 'server/wineserver')],
+          }
+
           patch_files = sorted(glob.glob('scripts/patches/*.patch'))
           if not patch_files:
               print('::error::scripts/patches/ has no .patch files; rebuild list would be empty.', file=sys.stderr)
               sys.exit(1)
 
           targets, artifacts, unmapped = [], [], []
+          def add(tgt, art):
+              if tgt not in targets:
+                  targets.append(tgt)
+              if art not in artifacts:
+                  artifacts.append(art)
+              for co_tgt, co_art in CO_REBUILD.get(tgt, []):
+                  add(co_tgt, co_art)
+
           for pf in patch_files:
               with open(pf) as f:
                   for line in f:
@@ -221,10 +242,7 @@ jobs:
                       path = m.group(1)
                       for pat, tgt, art in MAPPING:
                           if re.match(pat, path):
-                              if tgt not in targets:
-                                  targets.append(tgt)
-                              if art not in artifacts:
-                                  artifacts.append(art)
+                              add(tgt, art)
                               break
                       else:
                           unmapped.append(f'{pf}:{path}')
@@ -373,13 +391,17 @@ jobs:
             echo "  OK: $basename carries $label marker"
           done
 
-          # PE binaries (MinGW-cross, __APPLE__ undefined → no marker strings).
-          # Best available check: the swapped file must differ from the
-          # Gcenx original backed up alongside it. Combined with the patch
-          # script's source-modification assertion, this proves a patched
-          # build was produced and swapped in.
+          # Files that ship without an embedded marker string. The check is
+          # sha-changed-vs-Gcenx — proving a freshly-built artifact was
+          # swapped in, even if no source-level CW HACK marker survives
+          # into the binary. wow64cpu.dll is MinGW-cross PE (no __APPLE__,
+          # no marker strings). wineserver is rebuilt as a co-rebuild
+          # invariant for ntdll.so (so the SERVER_PROTOCOL_VERSION pair
+          # matches) and our patches don't touch its source, so the
+          # verification bar is just "freshly built, not the Gcenx one".
           SHA_CHECKS=(
             'wow64cpu.dll|CW HACK 20760'
+            'wineserver|ntdll co-rebuild'
           )
           for row in "${SHA_CHECKS[@]}"; do
             basename="${row%%|*}"
