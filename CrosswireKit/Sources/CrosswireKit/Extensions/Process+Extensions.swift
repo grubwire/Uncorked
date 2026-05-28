@@ -96,9 +96,25 @@ public extension Process {
     }
 
     // Drain anything still in the pipes at termination and route it through
-    // the same line splitter — previously this data was read with
-    // `_ = readToEnd()` and DISCARDED, which is why long runs truncated at
-    // whatever was already drained.
+    // the same line splitter.
+    //
+    // CRITICAL: this MUST NOT block. Bug #94: when an installer ShellExecutes
+    // a launcher in its Finish step, the launcher inherits the parent wine
+    // process's stdout/stderr file descriptors via wineserver. Even after
+    // the foreground wine process exits and terminationHandler fires, the
+    // pipes' write end is still held by wineserver+launcher, so they never
+    // EOF. A previous implementation called `readToEnd()` here, which
+    // blocks indefinitely waiting for EOF, suspended this terminationHandler
+    // closure forever, and `continuation.finish()` never ran. Result: the
+    // install flow's `for await` loop was stuck even though the foreground
+    // wine process had cleanly exited 0 — the auto-features (plist seed,
+    // dwrite override, finalizeAppIdentity) never got a chance to run.
+    //
+    // Fix: use `availableData` (non-blocking) to drain only what's currently
+    // buffered in the pipe. We may lose a small tail of output written
+    // BETWEEN the last readabilityHandler invocation and this drain, but
+    // that's acceptable — readabilityHandler already streamed the bulk to
+    // the log in real time.
     // swiftlint:disable function_parameter_count
     private static func drainPipesAtTermination(
         pipe: Pipe,
@@ -111,33 +127,36 @@ public extension Process {
     // swiftlint:enable function_parameter_count
         pipe.fileHandleForReading.readabilityHandler = nil
         errorPipe.fileHandleForReading.readabilityHandler = nil
+        let stdoutTail = pipe.fileHandleForReading.availableData
+        if !stdoutTail.isEmpty {
+            stdoutCarry.feed(stdoutTail) { line in
+                continuation.yield(.message(line))
+                Logger.wineKit.info("\(line, privacy: .public)")
+                fileHandle?.write(line: line + "\n")
+            }
+        }
+        let stderrTail = errorPipe.fileHandleForReading.availableData
+        if !stderrTail.isEmpty {
+            stderrCarry.feed(stderrTail) { line in
+                continuation.yield(.error(line))
+                Logger.wineKit.warning("\(line, privacy: .public)")
+                fileHandle?.write(line: line + "\n")
+            }
+        }
+        // Flush any final non-newline-terminated content already in the carry
+        // buffer from earlier readabilityHandler reads.
+        if let last = stdoutCarry.flush() {
+            continuation.yield(.message(last))
+            fileHandle?.write(line: last + "\n")
+        }
+        if let last = stderrCarry.flush() {
+            continuation.yield(.error(last))
+            fileHandle?.write(line: last + "\n")
+        }
         do {
-            if let tail = try pipe.fileHandleForReading.readToEnd(), !tail.isEmpty {
-                stdoutCarry.feed(tail) { line in
-                    continuation.yield(.message(line))
-                    Logger.wineKit.info("\(line, privacy: .public)")
-                    fileHandle?.write(line: line + "\n")
-                }
-            }
-            if let tail = try errorPipe.fileHandleForReading.readToEnd(), !tail.isEmpty {
-                stderrCarry.feed(tail) { line in
-                    continuation.yield(.error(line))
-                    Logger.wineKit.warning("\(line, privacy: .public)")
-                    fileHandle?.write(line: line + "\n")
-                }
-            }
-            // Flush any final non-newline-terminated content.
-            if let last = stdoutCarry.flush() {
-                continuation.yield(.message(last))
-                fileHandle?.write(line: last + "\n")
-            }
-            if let last = stderrCarry.flush() {
-                continuation.yield(.error(last))
-                fileHandle?.write(line: last + "\n")
-            }
             try fileHandle?.close()
         } catch {
-            Logger.wineKit.error("Error draining pipes at termination: \(error)")
+            Logger.wineKit.error("Error closing fileHandle at termination: \(error)")
         }
     }
 
