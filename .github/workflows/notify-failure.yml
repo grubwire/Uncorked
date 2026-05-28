@@ -17,11 +17,19 @@ on:
       - Crowdin sync
     types: [completed]
 
+# workflow_run runs in the context of the default branch with the
+# triggering run's elevated token. Lock the default to nothing and grant
+# only the minimum each job needs. Fields like head_branch are
+# attacker-controlled (fork PR can pick any branch name), so every use
+# of them below goes through env vars and jq --arg to avoid injection.
+permissions: {}
+
 jobs:
   open-issue:
     if: github.event.workflow_run.conclusion == 'failure'
     runs-on: ubuntu-latest
     permissions:
+      contents: read
       issues: write
     steps:
       - name: Ensure ci-failure label exists
@@ -49,28 +57,37 @@ jobs:
           # this workflow name (title or body), post a comment with the new run
           # instead of opening a second issue. Substring match in JQ so that
           # repurposed/renamed tracker issues still count.
-          WORKFLOW_LOWER=$(echo "$WORKFLOW" | tr '[:upper:]' '[:lower:]')
+          WORKFLOW_LOWER=$(printf '%s' "$WORKFLOW" | tr '[:upper:]' '[:lower:]')
+          # Pipe to standalone jq so the match string can be passed via
+          # --arg. Avoids interpolating $WORKFLOW_LOWER into a jq string
+          # literal, which would break (or be exploitable) if the workflow
+          # name ever contained `"` or `\`.
           EXISTING=$(gh issue list \
             --repo "$REPO" \
             --state open \
             --label ci-failure \
             --json number,title,body \
-            --jq "[.[] | select((.title + \" \" + .body) | ascii_downcase | contains(\"$WORKFLOW_LOWER\"))] | .[0].number // empty")
+            | jq -r --arg needle "$WORKFLOW_LOWER" \
+              '[.[] | select((.title + " " + .body) | ascii_downcase | contains($needle))] | .[0].number // empty')
 
-          if [ -n "$EXISTING" ]; then
-            gh issue comment "$EXISTING" \
-              --repo "$REPO" \
-              --body "Another **${WORKFLOW}** failure on \`${BRANCH}\` at \`${SHORT_SHA}\`. Run: ${RUN_URL}"
-          else
-            gh issue create \
-              --repo "$REPO" \
-              --title "CI: ${WORKFLOW} failed on ${BRANCH} (${SHORT_SHA})" \
-              --label "ci-failure" \
-              --body "**${WORKFLOW}** failed on branch \`${BRANCH}\` at commit \`${SHORT_SHA}\`.
+          COMMENT_BODY="Another **${WORKFLOW}** failure on \`${BRANCH}\` at \`${SHORT_SHA}\`. Run: ${RUN_URL}"
+          ISSUE_TITLE="CI: ${WORKFLOW} failed on ${BRANCH} (${SHORT_SHA})"
+          ISSUE_BODY="**${WORKFLOW}** failed on branch \`${BRANCH}\` at commit \`${SHORT_SHA}\`.
 
           Run: ${RUN_URL}
 
           Check the run logs and fix before merging or releasing.
 
           _Close this issue once the failure is resolved._"
+
+          if [ -n "$EXISTING" ]; then
+            gh issue comment "$EXISTING" \
+              --repo "$REPO" \
+              --body "$COMMENT_BODY"
+          else
+            gh issue create \
+              --repo "$REPO" \
+              --title "$ISSUE_TITLE" \
+              --label "ci-failure" \
+              --body "$ISSUE_BODY"
           fi
