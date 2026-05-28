@@ -298,21 +298,23 @@ struct ContentView: View {
     /// header anchor instead of floating rows on a gradient.
     private var library: some View {
         VStack(alignment: .leading, spacing: 0) {
-            HStack {
+            HStack(alignment: .firstTextBaseline) {
                 Text("Library")
-                    .font(CrosswireTheme.Typography.title)
-                    .foregroundStyle(CrosswireTheme.textPrimary)
+                    .font(CrosswireTheme.Typography.sectionHeader)
+                    .textCase(.uppercase)
+                    .tracking(0.6)
+                    .foregroundStyle(CrosswireTheme.textSecondary)
                 Spacer()
                 Text("^[\(filteredBottles.count) item](inflect: true)")
                     .font(CrosswireTheme.Typography.entryMeta)
-                    .foregroundStyle(CrosswireTheme.textSecondary)
+                    .foregroundStyle(CrosswireTheme.textTertiary)
             }
-            .padding(.horizontal, 28)
-            .padding(.top, 4)
-            .padding(.bottom, 8)
+            .padding(.horizontal, 16)
+            .padding(.top, 14)
+            .padding(.bottom, 10)
 
             ScrollView {
-                LazyVStack(spacing: 2) {
+                LazyVStack(spacing: 6) {
                     ForEach(filteredBottles) { bottle in
                         AppRow(
                             bottle: bottle,
@@ -325,11 +327,24 @@ struct ContentView: View {
                         )
                     }
                 }
-                .padding(.vertical, 4)
+                .padding(.horizontal, 10)
+                .padding(.bottom, 12)
             }
             .animation(.default, value: bottleVM.bottles)
             .animation(.default, value: searchText)
         }
+        // The library is a contained surface (Battle.net favorites-bar
+        // pattern): branded hex region over the page gradient, not a material.
+        .background(
+            RoundedRectangle(cornerRadius: 12, style: .continuous)
+                .fill(CrosswireTheme.surface)
+        )
+        .overlay(
+            RoundedRectangle(cornerRadius: 12, style: .continuous)
+                .strokeBorder(CrosswireTheme.regionBorder, lineWidth: 1)
+        )
+        .padding(.horizontal, 24)
+        .padding(.bottom, 24)
     }
 
     /// First-launch / empty-library state. Uses the app's own icon (single

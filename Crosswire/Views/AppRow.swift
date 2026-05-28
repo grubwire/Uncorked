@@ -57,8 +57,7 @@ struct AppRow: View {
         .contentShape(Rectangle())
         .background(
             RoundedRectangle(cornerRadius: 8, style: .continuous)
-                .fill(hovered ? CrosswireTheme.surfaceHover : Color.clear)
-                .padding(.horizontal, 8)
+                .fill(hovered ? CrosswireTheme.rowSurfaceHover : CrosswireTheme.rowSurface)
         )
         .scaleEffect(hovered ? 1.005 : 1.0)
         .animation(CrosswireTheme.Motion.hover, value: hovered)

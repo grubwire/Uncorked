@@ -52,11 +52,21 @@ public enum CrosswireTheme {
 
     // MARK: - Surfaces (elevated layers on the background)
 
-    /// A single row / card / group at rest. One step above the background.
+    /// The library region container — the contained surface the rows sit
+    /// inside. One step above the background gradient. Branded hex (not a
+    /// material): the persistent library shell stays opaque, not blurred.
     public static let surface = Color(hex: 0x1F232B)
 
-    /// A row / card under cursor hover. One step above `surface`.
-    public static let surfaceHover = Color(hex: 0x262B34)
+    /// A library row at rest — its own surface, one step above the region
+    /// container (`surface`).
+    public static let rowSurface = Color(hex: 0x262B34)
+
+    /// A library row under cursor hover. One step above `rowSurface`.
+    public static let rowSurfaceHover = Color(hex: 0x2A2F38)
+
+    /// The 1px hairline around the library region container. Same tone as a
+    /// row at rest, used as a quiet edge against the page gradient.
+    public static let regionBorder = Color(hex: 0x262B34)
 
     /// A row / card in selected / active state. Blue-tinted at 10% opacity
     /// so the row clearly belongs to the accent system but doesn't shout.
@@ -136,8 +146,12 @@ public enum CrosswireTheme {
         /// Window-title scale. The "Crosswire" wordmark in the header.
         public static let display: Font = .system(size: 30, weight: .bold, design: .default)
 
-        /// Section headers ("Library", "About", per-app sheet titles).
+        /// Page / sheet titles ("About", per-app sheet titles).
         public static let title: Font = .system(size: 20, weight: .semibold, design: .default)
+
+        /// Small-caps region label inside a contained surface ("LIBRARY").
+        /// Pair with `.textCase(.uppercase)` + `.tracking(0.6)` + 60% opacity.
+        public static let sectionHeader: Font = .system(size: 11, weight: .semibold, design: .default)
 
         /// Library entry name.
         public static let entryName: Font = .system(size: 16, weight: .semibold, design: .default)
