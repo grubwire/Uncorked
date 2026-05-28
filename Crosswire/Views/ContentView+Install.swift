@@ -165,8 +165,8 @@ extension ContentView {
         // dwrite override wasn't yet in user.reg — net result is a sliver-
         // render or post-Login crash on what looks to the user like the
         // first run of their freshly-installed app. Killing the bottle's
-        // wineserver takes the half-configured launcher down so the user's
-        // next Run click starts cleanly with all auto-features applied.
+        // wineserver takes the half-configured launcher down so the auto-
+        // launch below starts cleanly with all auto-features applied.
         try? Wine.killBottle(bottle: bottle)
 
         provisioningMessage = nil
@@ -178,6 +178,20 @@ extension ContentView {
                     + "Check the latest run log for details: ~/Library/Logs/app.Crosswire.Crosswire/. "
                     + "You can delete the app from its settings panel and try again."
             )
+            return
+        }
+
+        // Auto-launch the freshly-installed app. The installer's wizard
+        // promised "Run <app> after install" — we just killed THAT launcher
+        // because it started before our auto-features applied. Auto-launch
+        // here gives the user what they expected (their app opens), but now
+        // with the plist's _JAVA_OPTIONS + dwrite=builtin in effect from
+        // first paint. Brief settle so wineserver -k from killBottle finishes
+        // tearing down before the new launch comes up against a half-dead
+        // wineserver.
+        Task { @MainActor in
+            try? await Task.sleep(nanoseconds: 2_000_000_000)
+            runPrimary(for: bottle)
         }
     }
     // swiftlint:enable function_body_length
