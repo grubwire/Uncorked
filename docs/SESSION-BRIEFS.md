@@ -117,6 +117,10 @@ Same depth treatment. Hide "Bottle" terminology entirely (covered by section 1, 
 
 **Preserve all current functionality.** Every button, action, and state that exists today must exist after. This is a visual + naming pass, not a model or behavior change.
 
+### 9. Style the onboarding screens that Brief 3 builds
+
+Brief 3 introduces a 5-screen first-launch onboarding (Welcome → Sentry consent → Notifications → Engine download → You're ready). Brief 2 owns the **visual** layer of those screens: same gradient background, same depth/elevation treatment, blue accent, distinctive Crosswire feel. Heading typography matches the main window's headline scale. Continue buttons are blue primary. Disclosure links ("What's included?") use the secondary text tone. Onboarding is the first impression — it must feel like the same product as the icon and the library window.
+
 ### Acceptance (Brief 2)
 A first-time Mac user opens Crosswire and reads it as a polished, fun, Mac-native game-and-app launcher that belongs on their Mac. The app and the icon look like they're from the same product. Not generic. Not Wine-utility. Distinctively Crosswire.
 
@@ -139,7 +143,28 @@ Currently no structured Swift log, no crash bundle, no `hs_err` auto-pickup, no 
 - Wire into the existing failure-report dialog (#84-era feature) so when a user clicks "Report this issue," the crash bundle is included automatically.
 - Privacy: no automatic upload, no telemetry. User explicitly chooses to share the bundle.
 
-### 2. Session close-out
+### 2. First-launch onboarding flow with consent and permissions
+
+Build a guided onboarding shown exactly once per install (gated on a UserDefaults key). The flow:
+
+- **Screen 1 — Welcome.** Crosswire icon, "Welcome to Crosswire," tagline "Run Windows games and apps on your Mac," Continue.
+- **Screen 2 — Crash reporting consent.** Plain language: "Crosswire can send anonymous crash reports to help us fix bugs faster. No personal data is included." Buttons: "Help improve Crosswire" / "Maybe later." Disclosure link "What's included?" opens an inline panel listing exactly what Sentry receives (stack trace, app version, macOS version, Wine engine version, bottle config, scrubbed run log). Stores choice in UserDefaults; toggleable later in Settings → Privacy.
+- **Screen 3 — Notifications.** "Get notified when downloads finish or apps update." [Allow] / [Not now]. Allow triggers `UNUserNotificationCenter.requestAuthorization`.
+- **Screen 4 — Engine download.** "Crosswire needs to download its engine (~190MB) to run Windows apps." [Download Engine] (primary) / [Set up later] (secondary, defers but warns the user the app won't function until done). Triggers the existing engine-download path.
+- **Screen 5 — You're ready.** "Drop a Windows installer to install your first game or app. The first time you do this, macOS may ask you to allow access to your Downloads folder and Terminal — this is normal." Single [Get Started] button.
+
+**State management:**
+- `hasCompletedOnboarding` boolean in UserDefaults
+- Each individual permission state stored separately so we can detect "user revoked notifications in System Settings later" and re-prompt or grey out related features
+- Settings → Privacy lists each permission with current state and either a toggle (for Sentry) or "Open System Settings" deep-link buttons (for OS-managed permissions like notifications)
+
+**Do NOT ask for in onboarding:**
+- Downloads or Terminal/AppleScript access — those are user-action-triggered system prompts; pre-asking is confusing. Screen 5 warns about them.
+- Microphone, Camera, Photos, Contacts, Location, Calendar, Full Disk Access, Accessibility — Crosswire doesn't need any of these.
+
+Visual styling of the onboarding screens is handled by Brief 2 (which adds a note to style screens this brief builds). Brief 3 owns the logic (Sentry SDK, UserDefaults plumbing, first-launch detection, gated-permission flow); Brief 2 adds the polish.
+
+### 3. Session close-out
 - Confirm everything is committed and pushed to main. Nothing uncommitted in working tree. Nothing local-only.
 - Confirm CI is green on the latest commit.
 - Update CLAUDE.md (or the project-state doc) with shipped fixes from Briefs 1-3 and remaining queue.

@@ -159,6 +159,17 @@ extension ContentView {
             await JavaAppDetector.applyDefaultsIfNeeded(forExeAt: program.url, in: bottle)
         }
 
+        // Clean up anything the installer may have already spawned (notably
+        // the "Run <app> after install" Finish-step launcher in Inno Setup
+        // and friends). That launcher started BEFORE the auto-features
+        // above were applied, so its JVM read empty env vars and the
+        // dwrite override wasn't yet in user.reg — net result is a sliver-
+        // render or post-Login crash on what looks to the user like the
+        // first run of their freshly-installed app. Killing the bottle's
+        // wineserver takes the half-configured launcher down so the user's
+        // next Run click starts cleanly with all auto-features applied.
+        try? Wine.killBottle(bottle: bottle)
+
         provisioningMessage = nil
 
         if bottle.userVisiblePrograms.isEmpty {
