@@ -141,8 +141,7 @@ struct CrosswireApp: App {
         // Settings now opens as a full-bleed inline destination within the
         // main window via `ContentView.route = .settings`. The header gear
         // button and the standard Cmd+, keyboard shortcut both route to it.
-        // SettingsView.swift is preserved on disk for reference but no
-        // longer mounted as a scene.
+        // The prior standalone SettingsView scene has been removed.
     }
 
     // MARK: - Window helpers

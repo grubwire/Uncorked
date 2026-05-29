@@ -39,7 +39,6 @@
 		6E40495D29CCA19C006E3F1B /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6E40495C29CCA19C006E3F1B /* Preview Assets.xcassets */; };
 		6E40498129CCA8B0006E3F1B /* BottleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E40498029CCA8B0006E3F1B /* BottleView.swift */; };
 		6E40498329CCA91B006E3F1B /* Bottle+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E40498229CCA91B006E3F1B /* Bottle+Extensions.swift */; };
-		6E49E0212AECB7DB00009CAC /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E49E0202AECB7DB00009CAC /* SettingsView.swift */; };
 		6E50D98329CD6066008C39F6 /* BottleVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E50D98229CD6066008C39F6 /* BottleVM.swift */; };
 		6E50D98529CDF25B008C39F6 /* BottleCreationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E50D98429CDF25B008C39F6 /* BottleCreationView.swift */; };
 		6E59676B2A9A424900D64F70 /* ArgumentParser in Frameworks */ = {isa = PBXBuildFile; productRef = 6E59676A2A9A424900D64F70 /* ArgumentParser */; };
@@ -74,7 +73,6 @@
 		AB120001000000000000AAA1 /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB120002000000000000AAA2 /* AboutView.swift */; };
 		AB120003000000000000AAA3 /* DiagnosticsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB120004000000000000AAA4 /* DiagnosticsView.swift */; };
 		AB300011000000000000AA01 /* AppRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB300001000000000000AA01 /* AppRow.swift */; };
-		AB300012000000000000AA02 /* AppSettingsSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB300002000000000000AA02 /* AppSettingsSheet.swift */; };
 		AB300013000000000000AA03 /* AppTileIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB300003000000000000AA03 /* AppTileIcon.swift */; };
 		AB300014000000000000AA04 /* ContentView+Install.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB300004000000000000AA04 /* ContentView+Install.swift */; };
 		BFD1B92A22E31C8F79451104 /* CrosswireTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48DF165E670ADF3E17956342 /* CrosswireTheme.swift */; };
@@ -158,7 +156,6 @@
 		6E40495C29CCA19C006E3F1B /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		6E40498029CCA8B0006E3F1B /* BottleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottleView.swift; sourceTree = "<group>"; };
 		6E40498229CCA91B006E3F1B /* Bottle+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Bottle+Extensions.swift"; sourceTree = "<group>"; };
-		6E49E0202AECB7DB00009CAC /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		6E50D98229CD6066008C39F6 /* BottleVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottleVM.swift; sourceTree = "<group>"; };
 		6E50D98429CDF25B008C39F6 /* BottleCreationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottleCreationView.swift; sourceTree = "<group>"; };
 		6E621CEE2A5F631200C9AAB3 /* Winetricks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Winetricks.swift; sourceTree = "<group>"; };
@@ -190,7 +187,6 @@
 		AB120002000000000000AAA2 /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
 		AB120004000000000000AAA4 /* DiagnosticsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiagnosticsView.swift; sourceTree = "<group>"; };
 		AB300001000000000000AA01 /* AppRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRow.swift; sourceTree = "<group>"; };
-		AB300002000000000000AA02 /* AppSettingsSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettingsSheet.swift; sourceTree = "<group>"; };
 		AB300003000000000000AA03 /* AppTileIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppTileIcon.swift; sourceTree = "<group>"; };
 		AB300004000000000000AA04 /* ContentView+Install.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContentView+Install.swift"; sourceTree = "<group>"; };
 		C61CAB73D21A331D0F4EC7C6 /* EntryDetailView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EntryDetailView.swift; sourceTree = "<group>"; };
@@ -357,7 +353,6 @@
 		6E49E01F2AECB7D000009CAC /* Settings */ = {
 			isa = PBXGroup;
 			children = (
-				6E49E0202AECB7DB00009CAC /* SettingsView.swift */,
 				3C1A758CDD06FEDF58136816 /* InlineSettingsView.swift */,
 			);
 			path = Settings;
@@ -375,7 +370,6 @@
 				6E40495529CCA19C006E3F1B /* CrosswireApp.swift */,
 				6E40495729CCA19C006E3F1B /* ContentView.swift */,
 				AB300001000000000000AA01 /* AppRow.swift */,
-				AB300002000000000000AA02 /* AppSettingsSheet.swift */,
 				AB300003000000000000AA03 /* AppTileIcon.swift */,
 				AB300004000000000000AA04 /* ContentView+Install.swift */,
 				6E064B1329DD331F00D9A2D2 /* SparkleView.swift */,
@@ -668,7 +662,6 @@
 				6E70A4A12A9A280C007799E9 /* CrosswireCmd.swift in Sources */,
 				6E40495829CCA19C006E3F1B /* ContentView.swift in Sources */,
 				AB300011000000000000AA01 /* AppRow.swift in Sources */,
-				AB300012000000000000AA02 /* AppSettingsSheet.swift in Sources */,
 				AB300013000000000000AA03 /* AppTileIcon.swift in Sources */,
 				AB300014000000000000AA04 /* ContentView+Install.swift in Sources */,
 				67D278512BC5907E006F9A1E /* ActionView.swift in Sources */,
@@ -695,7 +688,6 @@
 				8C73E1342AF472FC00B6FB45 /* ProgramMenuView.swift in Sources */,
 				6E50D98329CD6066008C39F6 /* BottleVM.swift in Sources */,
 				6E2B25C12B0E20F50084A67A /* PinAddView.swift in Sources */,
-				6E49E0212AECB7DB00009CAC /* SettingsView.swift in Sources */,
 				6E7C07C02AAF570100F6E66B /* FileOpenView.swift in Sources */,
 				6E6C0CF22A419A6800356232 /* WelcomeView.swift in Sources */,
 				6E40498129CCA8B0006E3F1B /* BottleView.swift in Sources */,

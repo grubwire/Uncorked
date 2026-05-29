@@ -24,7 +24,7 @@ import CrosswireKit
 // swiftlint:disable type_body_length file_length
 /// Full-bleed inline per-entry detail shown when `AppRoute == .entryDetail`.
 /// Slides in over the library (same pattern as inline Settings); the back
-/// chevron returns. Replaces the old detached `AppSettingsSheet` modal.
+/// chevron returns. Replaces the old detached per-app settings sheet.
 ///
 /// This is a transient overlay, so it sits on a `.regularMaterial` blur over
 /// the library shell (materials-vs-hex rule). Launch + run-specific routes go
