@@ -216,13 +216,21 @@ struct ContentView: View {
             .help("Settings (⌘,)")
             .accessibilityLabel("Settings")
 
-            Button(action: installWindowsApp) {
-                Label("Install", systemImage: "plus")
+            // Labeled "+ Install" (not a bare icon) — install is the app's
+            // primary action and discoverability wins over toolbar minimalism.
+            // Suppressed when the library is empty: the centered hero CTA is
+            // the single obvious target there, so the toolbar copy would be
+            // redundant. See the spec's metrics legend.
+            if !bottleVM.bottles.isEmpty {
+                Button(action: installWindowsApp) {
+                    Label("Install", systemImage: "plus")
+                }
+                .labelStyle(.titleAndIcon)
+                .buttonStyle(.borderedProminent)
+                .tint(CrosswireTheme.accent)
+                .help("Install a Windows game or app")
+                .accessibilityLabel("Install a Game or App")
             }
-            .buttonStyle(.borderedProminent)
-            .tint(CrosswireTheme.accent)
-            .help("Install a Windows game or app")
-            .accessibilityLabel("Install a Game or App")
         }
     }
 

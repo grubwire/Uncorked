@@ -183,6 +183,12 @@ Everything else should track HIG: standardize one-off spacings to an 8pt
 rhythm, image-only buttons ≥24×24, window content margins ≥20pt, toolbar
 symbols 13pt/medium per above.
 
+- The toolbar install button is intentionally **labeled** ("+ Install", blue
+  primary) rather than an icon-only "+": install is the app's primary action
+  and discoverability outweighs strict toolbar minimalism — do NOT
+  "native-correct" it to a bare icon. (It's also suppressed on the empty
+  state, where the centered hero "Install a Game or App" button is the CTA.)
+
 ## Single-instance enforcement
 
 - When user clicks Launch on a program that's already running, bring the 
