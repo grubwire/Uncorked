@@ -254,6 +254,10 @@ struct EntryDetailView: View {
             .tint(CrosswireTheme.accent)
             .font(CrosswireTheme.Typography.body)
             .foregroundStyle(CrosswireTheme.textPrimary)
+        Toggle("Allow multiple instances", isOn: $bottle.settings.allowMultipleInstances)
+            .tint(CrosswireTheme.accent)
+            .font(CrosswireTheme.Typography.body)
+            .foregroundStyle(CrosswireTheme.textPrimary)
         VStack(alignment: .leading, spacing: 4) {
             Text("Installed at")
                 .font(CrosswireTheme.Typography.body)

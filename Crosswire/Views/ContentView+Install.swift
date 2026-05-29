@@ -298,6 +298,20 @@ extension ContentView {
     }
 
     func run(program: Program, bottle: Bottle) {
+        // Single-instance: unless this bottle opts into multiple instances, a
+        // Launch on an app that's already running focuses the existing window
+        // instead of spawning a duplicate. We only suppress the spawn when we
+        // find a live, focusable window — otherwise we fall through and launch,
+        // so the guard can never get stuck blocking legitimate launches.
+        if !bottle.settings.allowMultipleInstances {
+            let liveApps = Wine.runningProcessIDs(for: bottle)
+                .compactMap { NSRunningApplication(processIdentifier: $0) }
+                .filter { !$0.isTerminated }
+            if let existing = liveApps.first(where: { $0.activationPolicy == .regular }) {
+                existing.activate(options: [.activateAllWindows])
+                return
+            }
+        }
         Task(priority: .userInitiated) {
             do {
                 try await Wine.runProgram(at: program.url, bottle: bottle)

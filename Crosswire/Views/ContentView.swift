@@ -248,11 +248,13 @@ struct ContentView: View {
             Image(systemName: "magnifyingglass")
                 .font(.system(size: 12, weight: .medium))
                 .foregroundStyle(CrosswireTheme.textTertiary)
+                .accessibilityHidden(true)
             TextField("Search your library…", text: $searchText)
                 .textFieldStyle(.plain)
                 .font(CrosswireTheme.Typography.body)
                 .foregroundStyle(CrosswireTheme.textPrimary)
                 .focused($searchFocused)
+                .accessibilityLabel("Search your library")
         }
         .padding(.horizontal, 10)
         .padding(.vertical, 8)

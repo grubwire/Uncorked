@@ -54,6 +54,10 @@ public struct BottleInfo: Codable, Equatable {
     // and full program list in that case.
     var appDisplayName: String?
     var userVisibleProgramURLs: [URL]?
+    // When false (default) Launch focuses an already-running instance instead
+    // of spawning a second one. Per-bottle since "an instance" maps to the
+    // bottle's app.
+    var allowMultipleInstances: Bool = false
 
     public init() {}
 
@@ -65,6 +69,7 @@ public struct BottleInfo: Codable, Equatable {
         self.primaryProgramURL = try container.decodeIfPresent(URL.self, forKey: .primaryProgramURL)
         self.appDisplayName = try container.decodeIfPresent(String.self, forKey: .appDisplayName)
         self.userVisibleProgramURLs = try container.decodeIfPresent([URL].self, forKey: .userVisibleProgramURLs)
+        self.allowMultipleInstances = try container.decodeIfPresent(Bool.self, forKey: .allowMultipleInstances) ?? false
     }
 }
 
@@ -239,6 +244,13 @@ public struct BottleSettings: Codable, Equatable {
     public var userVisibleProgramURLs: [URL]? {
         get { return info.userVisibleProgramURLs }
         set { info.userVisibleProgramURLs = newValue }
+    }
+
+    /// When false (default), clicking Launch on an app that's already running
+    /// brings the existing window forward instead of starting a second copy.
+    public var allowMultipleInstances: Bool {
+        get { return info.allowMultipleInstances }
+        set { info.allowMultipleInstances = newValue }
     }
 
     public var enhancedSync: EnhancedSync {

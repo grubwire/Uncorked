@@ -416,6 +416,41 @@ public class Wine {
         }
     }
 
+    /// PIDs of processes currently running inside this bottle's prefix.
+    ///
+    /// Programs are launched with `WINEPREFIX` in their environment, and since
+    /// Crosswire owns these processes we can read that environment back via
+    /// `ps -E`. Matching `WINEPREFIX=<prefix>` gives a precise per-bottle
+    /// liveness signal — `runProgram` itself can't provide one because
+    /// `wine start /unix` detaches and returns immediately. Returns an empty
+    /// array when nothing is running in the bottle.
+    public static func runningProcessIDs(for bottle: Bottle) -> [pid_t] {
+        let process = Process()
+        process.executableURL = URL(fileURLWithPath: "/bin/ps")
+        process.arguments = ["-Aww", "-E", "-o", "pid=,command="]
+        let pipe = Pipe()
+        process.standardOutput = pipe
+        process.standardError = FileHandle.nullDevice
+        do {
+            try process.run()
+        } catch {
+            return []
+        }
+        let data = pipe.fileHandleForReading.readDataToEndOfFile()
+        process.waitUntilExit()
+        guard let output = String(data: data, encoding: .utf8) else { return [] }
+
+        let needle = "WINEPREFIX=\(bottle.url.path)"
+        var pids: [pid_t] = []
+        for line in output.split(separator: "\n") where line.contains(needle) {
+            let digits = line.drop { $0 == " " }.prefix { $0.isNumber }
+            if let pid = pid_t(digits) {
+                pids.append(pid)
+            }
+        }
+        return pids
+    }
+
     /// Set AeDebug.Auto = 0 in both the 64-bit and 32-bit (Wow6432Node)
     /// registry views. Stops Wine from spawning `winedbg --auto` on every
     /// in-process crash. Critical for JVM-based apps under Wine — the HotSpot
