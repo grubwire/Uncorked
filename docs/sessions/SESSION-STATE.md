@@ -1,92 +1,97 @@
-# Session state — Task D complete (2026-05-29)
+# Session state — redesign loop finished (2026-05-29)
 
-Task D (the HIG-aligned visual redesign build pass) is **done and pushed to
-`origin/main`**. Design source of truth: `docs/specs/visual-design-direction.md`.
+The HIG-aligned visual redesign (Task D) shipped, and this session closed out
+three of the four follow-up items. Design source of truth:
+`docs/specs/visual-design-direction.md`.
 
-Standing constraint: **native bones, custom skin** — native mechanics
-(toolbar, List, materials) with the branded identity. No user-facing strings
-mention Wine / engine / wrappers / version numbers.
+Standing constraint: **native bones, custom skin**. No user-facing strings
+mention Wine / engine / wrappers / version numbers (CLAUDE.md naming rule —
+overrides spec lines that mention "engine version").
 
-## What shipped (all on `origin/main`)
+## Shipped (all on `origin/main`)
 
-| # | Commit | What landed |
-|---|--------|-------------|
-| spec | `8a67081` | Six HIG amendments to the design spec (native toolbar, native sidebar List, materials for overlays, SF Symbol metrics, a11y labels, metrics legend). |
-| 1 | `cf35f24` | AccentColor orange → Crosswire blue (`0x418DF7`); inline Settings Done shortcut → `.cancelAction`. |
-| 2 | `08967c3` | Native unified toolbar (`.unifiedCompact`) replaces the custom header HStack: leading brand icon + chevron Menu, inline "Crosswire" title, trailing sparkle/bell/gear placeholders + install button. Tab control dropped. |
-| 2-fix | `d6af693` | Toolbar brand icon: block-based Retina redraw + `.resizable().frame(18,18)`. |
-| 2-fix | `3a24689` | Brand icon vertically centered by baking a 1.75pt downward shift into the bitmap (the toolbar Menu control seats labels high and ignores SwiftUI offset/padding — there's a `do NOT "fix" to y:0` comment guarding it). |
-| 3 | `e937c13` | Library as a contained surface (`#1f232b`, 12pt radius, 1px `#262b34` hairline, small-caps `LIBRARY` header); rows get their own surface (`#262b34` rest / `#2a2f38` hover). Branded hex, not material. |
-| 4 | `a86fa7e` | Row redesign: circular play + row gear removed → one discrete blue "Launch" pill; row tap → detail. Right-click context menu (Launch / Show Details / Rename / Check Dependencies / Show in Finder / — / Uninstall…). |
-| 5 | `5ee41dd` | Inline per-app detail via `.entryDetail(URL)` (replaces the `AppSettingsSheet` sheet); Settings sidebar → native `List(selection:)` (fixed an `id: \.self` selection bug); materials (`.regularMaterial`) on the transient Settings + detail overlays. |
-| 5-fix | `0ad8662` | Dropped the 3pt sidebar accent bar — the native `.sidebar` selection is already an on-brand blue pill. |
-| 6 | `fc0768b` | Single-instance launch enforcement + "Allow multiple instances" per-bottle setting (default off); a11y sweep (hid decorative search glyph, labeled the field). |
-| 6-refine | `7f567c9` | Install affordance: labeled "+ Install" toolbar button (not a bare "+"), suppressed on the empty state. Spec metrics-legend note added. |
+**Task D — redesign (prior session):** spec amendments `8a67081`; accent
+`cf35f24`; native toolbar `08967c3` (+ icon fixes `d6af693`, `3a24689`);
+contained library + rows `e937c13`; row redesign + context menu `a86fa7e`;
+inline detail + native Settings sidebar + materials `5ee41dd` (+ accent-bar
+drop `0ad8662`); single-instance + a11y `fc0768b`; labeled "+ Install"
+affordance `7f567c9`; Task-D doc `4006c3f`.
 
-All verified building clean (Debug) and runtime-checked against the real SWG
-bottle. Theme tokens added: `rowSurface`, `rowSurfaceHover`, `regionBorder`,
-`Typography.sectionHeader`.
+**This session (redesign-loop cleanup):**
+- `1c8d18e` — **dead-code removed**: deleted `AppSettingsSheet.swift` +
+  `SettingsView.swift` and their pbxproj entries (superseded by
+  `EntryDetailView` / `InlineSettingsView`). Build green.
+- `c2f67e5` — **Settings content cleanup**: real General (App Data Location
+  with Show in Finder + Change…, no raw container path), Updates (second
+  toggle relabeled "Windows compatibility updates" — no "engine" string,
+  still its own key), About (icon + version + GitHub / Website / Report-an-
+  Issue links; dropped the engine-version line). Replaced the thin shim
+  group-views with finished content.
+
+Theme tokens: `rowSurface`, `rowSurfaceHover`, `regionBorder`,
+`Typography.sectionHeader`. All built clean and runtime-checked.
 
 ## Decisions worth remembering
+- **Install affordance**: labeled "+ Install" toolbar button (blue primary,
+  `.titleAndIcon`), suppressed when the library is empty (hero CTA is the
+  single target there). Intentional — don't native-correct to a bare icon.
+- **Sidebar selection**: native `.sidebar` blue pill, no custom accent bar.
+- **No user-facing engine/version strings** anywhere (Updates toggle, About,
+  detail Advanced all comply). NOTE: `DiagnosticsView` still has a
+  `Section("Engine")` — diagnostics is developer-facing but worth a sweep.
+- **Omitted on purpose**: "Change Icon…" (no backing), DLL-overrides editor
+  (none exists), engine version in detail/About. Don't ship empty editors.
 
-- **Install affordance.** Toolbar button is labeled **"+ Install"** (blue
-  primary, `.labelStyle(.titleAndIcon)`), **suppressed when the library is
-  empty** (`if !bottleVM.bottles.isEmpty`) so the centered hero
-  "Install a Game or App" button is the single CTA there. Full wording stays
-  on the hero only. This is intentional — see the spec's metrics legend; do
-  not native-correct it back to a bare icon.
-- **Sidebar selection** is the native `.sidebar` blue pill (no custom accent
-  bar / background) — on-brand because AccentColor is Crosswire blue.
-- **Single-instance** is per-bottle: liveness via `Wine.runningProcessIDs`
-  (`ps -E` matched on `WINEPREFIX`), focuses the existing window
-  (`NSRunningApplication`, `.regular` policy) instead of spawning. Self-heals
-  (only suppresses the spawn when a focusable window exists), so it can't get
-  stuck. **Not runtime-verified** — needs the SWG GUI launched twice, which
-  was avoided (heavy launcher + known post-login crash #84). Worth a manual
-  double-Launch check.
-- **Deliberately omitted:** "Change Icon…" (no icon-customization backing),
-  DLL-overrides editor (none exists), engine version in the detail Advanced
-  (CLAUDE.md's no-engine-strings rule overrides the spec line). Don't ship
-  empty editors.
+## ⚠️ High-priority bug found this session (own diagnosis next)
 
-## Dead code — future cleanup pass (do NOT remove piecemeal now)
+**Launch re-runs the installer.** Clicking Launch on the SWG bottle ran
+`Z:\Users\nick\Downloads\SWGLegendsSetup.exe` (the setup wizard) rather than
+the installed launcher — i.e. the bottle's **primary-program resolution
+picked the installer over the installed app**. Launch re-running setup is a
+broken core action and is a bigger deal than single-instance. #95 territory
+(primary-program heuristic). Confirmed 2026-05-29 on bottle
+`BD247FEE-…` (its `appDisplayName` is "Star Wars Galaxies Legends" but the
+primary URL points at the Downloads installer). Needs a focused session:
+trace `pickUserFacingPrimary` / `finalizeAppIdentity` / how the install flow
+sets `primaryProgramURL`, and why it kept the source installer.
 
-These are unmounted/unused but still compiled, kept for reference (matching
-the project's prior pattern):
+## Single-instance — needs its own pass
 
-- `Crosswire/Views/AppSettingsSheet.swift` — replaced by `EntryDetailView`;
-  only a doc-comment reference remains.
-- `Crosswire/Views/Settings/SettingsView.swift` — replaced by
-  `InlineSettingsView` back in the inline-navigation pass.
+Shipped (`fc0768b`) but **currently inert** (safe). Verified at runtime:
+`Wine.runningProcessIDs` matches `WINEPREFIX=<prefix>` in `ps -E`, but macOS
+**hides the environment of Crosswire's detached `wine start /unix` processes**
+from `ps` (`ps -E -p <pid>` shows command only). So detection returns empty →
+the guard never fires → it always falls through and spawns. The self-healing
+design means launches are NOT broken, just un-deduped.
 
-A single cleanup commit should delete both files and drop their pbxproj
-entries (via the `xcodeproj` gem).
-
-## CLAUDE.md
-
-No stale UI references — CLAUDE.md is engine/infra-focused and only mentions
-`EngineSetupView` (the engine-download flow), which is unchanged. No update
-needed for the header/install restructure.
+- **Lead fix candidate: match by argv, not env.** The wine process's argv IS
+  visible (`Z:\…\X.exe` / `C:\Program Files…\X.exe`) even when env isn't. Map
+  the bottle's program URL → its Windows path/basename and match.
+- **Weak spot that approach must solve:** basename collisions across bottles
+  (two bottles with the same exe name). Needs to disambiguate (e.g. full
+  Windows path, or correlate with the launched program), not just basename.
+- Confirming winemac.drv GUI apps surface as `NSRunningApplication` with
+  `.regular` policy is still unverified (the installer, not a GUI app, was
+  what launched during the test — see the bug above).
 
 ## Next-session queue (priority order)
+1. **Launch-runs-installer bug** (above) — high priority, broken core action.
+2. **Single-instance pass** — argv-matching, solve basename collisions, verify
+   `.regular` policy + focus end-to-end.
+3. **Light mode** — parallel light palette in `CrosswireTheme` for the
+   persistent branded-hex shell (materials already adapt; hex doesn't).
+4. Minor: sweep `DiagnosticsView`'s `Section("Engine")` wording.
 
-1. **Dead-code cleanup** — delete `AppSettingsSheet.swift` +
-   `SettingsView.swift`, drop pbxproj entries, build green. Small, low-risk.
-2. **Runtime-verify single-instance** — once the SWG (or any GUI app) launches
-   reliably, confirm a second Launch focuses the existing window and that
-   "Allow multiple instances" lets it spawn. Adjust the `NSRunningApplication`
-   matching if winemac.drv apps don't surface as `.regular`.
-3. **Settings content cleanup (was "Section 3")** — relabel the two update
-   toggles, App Data Location "Show in Finder", rebuild the About card
-   (icon + version + links). `InlineSettingsView` group wrappers are still
-   thin behavior-preserving shims.
-4. **Light mode** — the persistent shell needs a parallel light palette in
-   `CrosswireTheme` (materials already adapt; branded hex does not).
-5. **Out of scope (designed-for, not built):** Notifications panel (bell
-   placeholder), What's New panel (sparkle placeholder), background-install
-   rework, icon extraction, Sentry, SWG crash #84.
+## Out of scope (designed-for, not built)
+Notifications panel (bell placeholder), What's New panel (sparkle
+placeholder), background-install rework, icon extraction, Sentry.
+
+## Open issues
+- **#84 / #93** — SWG launcher JavaFX crashes (login click; mid-Update). Engine
+  (Wine-fork) level, not app code — need CrossOver patch diff or newer Gcenx
+  Wine. (#90 and #92 closed this cycle.)
 
 ## Repo state
-- Branch: `main`; HEAD `7f567c9`; all Task D commits pushed.
-- CI: green on `7f567c9` (SwiftLint / Build / CodeQL).
+- Branch `main`; HEAD `c2f67e5`; all pushed.
+- CI: confirm green on the latest commit.
 - Working tree clean.
