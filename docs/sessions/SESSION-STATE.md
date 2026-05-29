@@ -106,20 +106,57 @@ design means launches are NOT broken, just un-deduped.
 - **Notifications: pure placeholder.** The bell is a non-functional button; no
   event model, store, or view behind it.
 
+## Brief 1 — engine diagnostics findings (2026-05-29)
+
+Exercised the `captureDiagnostics` path (built `91998ab` + `c9ffd6f`) against
+SWG for the first time. Results:
+
+- **The capture path does NOT work for SWG (or any re-exec'ing launcher).**
+  `SWGLegendsLauncher.exe` is a stub that re-execs as a *detached*
+  `javaw.exe -jar … (ppid=1)`. The direct-`wine` foreground process exits at
+  ~5s when the stub forks javaw, so the per-launch log closed with **only the
+  794-byte header — zero app output**, and `presentDiagnostics` fired at that
+  5s stub-exit, long before any crash. Same blind spot as `start /unix`, just
+  moved to "stub exits". **This is the thing to fix.**
+  - Achievable fix: don't end the diagnostics run at foreground-process exit —
+    **poll until the bottle is idle** (no wine procs for the prefix), *then*
+    scan for + reveal `hs_err_pid*.log`. Delivers the JVM crash dump (the real
+    #84/#93 evidence) reliably even without live stdout.
+  - Hard part (defer): live stdout/stderr of detached, re-exec'd Wine children
+    across the wineserver boundary — same class of problem as the original.
+- **SWG install is incomplete** (237 MB: launcher + bundled JRE + 2 patch
+  `.tre` fragments; no base game data). Launcher runs; game never downloaded.
+- **#84 is currently worked around.** With `dwrite=builtin` + `prism.order=j2d`
+  + `-Xint`, **login SUCCEEDS** (verified live — reached the post-login screen,
+  "Update Required — 571 patches"). The reachable crash is #93 (the patcher),
+  which needs the full multi-hundred-MB download (not driven — long + corrupts
+  state, and the capture path can't catch it anyway).
+- **Crash read (from `hs_err_pid228.log`, the real on-disk data):**
+  `EXCEPTION_ACCESS_VIOLATION` at **`ntdll.dll+0x52070`** (Wine builtin ntdll),
+  near-null deref (`ecx=0x107`), on a daemon thread `_thread_blocked_trans`,
+  **during a JVM safepoint** (VM `synchronizing`; VMThread holds
+  `Safepoint_lock`+`Threads_lock`). Loaded: glass/dwrite/opengl/**wined3d**
+  (no DXVK). **This signature matches neither documented issue** (#84
+  `pc=0x7bf2800b` BitSet.equals; #93 `pc=0xfffffcc8` vtable) — it's a third
+  signature: a Wine-ntdll fault during JVM thread-suspension for a safepoint.
+- **Leading fix direction for #84/#93:** Wine-fork ntdll thread-suspension /
+  SEH gap (NtSuspendThread / NtSetContextThread / exception dispatch) —
+  CrossOver-patches-vs-Gcenx-11.9. **Not** app-level, **not** DXVK/Vulkan,
+  **not** Crosswire config (env/plist/dwrite all correct; login works).
+  Engine-level effort; out of scope per the brief.
+
 ## Next-session queue (priority order)
-(The former #1 "Launch-runs-installer" item was investigated and cleared —
-see the misdiagnosis section above. Not a Crosswire bug.)
-1. **Observability follow-up** — capture the detached app's *full-lifetime*
-   stdout/stderr (keep a per-launch log open for the app's life, or a debug
-   launch path without `start` detachment, or `WINEDEBUG` channels tee'd to a
-   persistent file). **Prerequisite for #84/#93** — they're currently
-   undebuggable via Crosswire's own logs (see Observability state above). Do
-   this before attacking the engine bugs.
+(The former #1 "Launch-runs-installer" item was cleared as a misdiagnosis.)
+1. **Fix the diagnostics capture path** (above) — poll-until-idle + surface
+   `hs_err`, so "Launch with Diagnostics…" actually delivers the crash dump for
+   re-exec'ing launchers like SWG. Prerequisite for debugging #84/#93.
 2. **Single-instance pass** — argv-matching, solve basename collisions, verify
    `.regular` policy + focus end-to-end.
 3. **Light mode** — parallel light palette in `CrosswireTheme` for the
    persistent branded-hex shell (materials already adapt; hex doesn't).
 4. Minor: sweep `DiagnosticsView`'s `Section("Engine")` wording.
+5. (Optional) drive #93 live — click Update, let the 571-patch download run to
+   its mid-update crash; only useful once the capture-path fix lands.
 
 ## Out of scope (designed-for, not built)
 Notifications panel (bell placeholder), What's New panel (sparkle
@@ -131,8 +168,11 @@ placeholder), background-install rework, icon extraction, Sentry.
   Wine. (#90 and #92 closed this cycle.)
 
 ## Repo state
-- Branch `main`. Latest work: toolbar spacing polish (`2cfca28`) + this
-  observability diagnosis. All redesign-loop items (dead-code, Settings
-  cleanup) shipped earlier this session.
-- CI: confirm green on the latest commit.
+- Branch `main`. Recent: `captureDiagnostics` backend + "Launch with
+  Diagnostics…" (`91998ab`, `c9ffd6f`); inline-panel **consistency pass** —
+  shared back bar + button-hover style + pane layout (`b1cc1dd`, `b184252`,
+  `4717593`); plus this Brief-1 diagnostics doc.
+- Brief 1 made **no code commits** — capture-path fix is queued (#1 above),
+  pending decision; the diagnostics finding is the deliverable.
+- CI: green on `4717593` (SwiftLint + Build; CodeQL finishing).
 - Working tree clean after the SESSION-STATE commit lands.
