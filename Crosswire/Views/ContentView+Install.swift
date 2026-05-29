@@ -21,6 +21,7 @@ import AppKit
 import UniformTypeIdentifiers
 import CrosswireKit
 
+// swiftlint:disable file_length
 extension ContentView {
     func installWindowsApp() {
         // Concurrent-install guard. provisionAndInstall is @MainActor and
@@ -271,22 +272,9 @@ extension ContentView {
     func runPrimary(for bottle: Bottle) {
         guard bottle.isAvailable else { return }
         bottle.updateInstalledPrograms()
-        let programs = bottle.programs
-        guard !programs.isEmpty else { return }
-
-        if let primaryURL = bottle.settings.primaryProgramURL,
-           let primary = programs.first(where: { $0.url == primaryURL }) {
-            run(program: primary, bottle: bottle)
-            return
-        }
-
-        let visible = bottle.userVisiblePrograms
-        if visible.count == 1 {
-            run(program: visible[0], bottle: bottle)
-        } else if visible.count > 1 {
-            run(program: visible[0], bottle: bottle)
-        } else if programs.count == 1 {
-            run(program: programs[0], bottle: bottle)
+        guard !bottle.programs.isEmpty else { return }
+        if let program = primaryProgram(for: bottle) {
+            run(program: program, bottle: bottle)
         } else {
             // No detection has run and no primary is set; open the entry's
             // detail view so the user can pick a primary launcher explicitly
@@ -295,6 +283,101 @@ extension ContentView {
                 route = .entryDetail(bottle.id)
             }
         }
+    }
+
+    /// The program a Launch should run: an explicit primary if set and still
+    /// present, else the first user-visible program, else the sole installed
+    /// program. `nil` means we can't pick one unambiguously (caller routes to
+    /// the detail view so the user chooses). Assumes `programs` is already
+    /// populated and non-empty.
+    func primaryProgram(for bottle: Bottle) -> Program? {
+        let programs = bottle.programs
+        if let primaryURL = bottle.settings.primaryProgramURL,
+           let primary = programs.first(where: { $0.url == primaryURL }) {
+            return primary
+        }
+        if let firstVisible = bottle.userVisiblePrograms.first {
+            return firstVisible
+        }
+        return programs.count == 1 ? programs.first : nil
+    }
+
+    /// Launch the primary program with full-lifetime output capture (direct
+    /// `wine` invocation, not detached). Used to reproduce crashes: the app
+    /// runs as a foreground child and its complete stdout/stderr stream to the
+    /// per-run log; on exit we reveal that log plus any JVM crash dump the run
+    /// produced. See `Wine.runProgram(captureDiagnostics:)`.
+    @MainActor
+    func runWithDiagnostics(for bottle: Bottle) {
+        guard bottle.isAvailable else { return }
+        bottle.updateInstalledPrograms()
+        guard !bottle.programs.isEmpty, let program = primaryProgram(for: bottle) else {
+            withAnimation(.easeInOut(duration: 0.2)) { route = .entryDetail(bottle.id) }
+            return
+        }
+        let startedAt = Date()
+        Task(priority: .userInitiated) {
+            let report = try? await Wine.runProgram(
+                at: program.url, bottle: bottle, captureDiagnostics: true
+            )
+            await MainActor.run {
+                presentDiagnostics(report: report, bottle: bottle, since: startedAt)
+            }
+        }
+    }
+
+    /// After a diagnostics launch exits, surface what was captured: the run log
+    /// and any `hs_err_pid*.log` (JVM crash dump) written during the run.
+    @MainActor
+    private func presentDiagnostics(report: ProgramRunReport?, bottle: Bottle, since: Date) {
+        let crashDump = recentCrashDump(in: bottle, since: since)
+        let alert = NSAlert()
+        alert.messageText = "Diagnostics captured"
+        var info = "Captured the full run log for \(bottle.displayName)."
+        if let report { info += "\nExit code: \(report.exitCode)." }
+        if crashDump != nil { info += "\nA crash dump was written during this run." }
+        alert.informativeText = info
+        if report?.logFileURL != nil {
+            alert.addButton(withTitle: "Reveal Log")
+        }
+        if crashDump != nil {
+            alert.addButton(withTitle: "Reveal Crash Dump")
+        }
+        alert.addButton(withTitle: "Close")
+
+        let response = alert.runModal()
+        var revealed: [URL] = []
+        var buttonIndex = NSApplication.ModalResponse.alertFirstButtonReturn.rawValue
+        if let log = report?.logFileURL {
+            if response.rawValue == buttonIndex { revealed = [log] }
+            buttonIndex += 1
+        }
+        if let dump = crashDump, response.rawValue == buttonIndex {
+            revealed = [dump]
+        }
+        if !revealed.isEmpty {
+            NSWorkspace.shared.activateFileViewerSelecting(revealed)
+        }
+    }
+
+    /// Find an `hs_err_pid*.log` under the bottle's `drive_c` modified after
+    /// `since` — the JVM's own crash dump, which is the real evidence for
+    /// JavaFX/JVM crashes like #84/#93.
+    private func recentCrashDump(in bottle: Bottle, since: Date) -> URL? {
+        let driveC = bottle.url.appending(path: "drive_c")
+        guard let enumerator = FileManager.default.enumerator(
+            at: driveC,
+            includingPropertiesForKeys: [.contentModificationDateKey],
+            options: [.skipsHiddenFiles]
+        ) else { return nil }
+        while let url = enumerator.nextObject() as? URL {
+            let name = url.lastPathComponent
+            guard name.hasPrefix("hs_err_pid"), name.hasSuffix(".log") else { continue }
+            let modified = (try? url.resourceValues(forKeys: [.contentModificationDateKey]))?
+                .contentModificationDate ?? .distantPast
+            if modified >= since { return url }
+        }
+        return nil
     }
 
     func run(program: Program, bottle: Bottle) {

@@ -73,7 +73,8 @@ struct ContentView: View {
                     onBack: { withAnimation(.easeInOut(duration: 0.2)) { route = .library } },
                     onRun: { runPrimary(for: bottle) },
                     onRunProgram: { program in run(program: program, bottle: bottle) },
-                    onUninstall: { uninstall(bottle) }
+                    onUninstall: { uninstall(bottle) },
+                    onLaunchDiagnostics: { runWithDiagnostics(for: bottle) }
                 )
                 .transition(.move(edge: .trailing).combined(with: .opacity))
                 .zIndex(1)
@@ -363,7 +364,8 @@ struct ContentView: View {
                                     route = .entryDetail(bottle.id)
                                 }
                             },
-                            onUninstall: { uninstall(bottle) }
+                            onUninstall: { uninstall(bottle) },
+                            onLaunchDiagnostics: { runWithDiagnostics(for: bottle) }
                         )
                     }
                 }

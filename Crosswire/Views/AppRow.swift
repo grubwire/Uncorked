@@ -37,6 +37,9 @@ struct AppRow: View {
     /// Remove the entry (context menu "Uninstall…"). ContentView owns the
     /// confirmation + bottle-list mutation.
     let onUninstall: () -> Void
+    /// Launch with full-lifetime diagnostics capture (context menu). Used to
+    /// reproduce crashes; surfaces the run log + any JVM crash dump on exit.
+    let onLaunchDiagnostics: () -> Void
 
     @State private var showProgramMenu: Bool = false
     @State private var hovered: Bool = false
@@ -110,6 +113,8 @@ struct AppRow: View {
         Button { beginRename() } label: { Label("Rename", systemImage: "pencil") }
         Button { showRuntimesSheet = true } label: { Label("Check Dependencies", systemImage: "shippingbox") }
         Button { revealInFinder() } label: { Label("Show in Finder", systemImage: "folder") }
+        Button { onLaunchDiagnostics() } label: { Label("Launch with Diagnostics…", systemImage: "stethoscope") }
+            .disabled(!canLaunch)
         Divider()
         Button(role: .destructive) { onUninstall() } label: { Label("Uninstall…", systemImage: "trash") }
     }

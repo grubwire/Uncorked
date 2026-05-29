@@ -36,6 +36,8 @@ struct EntryDetailView: View {
     var onRun: () -> Void
     var onRunProgram: (Program) -> Void
     var onUninstall: () -> Void
+    /// Launch with full-lifetime diagnostics capture (Advanced › Maintenance).
+    var onLaunchDiagnostics: () -> Void
 
     @State private var showRuntimesSheet: Bool = false
     @State private var isRenaming: Bool = false
@@ -315,6 +317,9 @@ struct EntryDetailView: View {
     @ViewBuilder
     private var advancedMaintenance: some View {
         advancedHeader("Maintenance")
+        maintenanceRow("stethoscope", "Launch with Diagnostics…") {
+            onLaunchDiagnostics()
+        }
         maintenanceRow("arrow.clockwise", "Rescan installed programs") {
             bottle.finalizeAppIdentity()
         }
