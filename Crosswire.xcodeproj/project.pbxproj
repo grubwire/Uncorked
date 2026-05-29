@@ -13,6 +13,7 @@
 		0173DF9A2FC6BFB50043FD8C /* crosswire-icon-1024.icon in Resources */ = {isa = PBXBuildFile; fileRef = 0173DF982FC6BFB50043FD8C /* crosswire-icon-1024.icon */; };
 		0F85596667324331537E8D81 /* DetectedRuntimesSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = D15E81B81388F5818CF6A5E8 /* DetectedRuntimesSheet.swift */; };
 		10B488492E29C934B380ED64 /* FailureWatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = A90E69279487E2EC21976BBA /* FailureWatcher.swift */; };
+		132D3EB89D22EB42DCBD7034 /* CrosswireControls.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BAE8A2AEE32B9A4100AB35C /* CrosswireControls.swift */; };
 		15993F723EC1E52E4AA96671 /* InlineSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C1A758CDD06FEDF58136816 /* InlineSettingsView.swift */; };
 		36C37A041521C9341FB5CB40 /* RuntimePresets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7283F836592E92926EB66C02 /* RuntimePresets.swift */; };
 		41E4481FA77D4D93E01A6EC6 /* FailureReportBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1A47AEC3C6282D015BB8500 /* FailureReportBuilder.swift */; };
@@ -179,6 +180,7 @@
 		6EFDF6652AAE303300EF622F /* Icons.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Icons.xcassets; sourceTree = "<group>"; };
 		7283F836592E92926EB66C02 /* RuntimePresets.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = RuntimePresets.swift; sourceTree = "<group>"; };
 		77F0588ED6FEB4510C02034F /* RuntimesPrompt.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = RuntimesPrompt.swift; sourceTree = "<group>"; };
+		8BAE8A2AEE32B9A4100AB35C /* CrosswireControls.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CrosswireControls.swift; sourceTree = "<group>"; };
 		8C73E1332AF472FC00B6FB45 /* ProgramMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgramMenuView.swift; sourceTree = "<group>"; };
 		8CB681E42AED7C6F0018D319 /* CrosswireKit */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = CrosswireKit; sourceTree = "<group>"; };
 		A1A47AEC3C6282D015BB8500 /* FailureReportBuilder.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FailureReportBuilder.swift; sourceTree = "<group>"; };
@@ -376,6 +378,7 @@
 				6E7C07BF2AAF570100F6E66B /* FileOpenView.swift */,
 				CCDB38B94618F3DE070F13E7 /* AppRoute.swift */,
 				C61CAB73D21A331D0F4EC7C6 /* EntryDetailView.swift */,
+				8BAE8A2AEE32B9A4100AB35C /* CrosswireControls.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -705,6 +708,7 @@
 				FEEE7329ECC0B7DC86638FB4 /* AppRoute.swift in Sources */,
 				15993F723EC1E52E4AA96671 /* InlineSettingsView.swift in Sources */,
 				6169089994B0C03DFFCF1508 /* EntryDetailView.swift in Sources */,
+				132D3EB89D22EB42DCBD7034 /* CrosswireControls.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
