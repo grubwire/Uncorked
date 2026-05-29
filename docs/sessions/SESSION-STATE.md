@@ -1,92 +1,92 @@
-# Session state — handoff at 2026-05-28 16:05 CDT
+# Session state — Task D complete (2026-05-29)
 
-Snapshot of where Task D (the HIG-aligned visual redesign build pass) stands.
-Source of truth for the design is `docs/specs/visual-design-direction.md`
-(amended with the HIG fold-ins, commit `8a67081`).
+Task D (the HIG-aligned visual redesign build pass) is **done and pushed to
+`origin/main`**. Design source of truth: `docs/specs/visual-design-direction.md`.
 
-Standing constraint: **native bones, custom skin** — use native mechanics
-(toolbar, List, materials) while keeping the branded identity. No user-facing
-strings mention Wine / engine / wrappers / version numbers.
+Standing constraint: **native bones, custom skin** — native mechanics
+(toolbar, List, materials) with the branded identity. No user-facing strings
+mention Wine / engine / wrappers / version numbers.
 
-## What's done (committed; all pushed to `origin/main`)
-
-Task D runs as a sequence of small, surgical commits over the visual spec:
+## What shipped (all on `origin/main`)
 
 | # | Commit | What landed |
 |---|--------|-------------|
-| spec | `8a67081` | Six HIG amendments to `visual-design-direction.md` (native toolbar, native sidebar List, materials for overlays, SF Symbol metrics, a11y labels, metrics legend). |
-| 1 | `cf35f24` | Project AccentColor orange → Crosswire blue (`0x418DF7`); inline Settings Done shortcut `.defaultAction` → `.cancelAction` (Esc dismisses; Return no longer intercepted by the sidebar List). |
-| 2 | `08967c3` | Header restructure: custom header `HStack` replaced by the native unified toolbar (`.unifiedCompact`). Leading brand icon + chevron `Menu` (Settings / About / Check for Updates / Quit), inline "Crosswire" title, trailing primary-action group (sparkle / bell / gear placeholders + prominent blue "+" install). Tab control dropped. |
-| 2-fix | `d6af693` | Toolbar brand icon: block-based Retina redraw + `.resizable().frame(18,18)` (fixes blur + the giant-icon bug). |
-| 3 | `e937c13` | Library as a contained surface: region card `#1f232b`, 12pt radius, 1px `#262b34` hairline, small-caps `LIBRARY` header. Rows carry their own persistent surface (`#262b34` rest / `#2a2f38` hover). Branded hex, not material (persistent-shell rule). |
-| 4 | `a86fa7e` | Library row redesign: circular play glyph + row gear removed, replaced by one discrete blue "Launch" pill; row-body click → detail. Right-click context menu (Launch / Show Details / Rename / Check Dependencies / Show in Finder / — / Uninstall…) with inline rename + dependencies sheet. |
-| 2-fix | `3a24689` | Vertically center the toolbar brand icon: the Menu control seats its label ~1.75pt high and ignores SwiftUI offset/padding, so the nudge is baked into the bitmap. See the `do NOT "fix" to y:0` comment in `brandToolbarIcon`. |
+| spec | `8a67081` | Six HIG amendments to the design spec (native toolbar, native sidebar List, materials for overlays, SF Symbol metrics, a11y labels, metrics legend). |
+| 1 | `cf35f24` | AccentColor orange → Crosswire blue (`0x418DF7`); inline Settings Done shortcut → `.cancelAction`. |
+| 2 | `08967c3` | Native unified toolbar (`.unifiedCompact`) replaces the custom header HStack: leading brand icon + chevron Menu, inline "Crosswire" title, trailing sparkle/bell/gear placeholders + install button. Tab control dropped. |
+| 2-fix | `d6af693` | Toolbar brand icon: block-based Retina redraw + `.resizable().frame(18,18)`. |
+| 2-fix | `3a24689` | Brand icon vertically centered by baking a 1.75pt downward shift into the bitmap (the toolbar Menu control seats labels high and ignores SwiftUI offset/padding — there's a `do NOT "fix" to y:0` comment guarding it). |
+| 3 | `e937c13` | Library as a contained surface (`#1f232b`, 12pt radius, 1px `#262b34` hairline, small-caps `LIBRARY` header); rows get their own surface (`#262b34` rest / `#2a2f38` hover). Branded hex, not material. |
+| 4 | `a86fa7e` | Row redesign: circular play + row gear removed → one discrete blue "Launch" pill; row tap → detail. Right-click context menu (Launch / Show Details / Rename / Check Dependencies / Show in Finder / — / Uninstall…). |
+| 5 | `5ee41dd` | Inline per-app detail via `.entryDetail(URL)` (replaces the `AppSettingsSheet` sheet); Settings sidebar → native `List(selection:)` (fixed an `id: \.self` selection bug); materials (`.regularMaterial`) on the transient Settings + detail overlays. |
+| 5-fix | `0ad8662` | Dropped the 3pt sidebar accent bar — the native `.sidebar` selection is already an on-brand blue pill. |
+| 6 | `fc0768b` | Single-instance launch enforcement + "Allow multiple instances" per-bottle setting (default off); a11y sweep (hid decorative search glyph, labeled the field). |
+| 6-refine | `7f567c9` | Install affordance: labeled "+ Install" toolbar button (not a bare "+"), suppressed on the empty state. Spec metrics-legend note added. |
 
 All verified building clean (Debug) and runtime-checked against the real SWG
-bottle. Theme tokens added in `CrosswireTheme`: `rowSurface`,
-`rowSurfaceHover`, `regionBorder`, `Typography.sectionHeader`.
+bottle. Theme tokens added: `rowSurface`, `rowSurfaceHover`, `regionBorder`,
+`Typography.sectionHeader`.
 
-### Deliberate deviation to revisit
-**"Change Icon…" is omitted from the row context menu.** There is no
-icon-customization backing yet (deferred this session), and a no-op menu item
-would mislead. The spec lists it — add it together with the storage + render
-support, most naturally alongside the Commit 5 detail view.
+## Decisions worth remembering
 
-## What's remaining
+- **Install affordance.** Toolbar button is labeled **"+ Install"** (blue
+  primary, `.labelStyle(.titleAndIcon)`), **suppressed when the library is
+  empty** (`if !bottleVM.bottles.isEmpty`) so the centered hero
+  "Install a Game or App" button is the single CTA there. Full wording stays
+  on the hero only. This is intentional — see the spec's metrics legend; do
+  not native-correct it back to a bare icon.
+- **Sidebar selection** is the native `.sidebar` blue pill (no custom accent
+  bar / background) — on-brand because AccentColor is Crosswire blue.
+- **Single-instance** is per-bottle: liveness via `Wine.runningProcessIDs`
+  (`ps -E` matched on `WINEPREFIX`), focuses the existing window
+  (`NSRunningApplication`, `.regular` policy) instead of spawning. Self-heals
+  (only suppresses the spawn when a focusable window exists), so it can't get
+  stuck. **Not runtime-verified** — needs the SWG GUI launched twice, which
+  was avoided (heavy launcher + known post-login crash #84). Worth a manual
+  double-Launch check.
+- **Deliberately omitted:** "Change Icon…" (no icon-customization backing),
+  DLL-overrides editor (none exists), engine version in the detail Advanced
+  (CLAUDE.md's no-engine-strings rule overrides the spec line). Don't ship
+  empty editors.
 
-### Commit 5 — inline per-app detail + Settings sidebar → List + materials
-- **Inline per-app detail.** Replace the `AppSettingsSheet` `.sheet(item:)`
-  with an inline `.entryDetail(UUID)` route (the enum case already exists in
-  `AppRoute`). Slide-in from the right, same pattern/animation as inline
-  Settings. Back chevron + "Library" top-left. Content: large icon + editable
-  name, category line, big blue Launch, secondary actions (Uninstall red /
-  Check Dependencies / Show in Finder), Advanced disclosure (prefix path,
-  Windows version, DLL overrides). This is the natural home for **Change Icon**
-  (see deviation above) and the place to **rewire the row-body tap** from
-  "open sheet" to `route = .entryDetail(bottle.id)`.
-- **Settings sidebar → `List(selection:)`** (HIG fold-in). Rebuild
-  `InlineSettingsView`'s hand-rolled `VStack` of buttons as a native
-  `List(selection:)`. Inherits sidebar material + vibrancy, free keyboard nav
-  (which is *why* Return was being intercepted — that was the native List
-  doing its job), resize/AX for free. Overlay the 3pt blue left-edge accent bar
-  on the selected row; drop the custom `surfaceSelected` background.
-- **Materials on transient overlays** (HIG fold-in). Inline Settings + inline
-  detail + popovers/menus use SwiftUI materials (`.regularMaterial`, or
-  `.sidebar` for the Settings sidebar). The persistent library shell stays
-  branded hex. Light mode is therefore NOT free — materials cover only the
-  transient overlays.
+## Dead code — future cleanup pass (do NOT remove piecemeal now)
 
-### Commit 6 — atmospheric polish + single-instance (final stop)
-- **Single-instance enforcement.** When Launch is clicked on an
-  already-running program, bring the existing window to front instead of
-  spawning a new process. Track by bottle UUID + primary exe path. Add an
-  Advanced toggle "Allow multiple instances" defaulting off. (`Wine.runProgram`
-  currently allows arbitrary duplicate launches.)
-- **Atmospheric polish.** 150ms hover / 200ms slide-in consistency, monogram
-  tile shadow, single surface-separation convention (1px border OR inner
-  highlight, used everywhere).
-- **Accessibility-label sweep** (HIG fold-in). Every symbol-only button
-  (row Launch glyph, search, etc.) MUST carry an `.accessibilityLabel`. The
-  toolbar buttons already have them; sweep the rest.
-- **SF Symbol metrics** (HIG fold-in). Standardize toolbar/header symbols to
-  13pt medium, monochrome at small sizes. Could be folded here or split into an
-  optional Commit 7.
+These are unmounted/unused but still compiled, kept for reference (matching
+the project's prior pattern):
 
-### Out of scope for this build pass
-Notifications panel (bell is a placeholder), What's New panel (sparkle is a
-placeholder), background-install rework, light mode, icon-extraction debug,
-Sentry, the post-login SWG crash #84.
+- `Crosswire/Views/AppSettingsSheet.swift` — replaced by `EntryDetailView`;
+  only a doc-comment reference remains.
+- `Crosswire/Views/Settings/SettingsView.swift` — replaced by
+  `InlineSettingsView` back in the inline-navigation pass.
 
-## To resume (fresh session runs Commit 5)
-1. Read `docs/specs/visual-design-direction.md` (source of truth) — sections
-   "Inline per-app detail view", "Inline Settings", "Materials vs branded hex".
-2. Build Commit 5 as scoped above. Stop point after it: show the inline detail
-   view AND the converted Settings sidebar.
-3. Then Commit 6 (final stop).
+A single cleanup commit should delete both files and drop their pbxproj
+entries (via the `xcodeproj` gem).
+
+## CLAUDE.md
+
+No stale UI references — CLAUDE.md is engine/infra-focused and only mentions
+`EngineSetupView` (the engine-download flow), which is unchanged. No update
+needed for the header/install restructure.
+
+## Next-session queue (priority order)
+
+1. **Dead-code cleanup** — delete `AppSettingsSheet.swift` +
+   `SettingsView.swift`, drop pbxproj entries, build green. Small, low-risk.
+2. **Runtime-verify single-instance** — once the SWG (or any GUI app) launches
+   reliably, confirm a second Launch focuses the existing window and that
+   "Allow multiple instances" lets it spawn. Adjust the `NSRunningApplication`
+   matching if winemac.drv apps don't surface as `.regular`.
+3. **Settings content cleanup (was "Section 3")** — relabel the two update
+   toggles, App Data Location "Show in Finder", rebuild the About card
+   (icon + version + links). `InlineSettingsView` group wrappers are still
+   thin behavior-preserving shims.
+4. **Light mode** — the persistent shell needs a parallel light palette in
+   `CrosswireTheme` (materials already adapt; branded hex does not).
+5. **Out of scope (designed-for, not built):** Notifications panel (bell
+   placeholder), What's New panel (sparkle placeholder), background-install
+   rework, icon extraction, Sentry, SWG crash #84.
 
 ## Repo state
-- Branch: `main`
-- HEAD: `3a24689` (+ this doc/comment housekeeping commit on top)
-- Pushed: all Task D commits are on `origin/main`
-- CI: confirm green on the pushed HEAD
-- Working tree: clean after the housekeeping commit lands
+- Branch: `main`; HEAD `7f567c9`; all Task D commits pushed.
+- CI: green on `7f567c9` (SwiftLint / Build / CodeQL).
+- Working tree clean.
