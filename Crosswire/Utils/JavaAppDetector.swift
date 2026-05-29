@@ -38,7 +38,20 @@ enum JavaAppDetector {
     ///   graphics stack doesn't satisfy for these launchers.
     /// - `-Xint` runs the JVM in pure-interpreted mode, sidestepping
     ///   JIT codegen paths that have repeatedly tripped Wine.
-    static let recommendedJavaOptions = "-Dprism.order=j2d -Xint"
+    /// - The safepoint flags work around a JVM↔Wine thread-suspension bug:
+    ///   HotSpot crashes with "Illegal threadstate" (safepoint.cpp) or faults
+    ///   in Wine's ntdll when it suspends a thread mid native↔VM transition to
+    ///   reach a safepoint — which bites hardest on network/Finalizer threads
+    ///   (SWG #84 login + #93 patcher crashes). Suppressing the avoidable
+    ///   safepoints sidesteps it: `-XX:-UseBiasedLocking` removes biased-lock
+    ///   revocation safepoints, `-XX:GuaranteedSafepointInterval=0` removes the
+    ///   periodic cleanup safepoint, `-XX:-UsePerfData` drops the perfdata mmap
+    ///   thread. Verified 2026-05-29: with these, SWG logs in, loads launcher
+    ///   content, and downloads >1GB of patches without crashing (it died at
+    ///   ~392MB before).
+    static let recommendedJavaOptions =
+        "-Dprism.order=j2d -Xint -XX:-UseBiasedLocking "
+        + "-XX:+UnlockDiagnosticVMOptions -XX:GuaranteedSafepointInterval=0 -XX:-UsePerfData"
 
     /// Returns true if the directory tree rooted at (or beside) `exeURL`
     /// looks like it ships its own JRE.
