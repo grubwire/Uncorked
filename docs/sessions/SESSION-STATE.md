@@ -74,13 +74,44 @@ design means launches are NOT broken, just un-deduped.
   `.regular` policy is still unverified (the installer, not a GUI app, was
   what launched during the test — see the bug above).
 
+## Observability state (diagnosed 2026-05-29)
+
+- **Local logging: yes.** Each wine launch writes a timestamped file to
+  `~/Library/Logs/app.Crosswire.Crosswire/<ISO8601>.log` (`Wine.makeFileHandle`):
+  app + bottle header, process info (args/exe/cwd/env), then every stdout
+  (`Logger.wineKit.info`) and stderr (`.warning`) line + the exit status.
+  Dual-logged to os.log (Console.app). Logs auto-pruned after 7 days.
+- **Crash surfacing:** `FailureWatcher` shows a "stopped unexpectedly" dialog
+  (Report… → prefilled GitHub issue with log + engine version + bottle config /
+  View Log / Not Now) on `crosswireProgramDidExit` when `isAbnormal`
+  (`exitCode != 0`), debounced 30s/exe. **Manual reporter, not telemetry.**
+- **⚠️ The gap that matters:** launches use detached `wine start /unix`. The
+  captured process is the `start` invocation, which exits ~immediately (status
+  0) after handing off to wineserver; at that point `drainPipesAtTermination`
+  clears the readers and **closes the log handle**. So the per-run log captures
+  only the launch + first seconds — the long-running app's later output
+  (crash-time Wine/JVM stderr) is NOT captured, and FailureWatcher never fires
+  (start exited 0). **GUI-app crashes (#84/#93 class) are invisible to
+  Crosswire's own logs** — the only crash evidence is the JVM's `hs_err_pid*`
+  dumps written into the bottle dir.
+- **Sentry: not wired** (zero references; no dependency). The Privacy pane's
+  "crash reporting in a future release" is pure placeholder text.
+- **Notifications: pure placeholder.** The bell is a non-functional button; no
+  event model, store, or view behind it.
+
 ## Next-session queue (priority order)
 1. **Launch-runs-installer bug** (above) — high priority, broken core action.
-2. **Single-instance pass** — argv-matching, solve basename collisions, verify
+2. **Observability follow-up** — capture the detached app's *full-lifetime*
+   stdout/stderr (keep a per-launch log open for the app's life, or a debug
+   launch path without `start` detachment, or `WINEDEBUG` channels tee'd to a
+   persistent file). **Prerequisite for #84/#93** — they're currently
+   undebuggable via Crosswire's own logs (see Observability state above). Do
+   this before attacking the engine bugs.
+3. **Single-instance pass** — argv-matching, solve basename collisions, verify
    `.regular` policy + focus end-to-end.
-3. **Light mode** — parallel light palette in `CrosswireTheme` for the
+4. **Light mode** — parallel light palette in `CrosswireTheme` for the
    persistent branded-hex shell (materials already adapt; hex doesn't).
-4. Minor: sweep `DiagnosticsView`'s `Section("Engine")` wording.
+5. Minor: sweep `DiagnosticsView`'s `Section("Engine")` wording.
 
 ## Out of scope (designed-for, not built)
 Notifications panel (bell placeholder), What's New panel (sparkle
@@ -92,6 +123,8 @@ placeholder), background-install rework, icon extraction, Sentry.
   Wine. (#90 and #92 closed this cycle.)
 
 ## Repo state
-- Branch `main`; HEAD `c2f67e5`; all pushed.
+- Branch `main`. Latest work: toolbar spacing polish (`2cfca28`) + this
+  observability diagnosis. All redesign-loop items (dead-code, Settings
+  cleanup) shipped earlier this session.
 - CI: confirm green on the latest commit.
-- Working tree clean.
+- Working tree clean after the SESSION-STATE commit lands.
