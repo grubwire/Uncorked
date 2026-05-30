@@ -18,53 +18,74 @@ The founding goal (SWG playable in-game) has exactly two remaining gates:
    blocked only by the lack of game data** (gate 2). The DXVK substrate is proven
    (MoltenVK 1.4.1 works); this is genuinely one launch from STOP 2.
 
-2. **⛔ NEW TOP BLOCKER — in-bottle manifest fetch returns empty.** The SWG
-   patcher can't download the game because its **manifest fetch comes back empty
-   in-bottle** (`launcherManifest.ini` = `checksum = 0`), so it has the patch
-   *count* (577) but not the *list*, and never starts the `.tre` download.
-   - **DECISIVE TEST (World 2 confirmed):** `curl https://patch.swglegends.com/manifest.php`
-     from bare macOS (no auth, no params) returns a **full valid 94 KB JSON
-     manifest — 577 files, sizes matching `patchsizes.cfg`, total 8,310,719,585
-     bytes (8.3 GB)**. Server is fine. **Account/version-gating ruled out**
-     (public GET, no token). The failure is **in-bottle transport**, not
-     server-side.
-   - **Why it's fragile:** `manifest.php` is the launcher's one **gzip +
-     `Transfer-Encoding: chunked`** response (behind Cloudflare, `CF-RAY`). Small
-     plain files (`spaceloot.txt` 29 KB) + auth succeed; this gzip+chunked
-     response does not. **Same networking class as #2 (CLOSE_WAIT) / #84 / #93**
-     (JVM↔Wine in-bottle HTTPS), and **intermittent** — it fetched fine last
-     session (the 8.4 GB downloaded then), fails this session.
-   - **Captured evidence for next session** (credential-free):
-     `~/Library/Logs/app.Crosswire.Crosswire/swg-manifest-fetch-SIGNALS-2026-05-30.txt`.
-     Shows the `GET /manifest.php`, gzip+chunked headers, many
-     `close_notify`/`called closeSocket(true)` on URL-Loader threads, and a
-     **`java.net.SocketException: Socket Closed`** (Finalizer). The full
-     `ssl,plaintext` capture was DELETED — SWG sends the password **cleartext**
-     in the auth POST (`un=…&pw=…`, split across hex-dump rows, defeats clean
-     redaction), so persisting it leaked the credential. **Re-run capture next
-     session credential-safe** (capture only the `patch.swglegends.com`
-     connection, or pre-filter the auth POST host). Exact command in the brief
-     below.
+2. **⛔ TOP BLOCKER — manifest fetch hangs in-bottle. ROOT CAUSE CONFIRMED
+   (2026-05-30).** The SWG patcher can't download the game because its manifest
+   fetch never completes in-bottle (`launcherManifest.ini` stays `checksum = 0`),
+   so it has the patch *count* (577) but not the *list*, and never starts the
+   `.tre` download.
+   - **Server is fine (World 2).** `curl https://patch.swglegends.com/manifest.php`
+     from bare macOS (no auth/params) returns a full valid **94 KB JSON manifest,
+     577 files, total 8,310,719,585 bytes (8.3 GB)**. Account/version-gating ruled
+     out. The failure is **purely in-bottle transport.**
+   - **ROOT CAUSE (record-level capture, credential-safe — the diagnosis is
+     locked):** Wine's winsock **does not deliver connection-end (FIN/EOF) to a
+     blocking read**, so the JVM's manifest read **hangs forever even though the
+     full body arrived.** Proof on the manifest connection (Thread-6, SNI
+     patch.swglegends.com):
+     - **Full body received, NOT truncated:** TLS Application-Data reads summed to
+       `384 + 16464×5 + 12848 + 80 + 80 = ` **95,712 B ≈ the 94,694-byte manifest
+       + headers.**
+     - **NOT gzip:** 95,712 ≈ *uncompressed* size (gzipped would be ~25 KB) → the
+       launcher got plain JSON; nothing to fail-decode. (So "strip gzip" is moot.)
+     - **Read never terminates + timeout never fires:** `setSoTimeout(5000)` set,
+       but **0** `SocketTimeoutException` and **1,541× `select status 0`** (idle
+       poll) over ~30 s — read blocked ~6× past its own 5 s deadline. **Wine does
+       not honor `SO_RCVTIMEO`.**
+   - **Cheap JVM levers EXHAUSTED:** `-Dhttp.keepAlive=false` tested clean — the
+     connection *did* close (`estab→0`) but the manifest **still** stayed
+     `checksum=0`. Closing the socket doesn't help because **Wine never surfaces
+     the close to the JVM read.** No JVM-side knob can fix this; even if the 5 s
+     timeout fired, the launcher would just get a `SocketTimeoutException` and
+     still fail — the read must *terminate with the full body*, which needs Wine
+     to deliver end-of-stream.
+   - **This is the #2 (CLOSE_WAIT) root.** One Wine-winsock fix pays both down.
+   - **THE FIX (next session — deep engine work, do NOT start cold):** a
+     **Wine-source winsock/ws2_32 patch** to (a) deliver connection-end/FIN to
+     blocking reads so the read returns the body, and/or (b) honor `SO_RCVTIMEO`
+     so the read times out — then **engine rebuild via `engine-bundle.yml`**, same
+     class as the existing `scripts/patch-cw-*.py` patches (signal/virtual/cpu).
+   - Evidence files (credential-free):
+     `~/Library/Logs/app.Crosswire.Crosswire/swg-manifest-STEP1-mechanism-2026-05-30.txt`
+     (byte accounting + timeout/idle-poll proof) and `…-SIGNALS-2026-05-30.txt`.
+     Full `ssl,plaintext` captures were DELETED — SWG sends the password
+     **cleartext** in the auth POST (`un=…&pw=…`), so any plaintext capture leaks
+     it; **record-level only** if re-capturing.
 
-**Tonight's stop:** both gates identified. DXVK staged; manifest-fetch is the
-real founding-goal blocker and deserves a **fresh focused session** doing
-careful SSL-debug reading — NOT a tired grind. Fixing it likely **pays down #2
-(CLOSE_WAIT)** too.
+**Tonight's stop:** diagnosis fully locked, cheap levers exhausted. The fix is a
+Wine-source winsock patch + engine rebuild — exactly the deep-engine work to do
+in a fresh session, not cold late at night.
 
-### → NEXT SESSION: manifest-fetch transport bug (start here)
-1. Read `swg-manifest-fetch-SIGNALS-2026-05-30.txt`. Then re-capture the fetch
-   cleanly: launch javaw direct with
-   `_JAVA_OPTIONS="<safepoint flags> -Djavax.net.debug=ssl,plaintext,record"`
-   + `WINEDEBUG=+winsock`, stderr→file, **filtering to the patch.swglegends.com
-   connection only** (no auth POST → no credential). Login is required to trigger
-   the post-login autocheck fetch.
-2. Identify which of three: **gzip-decode failure** (full gzipped body arrives,
-   decode throws), **chunked truncation** (body cut short), or **CLOSE_WAIT
-   drop** (connection closed mid-stream → empty). The `SocketException: Socket
-   Closed` + `closeSocket` events point at connection-close; confirm against the
-   body bytes.
-3. Fix the transport (engine/Wine winsock or JVM socket handling). Likely shared
-   root with #2.
+### → NEXT SESSION: Wine winsock connection-end fix (start mid-fix)
+1. Research where in Wine's **ws2_32 / winsock (dlls/ws2_32, server/sock.c)** a
+   blocking `recv`/`select` is supposed to return on FIN/EOF, and where
+   `SO_RCVTIMEO` should fire — both are failing for the SWG manifest read.
+   Compare Gcenx 11.9 vs upstream/CrossOver for a known patch.
+2. Draft the patch as `scripts/patch-cw-winsock.py` (+ `scripts/patches/*.patch`),
+   add its rebuild mapping to `engine-bundle.yml`'s MAPPING table, rebuild.
+3. **Fast verify against the 94 KB manifest fetch** (seconds): launch javaw
+   direct, login, check `launcherManifest.ini` checksum != 0. No 8.4 GB needed to
+   test the fix.
+4. Once it fetches: confirm the patcher BEGINS pulling the 577 `.tre` files →
+   full download → **STOP 2** (DXVK already staged: launch `SwgClient_r.exe`,
+   capture render).
+
+### ⚠️ #93 crash is NOT fully fixed (2026-05-30)
+The safepoint fix `3fad7e6` **reduces but does not eliminate** the #93
+native-transition crash. Reproduced this session **with all safepoint flags
+applied** (confirmed in the hs_err `jvm_args`): `Internal Error 0xfffffcc8`,
+`ntdll.dll`, thread **`QuantumRenderer-0`** (JavaFX) in `_thread_in_native_trans`
+— the same 0xfffffcc8 signature, still intermittent. **#84/#93 stay open** (and
+not just for the black screen — the crash itself still recurs).
 
 ## ✅ FRESH-INSTALL validation — crash fix ships AND auto-applies (2026-05-29)
 
