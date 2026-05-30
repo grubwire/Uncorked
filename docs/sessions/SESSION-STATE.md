@@ -1,4 +1,4 @@
-# Session state — redesign loop finished (2026-05-29)
+# Session state — fresh-install validated, DXVK black-screen root-caused (2026-05-29)
 
 The HIG-aligned visual redesign (Task D) shipped, and this session closed out
 three of the four follow-up items. Design source of truth:
@@ -7,6 +7,70 @@ three of the four follow-up items. Design source of truth:
 Standing constraint: **native bones, custom skin**. No user-facing strings
 mention Wine / engine / wrappers / version numbers (CLAUDE.md naming rule —
 overrides spec lines that mention "engine version").
+
+## ✅ FRESH-INSTALL validation — crash fix ships AND auto-applies (2026-05-29)
+
+Did a **full wipe + clean reinstall** to prove the shipped fix works for a real
+first-time user, not just our hand-patched bottle. Deleted the old 8.7 GB bottle
+`BD247FEE` (and the 8.4 GB download with it — deliberate), cleared
+`BottleVM.plist`. New bottle `1A73CA21-DC93-4B56-9F9A-D670789941DA`.
+
+- Rebuilt from HEAD first (the running build predated `3fad7e6`), installed SWG
+  via Crosswire's normal Install flow (`SWGLegendsSetup.exe`), drove the Inno
+  wizard to Finish (unchecked its "Launch SWG Legends" so first launch goes
+  through Crosswire, not the installer).
+- **Key result — `JavaAppDetector` auto-seeded the full fix on the new bottle**
+  with zero manual steps: per-program plist `_JAVA_OPTIONS` = the complete
+  safepoint set (`-Dprism.order=j2d -Xint -XX:-UseBiasedLocking
+  -XX:+UnlockDiagnosticVMOptions -XX:GuaranteedSafepointInterval=0
+  -XX:-UsePerfData`) **+** `dwrite=builtin` override. This is what a real user
+  gets on first install.
+- **Launcher comes up consistently — two independent launches:** (1) Crosswire's
+  post-install auto-launch and (2) the manual **Launch** button. Both rendered
+  the full SWG login screen (logo, fields, Bespin art, "Ver 2.91"); javaw stable;
+  **0 `hs_err` dumps** across the whole run. Login screen ≠ playable, so #84/#93
+  stay open (see DXVK below).
+
+## 🔬 DXVK black-screen — ROOT CAUSE NAILED (2026-05-29, new top engine blocker)
+
+Diagnosed **without** re-downloading the 8.4 GB game (a runtime game capture
+would be empty on the Vulkan side *by definition* — see below). Static engine
+inspection + a direct MoltenVK probe:
+
+- **MoltenVK / Vulkan / Metal WORKS.** Engine 11.9 ships `libMoltenVK.dylib`
+  (x86_64, v1.4.1, Vulkan 1.4.334) and `winevulkan.so`/`.dll`. A minimal x86_64
+  probe (`/tmp/vkprobe.c`) dlopen'd the engine's MoltenVK, **created a VkInstance
+  and enumerated the M1 Pro GPU via Metal** (MSL 3.2, GPU Family Apple 7 / Mac 2
+  / Metal 3, ~12 GB). The Vulkan→Metal substrate DXVK needs is fully functional.
+  (Corrects the earlier-session assumption that the engine had no Vulkan stack.)
+- **DXVK is ABSENT — from the engine entirely, not just the bottle.** No DXVK
+  DLLs anywhere under the engine *or* the bottle. Bottle `d3d9.dll` is Wine's
+  **builtin wined3d** (188 KB; DXVK's d3d9 is multi-MB). `dxvkConfig.dxvk=false`,
+  and toggling it would do nothing — `enableDXVK` has no DLLs to copy.
+- **Therefore the black screen:** `SwgClient_r.exe` (D3D9) has no path to the
+  working Vulkan/Metal stack, so it falls back to **wined3d → opengl32 → winemac
+  → AppleMetalOpenGLRenderer** (Apple's deprecated GL-over-Metal) → black.
+- **Why no runtime game capture was needed:** without DXVK installed the game
+  never touches Vulkan, so `WINEDEBUG=+dxvk/+vulkan`, the DXVK HUD, and DXVK
+  logs are all empty. The MoltenVK probe gives the Vulkan/Metal evidence the
+  game path *can't*. (User accepted this as the engine-task input, skipping the
+  re-download.)
+- **Fix (next session, scoped):** bundle a MoltenVK-compatible DXVK into the
+  engine (so `enableDXVK` has source DLLs), enable `dxvkConfig.dxvk`, relaunch.
+  The fix is **viable** — the Vulkan→Metal target is proven working; DXVK is
+  simply not shipped. Engine note: the sandboxed engine lives at
+  `~/Library/Application Support/app.Crosswire.Crosswire/Engine/` (not the bare
+  `…/Crosswire/Engine` in CLAUDE.md — sandbox container path).
+
+## 🛠 Build gotcha — xcodebuild -destination fixes a rebuild hang (2026-05-29)
+
+A bare `xcodebuild -scheme Crosswire -configuration Debug -derivedDataPath …
+build` **hung indefinitely** in `-[DTDKRemoteDeviceConnection startServiceBrowsers]`
+(device-discovery phase) — 0 % CPU, no compiler children, no file writes, never
+reached compilation. Adding an explicit destination fixes it:
+`-destination 'platform=macOS,arch=arm64'` (also pass `-skipPackagePluginValidation`).
+Use this for all future rebuilds. A plain "process exists" watch can't tell this
+hang from real work — watch file-writes/compiler-procs instead.
 
 ## ✅ SWG launcher crashes FIXED (#84/#93) — in-game pending DXVK (2026-05-29)
 
@@ -192,7 +256,10 @@ Drove the full path: download → install → launch the game client.
   (correct: Launch runs the launcher → Play runs the client); `drive_c` now
   contains `SwgClient_r.exe` so `updateInstalledPrograms` sees it; library row
   shows "Star Wars Galaxies Legends".
-- **⛔ NEW BLOCKER — game client renders a BLACK SCREEN.** Clicking Play
+- **⛔ BLACK SCREEN blocker (SUPERSEDED — see "🔬 DXVK black-screen — ROOT CAUSE
+  NAILED" near the top, which is authoritative: DXVK is absent from the *engine*
+  itself, not just `Libraries/DXVK`, and MoltenVK is proven working via direct
+  probe).** Clicking Play
   launches `SwgClient_r.exe` and it **runs without crashing** (so the crash fix
   carries into the client), CPU ~5%, but the window stays pure black (no
   loading/login/world; focus+Enter+Space did nothing). Root cause: the client
@@ -208,11 +275,14 @@ Drove the full path: download → install → launch the game client.
 ## Next-session queue (priority order)
 (Done this session: capture-path fix `72f07be`; SWG #84/#93 crash fix `3fad7e6`;
 SWG fully downloaded + game client launches with no crash.)
-1. **DXVK for the game client (the in-game blocker)** — install a
-   MoltenVK-compatible DXVK into `Libraries/DXVK/{x64,x32}`, enable
-   `dxvkConfig.dxvk`, relaunch `SwgClient_r.exe`, confirm it renders past the
-   black screen to the in-game login/world. Until this lands, **do NOT close
-   #84/#93** — login + patching work, but in-game render is unconfirmed.
+1. **DXVK for the game client (THE top blocker — root cause nailed, see "DXVK
+   black-screen" above).** DXVK is absent from the engine; MoltenVK/Vulkan/Metal
+   is proven working. Bundle a MoltenVK-compatible DXVK into the engine so
+   `enableDXVK` has source DLLs to copy, enable `dxvkConfig.dxvk`, relaunch
+   `SwgClient_r.exe`, confirm it renders past the black screen. **Requires
+   re-downloading the 8.4 GB game** (wiped this session) to reach the client —
+   factor that into the session. Until in-game render is confirmed, **do NOT
+   close #84/#93**.
 2. **Winsock CLOSE_WAIT self-recovery** (engine task) — a dropped connection
    leaves the JVM's socket read blocked forever (Wine doesn't deliver the FIN),
    so the patcher hangs instead of retrying. Fix so dropped connections resume
@@ -220,8 +290,14 @@ SWG fully downloaded + game client launches with no crash.)
    timeout, JVM `sun.net` socket-read timeouts, or a patcher watchdog).
 3. **Minimize the safepoint flag set** — `3fad7e6` ships the full working combo;
    confirm which are load-bearing (likely `-XX:-UseBiasedLocking`).
-4. **Single-instance pass** — argv-matching, basename collisions, `.regular`
-   focus.
+4. **Single-instance / wineprefix cleanup pass** — argv-matching, basename
+   collisions, `.regular` focus. **Also: orphaned-process pileup.** This session's
+   wipe→install→2 launches left **~22 stale `winedevice`/`services.exe`** procs
+   (reparented to PPID 1 when their wineservers died); cleaning them needed
+   `ps | grep system32 | awk '{print $1}' | xargs -n1 kill -9` (multi-PID
+   `kill` and tight `for` loops silently no-op'd on these). Crosswire should
+   reap a bottle's prefix procs on app/bottle exit so they don't accumulate
+   (ties into the single-instance work — same process-lifecycle gap).
 5. **Light mode**; minor `DiagnosticsView` "Engine" wording; (optional)
    diagnostics live-stdout capture of detached children.
 
@@ -238,21 +314,25 @@ Notifications panel (bell placeholder), What's New panel (sparkle
 placeholder), background-install rework, icon extraction, Sentry.
 
 ## Open issues
-- **#84 / #93 — crash fixed, NOT yet closed.** The JVM safepoint flags
-  (`3fad7e6`) fixed the launcher crashes: SWG logs in, loads content, and
-  downloaded the full game (8.4 GB) with **zero crashes**. **Keep open** until
-  in-game render is confirmed — the game client currently launches but renders
-  a black screen (DXVK blocker, queue #1). Don't close until you can actually
-  play. (#90 and #92 closed earlier.)
+- **#84 / #93 — crash fix CONFIRMED to ship + auto-apply, NOT yet closed.** The
+  JVM safepoint flags (`3fad7e6`) fix the launcher crashes, and a **fresh clean
+  install** proved `JavaAppDetector` auto-seeds them for a real first-time user
+  (login screen renders on both launch paths, 0 crashes). **Keep open** until
+  in-game render is confirmed — root cause of the black screen is now nailed
+  (DXVK absent from engine; MoltenVK works), fix is queue #1. Don't close until
+  you can actually play. (#90 and #92 closed earlier.)
 
 ## Repo state
-- Branch `main`. This session shipped: inline-panel **consistency pass**
-  (`b1cc1dd`, `b184252`, `4717593`); diagnostics **capture-path fix**
-  (`72f07be`); **SWG #84/#93 crash fix** (`3fad7e6`); docs.
-- The SWG bottle's per-program plist `_JAVA_OPTIONS` was updated in place (data,
-  not committed) with the safepoint flags. `dxvkConfig.dxvk` left **false**
-  (DXVK isn't installed; enabling it without the DLLs would fail a launch).
-- SWG is **fully downloaded** (8.4 GB). All SWG processes were cleaned up at
-  end of session.
-- CI: green through `4717593`; confirm on `3fad7e6` + this doc.
+- Branch `main`. This session: **fresh-install validation** (no code change —
+  wipe + reinstall on a rebuilt-from-HEAD app), **DXVK root-cause diagnosis**
+  (static + MoltenVK probe, no game re-download), **xcodebuild -destination**
+  build-hang fix, this doc. Prior session shipped the SWG crash fix (`3fad7e6`)
+  + capture-path fix (`72f07be`).
+- Old bottle `BD247FEE` (8.7 GB) **deleted**; new validated bottle
+  `1A73CA21-DC93-4B56-9F9A-D670789941DA` (~516 MB, launcher only — game NOT
+  re-downloaded). `dxvkConfig.dxvk=false` (DXVK not in engine; nothing to copy).
+- All wine procs cleaned up at end of session (0 remaining).
+- Running dev build: `/private/tmp/crosswire-build/...Debug/Crosswire.app`,
+  rebuilt from HEAD this session (relinked 19:46) — includes the safepoint fix.
+- CI: green through `cf4648c` (prior); confirm on this doc's commit.
 - Working tree clean after the SESSION-STATE commit lands.
