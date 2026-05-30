@@ -4,6 +4,46 @@ Standing constraint: **native bones, custom skin**. No user-facing strings
 mention Wine / engine / wrappers / version numbers (CLAUDE.md naming rule —
 overrides spec lines that mention "engine version").
 
+## 🧹 Deck-clearing session — safety + polish (2026-05-30, low-risk, engine untouched)
+
+Independent low-risk items, each its own commit. No engine / build-pipeline /
+prod-promotion work. All four commits below pushed to `origin/main`.
+
+- **1a — `rm -rf` grant narrowed (local config, gitignored — no commit).**
+  `.claude/settings.local.json`'s blanket `Bash(rm -rf *)` replaced with four
+  scoped grants (`/private/tmp/crosswire-build` and `/tmp/crosswire-build`,
+  each ± `/*`). Build derived-data auto-approves; bottles / game data / repo /
+  Application Support now require an explicit per-path prompt (the SWG-bottle
+  wipe class of path). Prompted by the irrecoverable bottle `rm -rf` this week.
+- **1b — `build-crosswire` skill** (`3cbe563`): `.claude/skills/build-crosswire/SKILL.md`
+  packages the working `xcodebuild` line (`-destination 'platform=macOS,arch=arm64'
+  -skipPackagePluginValidation -derivedDataPath /private/tmp/crosswire-build`)
+  + *why* (dodges the `DTDKRemoteDeviceConnection` device-discovery hang) + the
+  relink-mtime check (`Crosswire.debug.dylib` mtime; `strings` can't verify
+  Swift literals). So no future session re-derives the hang fix.
+- **2a — dead files: VERIFIED already gone, no action.** `AppSettingsSheet.swift`
+  + `SettingsView.swift` absent from disk *and* pbxproj (only `InlineSettingsView.swift`
+  matches). Confirmed shipped in `1c8d18e`.
+- **2b — DiagnosticsView engine wording** (`00e5ccb`): `Section("Engine")`→`"Compatibility"`,
+  `"Upstream tag"`→`"Build"`, Paths `"Engine"`→`"Compatibility"`. Version
+  *values* kept (needed for bug reports); only the engine *labels* changed.
+- **Item 3 — Settings consistency: COMPLETE.** Most of it was already built by
+  WIP `0d06ef5` (shared `InlinePanelBackBar`, the single `settingsPane` layout
+  container, de-carded App Data Location, Check-for-Updates chip) — audited live
+  rather than rebuilt. Confirmed: nav unified (Settings + detail both render
+  `InlinePanelBackBar` "‹ Library", no "Done"); all 5 panes share identical
+  insets (no content jump on switch); one-offs resolved. **Two fixes this
+  session:**
+  - `9545adb` — the per-program **"Run"** button (detail › installed-programs)
+    was the only control still on `.borderless`; moved to
+    `CrosswireButtonStyle(.secondary)` so every button shares the one hover system.
+  - `1f25ed2` — **`rowSurfaceHover` bumped `0x2A2F38`→`0x323740`** (+4→+12 per
+    channel). The secondary hover was a ~1.5% lift (measured live +4/+3/+3,
+    imperceptible); now +11/+10/+10 (~4.3%), perceptible. Preserves rowSurface's
+    channel spacing. Affects every `.secondary` button + library row hover.
+- **Light mode** still **queued as its own session** (needs color judgment in
+  both schemes — explicitly out of this pass).
+
 ## 🎯 SWG finale — two gates, both now identified (2026-05-30)
 
 The founding goal (SWG playable in-game) has exactly two remaining gates:
