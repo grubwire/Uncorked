@@ -24,8 +24,11 @@ import os.log
 @MainActor
 // swiftlint:disable:next type_body_length
 public class Wine {
-    /// URL to the installed `DXVK` folder
-    private nonisolated static let dxvkFolder: URL = CrosswireEngine.libraryFolder.appending(path: "DXVK")
+    /// URL to the installed `DXVK` folder. Lives inside the engine tree so DXVK
+    /// ships, versions, signs, and installs atomically with the engine archive
+    /// (engine-bundle.yml drops d9vk into `engine/DXVK/{x64,x32}`); previously a
+    /// sibling of Engine/ under Libraries/, which the engine archive never wrote.
+    private nonisolated static let dxvkFolder: URL = CrosswireEngine.engineFolder.appending(path: "DXVK")
     /// Path to the Crosswire64 wrapper (thin shell over wine64; all app code uses this, never wine64 directly)
     public nonisolated static let wineBinary: URL = CrosswireEngine.binFolder.appending(path: "Crosswire64")
     /// Path to the Crosswireserver wrapper (thin shell over wineserver)

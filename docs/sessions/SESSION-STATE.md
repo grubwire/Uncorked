@@ -1,12 +1,73 @@
-# Session state — fresh-install validated, DXVK black-screen root-caused (2026-05-29)
-
-The HIG-aligned visual redesign (Task D) shipped, and this session closed out
-three of the four follow-up items. Design source of truth:
-`docs/specs/visual-design-direction.md`.
+# Session state — DXVK staged; REAL blocker is in-bottle manifest fetch (2026-05-30)
 
 Standing constraint: **native bones, custom skin**. No user-facing strings
 mention Wine / engine / wrappers / version numbers (CLAUDE.md naming rule —
 overrides spec lines that mention "engine version").
+
+## 🎯 SWG finale — two gates, both now identified (2026-05-30)
+
+The founding goal (SWG playable in-game) has exactly two remaining gates:
+
+1. **DXVK black screen — STAGED ✓, one launch from STOP 2.** Done this session:
+   `Wine.dxvkFolder` repointed to `engineFolder/DXVK` (Wine.swift:28,
+   **uncommitted→now committed**); d9vk `v1.10.3-20250511` `x64/d3d9.dll` (3.8 MB)
+   + `x32/d3d9.dll` (4 MB) dropped into the LOCAL engine at
+   `…/app.Crosswire.Crosswire/Engine/DXVK/{x64,x32}`; `dxvk=true` on bottle
+   `1A73CA21`; app rebuilt. On next game-client launch, `enableDXVK` copies the
+   d3d9 DLL in and `WINEDLLOVERRIDES=…d3d9…=n,b` activates it. **Render test is
+   blocked only by the lack of game data** (gate 2). The DXVK substrate is proven
+   (MoltenVK 1.4.1 works); this is genuinely one launch from STOP 2.
+
+2. **⛔ NEW TOP BLOCKER — in-bottle manifest fetch returns empty.** The SWG
+   patcher can't download the game because its **manifest fetch comes back empty
+   in-bottle** (`launcherManifest.ini` = `checksum = 0`), so it has the patch
+   *count* (577) but not the *list*, and never starts the `.tre` download.
+   - **DECISIVE TEST (World 2 confirmed):** `curl https://patch.swglegends.com/manifest.php`
+     from bare macOS (no auth, no params) returns a **full valid 94 KB JSON
+     manifest — 577 files, sizes matching `patchsizes.cfg`, total 8,310,719,585
+     bytes (8.3 GB)**. Server is fine. **Account/version-gating ruled out**
+     (public GET, no token). The failure is **in-bottle transport**, not
+     server-side.
+   - **Why it's fragile:** `manifest.php` is the launcher's one **gzip +
+     `Transfer-Encoding: chunked`** response (behind Cloudflare, `CF-RAY`). Small
+     plain files (`spaceloot.txt` 29 KB) + auth succeed; this gzip+chunked
+     response does not. **Same networking class as #2 (CLOSE_WAIT) / #84 / #93**
+     (JVM↔Wine in-bottle HTTPS), and **intermittent** — it fetched fine last
+     session (the 8.4 GB downloaded then), fails this session.
+   - **Captured evidence for next session** (credential-free):
+     `~/Library/Logs/app.Crosswire.Crosswire/swg-manifest-fetch-SIGNALS-2026-05-30.txt`.
+     Shows the `GET /manifest.php`, gzip+chunked headers, many
+     `close_notify`/`called closeSocket(true)` on URL-Loader threads, and a
+     **`java.net.SocketException: Socket Closed`** (Finalizer). The full
+     `ssl,plaintext` capture was DELETED — SWG sends the password **cleartext**
+     in the auth POST (`un=…&pw=…`, split across hex-dump rows, defeats clean
+     redaction), so persisting it leaked the credential. **Re-run capture next
+     session credential-safe** (capture only the `patch.swglegends.com`
+     connection, or pre-filter the auth POST host). Exact command in the brief
+     below.
+
+**Tonight's stop:** both gates identified. DXVK staged; manifest-fetch is the
+real founding-goal blocker and deserves a **fresh focused session** doing
+careful SSL-debug reading — NOT a tired grind. Fixing it likely **pays down #2
+(CLOSE_WAIT)** too.
+
+### → NEXT SESSION: manifest-fetch transport bug (start here)
+1. Read `swg-manifest-fetch-SIGNALS-2026-05-30.txt`. Then re-capture the fetch
+   cleanly: launch javaw direct with
+   `_JAVA_OPTIONS="<safepoint flags> -Djavax.net.debug=ssl,plaintext,record"`
+   + `WINEDEBUG=+winsock`, stderr→file, **filtering to the patch.swglegends.com
+   connection only** (no auth POST → no credential). Login is required to trigger
+   the post-login autocheck fetch.
+2. Identify which of three: **gzip-decode failure** (full gzipped body arrives,
+   decode throws), **chunked truncation** (body cut short), or **CLOSE_WAIT
+   drop** (connection closed mid-stream → empty). The `SocketException: Socket
+   Closed` + `closeSocket` events point at connection-close; confirm against the
+   body bytes.
+3. Fix the transport (engine/Wine winsock or JVM socket handling). Likely shared
+   root with #2.
+
+## ✅ FRESH-INSTALL validation — crash fix ships AND auto-applies (2026-05-29)
+
 
 ## ✅ FRESH-INSTALL validation — crash fix ships AND auto-applies (2026-05-29)
 
