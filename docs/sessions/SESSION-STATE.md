@@ -407,8 +407,8 @@ Theme tokens: `rowSurface`, `rowSurfaceHover`, `regionBorder`,
   single target there). Intentional — don't native-correct to a bare icon.
 - **Sidebar selection**: native `.sidebar` blue pill, no custom accent bar.
 - **No user-facing engine/version strings** anywhere (Updates toggle, About,
-  detail Advanced all comply). NOTE: `DiagnosticsView` still has a
-  `Section("Engine")` — diagnostics is developer-facing but worth a sweep.
+  detail Advanced, and `DiagnosticsView` all comply — the latter swept in
+  `00e5ccb`: `Section("Engine")`→`"Compatibility"`, `"Upstream tag"`→`"Build"`).
 - **Omitted on purpose**: "Change Icon…" (no backing), DLL-overrides editor
   (none exists), engine version in detail/About. Don't ship empty editors.
 
@@ -575,8 +575,8 @@ SWG fully downloaded + game client launches with no crash.)
    `kill` and tight `for` loops silently no-op'd on these). Crosswire should
    reap a bottle's prefix procs on app/bottle exit so they don't accumulate
    (ties into the single-instance work — same process-lifecycle gap).
-5. **Light mode**; minor `DiagnosticsView` "Engine" wording; (optional)
-   diagnostics live-stdout capture of detached children.
+5. **Light mode**; (optional) diagnostics live-stdout capture of detached
+   children. (`DiagnosticsView` "Engine" wording — DONE in `00e5ccb`.)
 
 ## Design direction (note, NOT a task)
 Future: a **health-check / remediation system** that auto-recovers from known
